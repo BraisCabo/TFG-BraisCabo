@@ -42,7 +42,9 @@ public class RestSecurityConfig {
 				.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
 						.requestMatchers("/api/users/").permitAll()
 						.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-						.requestMatchers("/api/users/get").hasRole("USER"));
+						.requestMatchers("/api/users/get").hasRole("USER")
+						.anyRequest().permitAll()
+						);
 		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
