@@ -1,5 +1,7 @@
 package com.tfg.brais.Service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +49,15 @@ public class AccountService {
         user.setRoles("USER");
         userRepository.save(user);
         return ResponseEntity.created(path.buildAndExpand(user.getId()).toUri()).body(user);
+    }
+
+    public ResponseEntity<List<User>> findAll(){
+        List<User> list = userRepository.findAll();
+        if (list.isEmpty()){
+            return new ResponseEntity<List<User>>(HttpStatusCode.valueOf(404));
+        }else{
+            return ResponseEntity.ok(list);
+        }
     }
 
 
