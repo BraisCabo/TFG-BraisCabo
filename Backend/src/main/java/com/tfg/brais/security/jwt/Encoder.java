@@ -10,4 +10,8 @@ import lombok.Getter;
 @Component
 public class Encoder {
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    public String encode(String stringToEncode){
+        return this.passwordEncoder.encode(stringToEncode);
+    }
 }

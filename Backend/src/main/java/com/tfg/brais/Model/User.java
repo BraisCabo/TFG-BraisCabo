@@ -27,7 +27,19 @@ public class User{
     @JsonIgnore
     private String encodedPassword;
 
+    private String name;
+
+    private String lastName;
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
+
+    public void setRoles(String ... roles){
+        this.roles = List.of(roles);
+    }
+
+    public void setPassword(String password) {
+        setEncodedPassword(password);
+    }
 
 }

@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.crypto.KeyGenerator;
 import javax.crypto.spec.SecretKeySpec;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,7 +36,8 @@ public class JwtTokenProvider {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(JwtRequestFilter.class);
 	
-	private Key jwtSecret;
+	@Autowired
+	private SecretKey jwtSecret;
 	
 	private static long JWT_EXPIRATION_IN_MS = 5400000;
 	private static Long REFRESH_TOKEN_EXPIRATION_MSEC = 10800000l;
@@ -46,13 +46,7 @@ public class JwtTokenProvider {
 	private UserDetailsService userDetailsService;
 
 	public JwtTokenProvider(){
-		try {
-			KeyGenerator keyGenerator = KeyGenerator.getInstance("HMACSHA256");
-			keyGenerator.init(256); // Tamaño de la clave en bits
-			jwtSecret = keyGenerator.generateKey();
-		} catch (Exception e) {
-			
-		}
+		
 
 	}
 
@@ -68,7 +62,12 @@ public class JwtTokenProvider {
     }
 
 	public String getUsername(String token) {
-		return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+		return Jwts.parserBuilder()
+		.setSigningKey(jwtSecret.getPrivateKey())
+		.build()
+		.parseClaimsJws(token)
+		.getBody()
+		.getSubject();
 	}
 
 	public String resolveToken(HttpServletRequest req) {
@@ -81,7 +80,7 @@ public class JwtTokenProvider {
 
 	public boolean validateToken(String token) {
 		try {
-			Jwts.parserBuilder().setSigningKey(jwtSecret).build().parseClaimsJws(token);
+			Jwts.parserBuilder().setSigningKey(jwtSecret.getPrivateKey()).build().parseClaimsJws(token);
 			return true;
 		 } catch (MalformedJwtException ex) {
 			LOG.debug("Invalid JWT token");
@@ -112,7 +111,7 @@ public class JwtTokenProvider {
 		calendar.add(Calendar.HOUR_OF_DAY, 8);
 
 		String token = Jwts.builder().setClaims(claims).setSubject((user.getUsername())).setIssuedAt(new Date())
-				.setExpiration(expiryDate).signWith(jwtSecret, SignatureAlgorithm.HS256).compact();
+				.setExpiration(expiryDate).signWith(jwtSecret.getPrivateKey(), SignatureAlgorithm.HS256).compact();
 
 		return new Token(Token.TokenType.ACCESS, token, duration,
 				LocalDateTime.ofInstant(expiryDate.toInstant(), ZoneId.systemDefault()));
@@ -132,7 +131,7 @@ public class JwtTokenProvider {
 		calendar.setTime(now);
 		calendar.add(Calendar.HOUR_OF_DAY, 8);
 		String token = Jwts.builder().setClaims(claims).setSubject((user.getUsername())).setIssuedAt(new Date())
-				.setExpiration(expiryDate).signWith(jwtSecret, SignatureAlgorithm.HS256).compact();
+				.setExpiration(expiryDate).signWith(jwtSecret.getPrivateKey(), SignatureAlgorithm.HS256).compact();
 
 		return new Token(Token.TokenType.REFRESH, token, duration,
 				LocalDateTime.ofInstant(expiryDate.toInstant(), ZoneId.systemDefault()));
