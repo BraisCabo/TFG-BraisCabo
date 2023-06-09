@@ -1,0 +1,12 @@
+
+app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000; /* Ajusta este valor si necesitas que el app-header esté por encima de otros elementos */
+}
+
+.content {
+  margin-top: 7vh;
+}
