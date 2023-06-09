@@ -138,4 +138,14 @@ public class UserLoginService {
 		httpHeaders.add(HttpHeaders.SET_COOKIE,
 				cookieUtil.createRefreshTokenCookie(token.getTokenValue(), token.getDuration()).toString());
 	}
+
+	public HttpHeaders generateFreshToken(String username){
+		UserDetails user = userDetailsService.loadUserByUsername(username);
+		Token newAccessToken = jwtTokenProvider.generateToken(user);
+		Token newRefreshToken = jwtTokenProvider.generateRefreshToken(user);
+		HttpHeaders responseHeaders = new HttpHeaders();
+		addAccessTokenCookie(responseHeaders, newAccessToken);
+		addRefreshTokenCookie(responseHeaders, newRefreshToken);
+		return responseHeaders;
+	}
 }
