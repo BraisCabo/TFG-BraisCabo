@@ -21,19 +21,19 @@ import com.tfg.brais.Service.AccountService;
 @Controller
 @RequestMapping("/api/users")
 public class AccountController {
-    
 
     @Autowired
     private AccountService accountService;
 
     @PostMapping("/")
-    public ResponseEntity<User> register(@RequestBody User user){
+    public ResponseEntity<User> register(@RequestBody User user) {
         UriComponentsBuilder path = fromCurrentRequest().path("/{id}");
         return accountService.register(user, path);
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<User>> findAll(){
+    public ResponseEntity<List<User>> findAll() {
         return this.accountService.findAll();
     }
+
 }

@@ -68,10 +68,13 @@ public class AdminService {
         if (response.getStatusCode().is4xxClientError()){
             return response;
         }
-        if (existSubject(subjectDto.getName()) || checkSubject(subjectDto.getStudents(), subjectDto.getTeachers())){
+        if (checkSubject(subjectDto.getStudents(), subjectDto.getTeachers())){
             return new ResponseEntity<Subject>(HttpStatusCode.valueOf(403));
         }
         Subject subject = response.getBody();
+        if (existSubject(subjectDto.getName()) && !subject.getName().equals(subjectDto.getName())){
+            return new ResponseEntity<Subject>(HttpStatusCode.valueOf(403));
+        }
         subject.setName(subjectDto.getName());
         subject.setStudents(loadUsers(subjectDto.getStudents()));
         subject.setTeachers(loadUsers(subjectDto.getTeachers()));

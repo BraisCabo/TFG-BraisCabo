@@ -60,5 +60,13 @@ public class AccountService {
         }
     }
 
+    public ResponseEntity<User> findByMail(String mail){
+        try {
+            return ResponseEntity.ok(userRepository.findByEmail(mail).get());
+        } catch (Exception e) {
+            return new ResponseEntity<User>(HttpStatusCode.valueOf(404));
+        }
+    }
+
 
 }
