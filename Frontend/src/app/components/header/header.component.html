@@ -1,5 +1,28 @@
-<div style="margin-top: 0x">
-  <mat-toolbar color="primary" style="height: 6vh">
-    <span>My Application</span>
-  </mat-toolbar>
-</div>
+<mat-toolbar style="height: 6vh; justify-content: flex-end;" class="first-row">
+  <span *ngIf="this.isLogged()" style="margin-right: 2vw">Mi cuenta</span>
+</mat-toolbar>
+
+<mat-grid-list cols="2" rowHeight="8vh" class="second-row">
+  <mat-grid-tile style="justify-content: flex-start;">
+    <img src="assets/images/logo.png" alt="logo"
+      style="height: 6vh; width: auto; margin-left: 2vw; margin-right: auto;" [routerLink]="">
+  </mat-grid-tile>
+
+  <mat-grid-tile style="justify-content: flex-end;">
+    <div style="margin-left: auto; margin-right: 2vw;">
+    <button *ngIf="this.isLogged(); else noLogged" style=" flex-direction: row-reverse" mat-button color="basic" (click)="this.toggle()" class="hover-effect" >
+      Mis asignaturas
+      <mat-icon class="details-icon">arrow_drop_down</mat-icon>
+    </button>
+    <ng-template #noLogged>
+      <button mat-button color="basic" (click)="this.navigateToRegister()" class="hover-effect" >
+        Registro
+      </button>
+      <button mat-button color="basic" (click)="this.navigateToLogin()" class="hover-effect">
+        Login
+      </button>
+    </ng-template>
+  </div>
+  </mat-grid-tile>
+</mat-grid-list>
+

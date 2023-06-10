@@ -1,4 +1,5 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, ViewChild } from '@angular/core';
+import { DrawerService } from './services/DrawerService';
 
 
 @Component({
@@ -7,6 +8,12 @@ import { Component, HostListener } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Aula Virtual';
-  isSticky : boolean = true;
+  constructor(public drawerService:DrawerService){}
+  title = 'Aula Virtual'
+
+  backdropClick(){
+    if (this.drawerService.opened){
+      this.drawerService.opened = false;
+    }
+  }
 }

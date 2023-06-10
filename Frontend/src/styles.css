@@ -6,3 +6,13 @@ header {
   margin: 0;
   padding: 0;
 }
+
+
+body {
+  height: auto;
+}
+
+mat-drawer-container{
+  margin: 0;
+  padding: 0;
+}

@@ -1,0 +1,13 @@
+.first-row {
+  background-color: #cb0017;
+  color: white;
+}
+
+.second-row {
+  background-color: #1c1c1c;
+  color: white;
+}
+
+.hover-effect:hover {
+  background-color: #414550;
+}

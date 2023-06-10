@@ -1,99 +1,11 @@
+<app-header></app-header>
 
-
-  <app-header></app-header>
-  <div class="content">
-    <router-outlet></router-outlet>
-
-
-    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rem amet, soluta magnam adipisci velit corrupti dicta
-    libero
-    iure? Ab natus fugit eligendi quis animi impedit commodi repudiandae cupiditate dolore nisi.
-
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis similique iusto fuga provident enim. Error
-    facere numquam iure quibusdam beatae recusandae tempora! Modi qui dolores tempora! Consequuntur perspiciatis
-    blanditiis ducimus?
-
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto molestias aspernatur nihil excepturi veniam,
-    odio
-    minima, debitis nobis eaque aperiam vitae illo autem doloribus placeat expedita ratione? Modi, consequuntur libero.
-
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore suscipit nisi officiis obcaecati voluptatem natus
-    consectetur incidunt mollitia delectus qui neque, voluptate necessitatibus libero magni! Et rem ad voluptatum
-    minima?
-
-    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rem amet, soluta magnam adipisci velit corrupti dicta
-    libero
-    iure? Ab natus fugit eligendi quis animi impedit commodi repudiandae cupiditate dolore nisi.
-
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis similique iusto fuga provident enim. Error
-    facere numquam iure quibusdam beatae recusandae tempora! Modi qui dolores tempora! Consequuntur perspiciatis
-    blanditiis ducimus?
-
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto molestias aspernatur nihil excepturi veniam,
-    odio
-    minima, debitis nobis eaque aperiam vitae illo autem doloribus placeat expedita ratione? Modi, consequuntur libero.
-
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore suscipit nisi officiis obcaecati voluptatem natus
-    consectetur incidunt mollitia delectus qui neque, voluptate necessitatibus libero magni! Et rem ad voluptatum
-    minima?
-    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rem amet, soluta magnam adipisci velit corrupti dicta
-    libero
-    iure? Ab natus fugit eligendi quis animi impedit commodi repudiandae cupiditate dolore nisi.
-
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis similique iusto fuga provident enim. Error
-    facere numquam iure quibusdam beatae recusandae tempora! Modi qui dolores tempora! Consequuntur perspiciatis
-    blanditiis ducimus?
-
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto molestias aspernatur nihil excepturi veniam,
-    odio
-    minima, debitis nobis eaque aperiam vitae illo autem doloribus placeat expedita ratione? Modi, consequuntur libero.
-
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore suscipit nisi officiis obcaecati voluptatem natus
-    consectetur incidunt mollitia delectus qui neque, voluptate necessitatibus libero magni! Et rem ad voluptatum
-    minima?
-    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rem amet, soluta magnam adipisci velit corrupti dicta
-    libero
-    iure? Ab natus fugit eligendi quis animi impedit commodi repudiandae cupiditate dolore nisi.
-
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis similique iusto fuga provident enim. Error
-    facere numquam iure quibusdam beatae recusandae tempora! Modi qui dolores tempora! Consequuntur perspiciatis
-    blanditiis ducimus?
-
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto molestias aspernatur nihil excepturi veniam,
-    odio
-    minima, debitis nobis eaque aperiam vitae illo autem doloribus placeat expedita ratione? Modi, consequuntur libero.
-
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore suscipit nisi officiis obcaecati voluptatem natus
-    consectetur incidunt mollitia delectus qui neque, voluptate necessitatibus libero magni! Et rem ad voluptatum
-    minima?
-    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rem amet, soluta magnam adipisci velit corrupti dicta
-    libero
-    iure? Ab natus fugit eligendi quis animi impedit commodi repudiandae cupiditate dolore nisi.
-
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis similique iusto fuga provident enim. Error
-    facere numquam iure quibusdam beatae recusandae tempora! Modi qui dolores tempora! Consequuntur perspiciatis
-    blanditiis ducimus?
-
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto molestias aspernatur nihil excepturi veniam,
-    odio
-    minima, debitis nobis eaque aperiam vitae illo autem doloribus placeat expedita ratione? Modi, consequuntur libero.
-
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore suscipit nisi officiis obcaecati voluptatem natus
-    consectetur incidunt mollitia delectus qui neque, voluptate necessitatibus libero magni! Et rem ad voluptatum
-    minima?
-    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rem amet, soluta magnam adipisci velit corrupti dicta
-    libero
-    iure? Ab natus fugit eligendi quis animi impedit commodi repudiandae cupiditate dolore nisi.
-
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis similique iusto fuga provident enim. Error
-    facere numquam iure quibusdam beatae recusandae tempora! Modi qui dolores tempora! Consequuntur perspiciatis
-    blanditiis ducimus?
-
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto molestias aspernatur nihil excepturi veniam,
-    odio
-    minima, debitis nobis eaque aperiam vitae illo autem doloribus placeat expedita ratione? Modi, consequuntur libero.
-
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore suscipit nisi officiis obcaecati voluptatem natus
-    consectetur incidunt mollitia delectus qui neque, voluptate necessitatibus libero magni! Et rem ad voluptatum
-    minima?
-  </div>
+<mat-drawer-container class="drawer-container" (backdropClick)="this.backdropClick()">
+  <mat-drawer #drawer mode="over" [opened]="this.drawerService.opened" position="end" autoFocus="false">I'm a drawer</mat-drawer>
+  <mat-drawer-content class="content">
+    <div class="content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>
+<app-footer></app-footer>

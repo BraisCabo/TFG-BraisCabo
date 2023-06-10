@@ -1,0 +1,32 @@
+<mat-grid-list cols="1" rowHeight="76vh">
+  <mat-grid-tile class="container">
+    <mat-card style="background-color: rgba(255, 255, 255, 0.7);" class="card-container">
+      <mat-card-header class="logo-container">
+        <div class="image-wrapper">
+          <img src="assets/images/logo_aula.svg" class="logo-image">
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div>
+          <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input matInput placeholder="pat@example.com" [(ngModel)]="email">
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field>
+            <mat-label>Introduce tu contraseña</mat-label>
+            <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="password">
+            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hide">
+              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+      <mat-card-actions style="justify-content: center;">
+        <button (click)="login()" mat-raised-button color="primary">Login</button>
+      </mat-card-actions>
+    </mat-card>
+  </mat-grid-tile>
+</mat-grid-list>
