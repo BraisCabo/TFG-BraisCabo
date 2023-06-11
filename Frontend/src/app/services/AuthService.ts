@@ -12,7 +12,7 @@ interface UserCredentials {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private currentUser: User = new User();
+  private currentUser!: User;
   private logged: boolean = false;
 
   constructor(private http: HttpClient) {
@@ -48,5 +48,9 @@ export class AuthService {
 
   private getMe(): Observable<User> {
     return this.http.get('/api/users/me') as Observable<User>;
+  }
+
+  isAdmin(): boolean {
+    return this.currentUser.roles.includes("ADMIN");
   }
 }

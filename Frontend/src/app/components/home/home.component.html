@@ -1,0 +1,6 @@
+<div *ngIf="this.isAdmin(); else noAdmin">
+  <app-admin-home></app-admin-home>
+</div>
+<ng-template #noAdmin>
+  <app-user-home></app-user-home>
+</ng-template>

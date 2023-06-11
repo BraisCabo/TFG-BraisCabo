@@ -24,7 +24,7 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-    @PostMapping("/subjects")
+    @PostMapping("/subjects/")
     public ResponseEntity<Subject> createSubject(@RequestBody SubjectDTO subjectDTO) {
         UriComponentsBuilder path = fromCurrentRequest().path("/{id}");
         return adminService.createSubject(subjectDTO, path);

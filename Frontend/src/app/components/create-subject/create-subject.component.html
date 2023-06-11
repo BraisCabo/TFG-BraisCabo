@@ -1,0 +1,62 @@
+<mat-grid-list cols="1">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title><span class="title">Nombre</span></mat-card-title>
+      <mat-card-subtitle>Selecciona el nombre de la asignatura</mat-card-subtitle>
+    </mat-card-header>
+    <br>
+    <mat-card-content>
+      <mat-form-field style="width: 100%;">
+        <mat-label>Nombre de la asignatura</mat-label>
+        <input matInput [formControl]="name" required>
+        <mat-error *ngIf="name.invalid">{{getErrorMessage()}}</mat-error>
+      </mat-form-field>
+    </mat-card-content>
+  </mat-card>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title><span class="title">Profesores</span></mat-card-title>
+        <mat-card-subtitle>Selecciona a los profesores que van a impartir la asignatura</mat-card-subtitle>
+      </mat-card-header>
+      <br>
+      <mat-card-content>
+        <mat-list *ngIf="this.allUsers.length > 0; else noTeachers">
+        <mat-divider></mat-divider>
+        <div  *ngFor="let teacher of this.allUsers">
+        <mat-list-item [disabled]="this.isStudent(teacher)">
+          <mat-checkbox [checked]="this.isTeacher(teacher)" [disabled]="this.isStudent(teacher)" (change)="addTeacher(teacher)"></mat-checkbox>
+            {{teacher.name}} {{teacher.lastName}}
+        </mat-list-item>
+        <mat-divider></mat-divider>
+      </div>
+      </mat-list>
+      <ng-template #noTeachers>
+        No hay profesores disponibles
+      </ng-template>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title><span class="title">Estudiantes</span></mat-card-title>
+        <mat-card-subtitle>Selecciona a los estudiantes que están matriculados en la asignatura</mat-card-subtitle>
+      </mat-card-header>
+      <br>
+      <mat-card-content>
+        <mat-list *ngIf="this.allUsers.length > 0; else noStudents">
+        <mat-divider></mat-divider>
+        <div  *ngFor="let student of this.allUsers">
+        <mat-list-item [disabled]="this.isTeacher(student)">
+          <mat-checkbox [checked]="this.isStudent(student)" [disabled]="this.isTeacher(student)" (change)="addStudent(student)" ></mat-checkbox>
+            {{student.name}} {{student.lastName}}
+        </mat-list-item>
+        <mat-divider></mat-divider>
+      </div>
+      </mat-list>
+      <ng-template #noStudents>
+        No hay estudiantes disponibles
+      </ng-template>
+      </mat-card-content>
+    </mat-card>
+    <button [disabled]="!canCreateSubject()" mat-raised-button color="primary" (click)="createSubject()">Crear Asignatura</button>
+</mat-grid-list>

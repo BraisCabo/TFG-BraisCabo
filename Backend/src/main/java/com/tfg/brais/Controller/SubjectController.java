@@ -31,12 +31,12 @@ public class SubjectController {
         return this.subjectService.findById(id);
     }
 
-    @GetMapping("/{id}/students")
+    @GetMapping("/{id}/students/")
     public ResponseEntity<List<User>> findAllStudents(@PathVariable long id, HttpServletRequest request){
         return this.subjectService.findAllStudents(id, request.getUserPrincipal());
     }
 
-    @GetMapping("/{id}/teachers")
+    @GetMapping("/{id}/teachers/")
     public ResponseEntity<List<User>> findAllTeachers(@PathVariable long id, HttpServletRequest request){
         return this.subjectService.findAllTeachers(id, request.getUserPrincipal());
     }

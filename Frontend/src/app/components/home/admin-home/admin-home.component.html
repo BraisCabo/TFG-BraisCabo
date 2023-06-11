@@ -1,0 +1,24 @@
+
+<mat-grid-list cols="1">
+  <button mat-raised-button color="primary" [routerLink]="['/newSubject']">  <mat-icon>add</mat-icon> Nueva asignatura</button>
+  <mat-card *ngFor="let subject of this.subjects">
+    <mat-card-header>
+      <mat-card-title style="font-size: x-large;">
+        {{subject.name}}
+      </mat-card-title>
+      <mat-card-subtitle>
+          {{this.getTeachers(subject)}}
+          <br>
+          {{this.getStudents(subject)}}
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-actions align="end">
+      <button mat-icon-button color="primary" (click)="deleteSubject(subject)">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <button mat-icon-button color="primary">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</mat-grid-list>

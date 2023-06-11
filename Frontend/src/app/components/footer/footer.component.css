@@ -2,3 +2,9 @@
   background-color: #1a1a1a;
   color: white;
 }
+
+mat-grid-list{
+  padding: unset;
+  border: unset;
+  margin : unset;
+}

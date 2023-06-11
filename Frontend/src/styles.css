@@ -16,3 +16,12 @@ mat-drawer-container{
   margin: 0;
   padding: 0;
 }
+
+mat-grid-list{
+  padding: 0;
+  border: 0;
+  margin-top: 3vh;
+  margin-bottom: 2vh;
+  margin-left: 2vw;
+  margin-right: 2vw;
+}
