@@ -18,17 +18,20 @@ import { LoginComponent } from './components/login/login.component';
 import { FooterComponent } from './components/footer/footer.component';
 import {MatCardModule} from '@angular/material/card';
 import {MatInputModule} from '@angular/material/input';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {MatDialogModule} from '@angular/material/dialog';
 import { HomeComponent } from './components/home/home.component';
 import { AdminHomeComponent } from './components/home/admin-home/admin-home.component';
 import { UserHomeComponent } from './components/home/user-home/user-home.component';
-import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import { MatSnackBarModule} from '@angular/material/snack-bar';
 import { CreateSubjectComponent } from './components/create-subject/create-subject.component';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatListModule} from '@angular/material/list';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import { FormControl } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SubjectEditingDialog } from './components/edit-subject/edit-subject.component';
+import { SubjectPageAdminComponent } from './components/subject-page-admin/subject-page-admin.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import {MatMenuModule} from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -39,7 +42,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     HomeComponent,
     AdminHomeComponent,
     UserHomeComponent,
-    CreateSubjectComponent
+    CreateSubjectComponent,
+    SubjectEditingDialog,
+    SubjectPageAdminComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +66,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatDividerModule,
     MatListModule,
     MatCheckboxModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatPaginatorModule,
+    MatMenuModule
   ],
   providers: [],
   bootstrap: [AppComponent]

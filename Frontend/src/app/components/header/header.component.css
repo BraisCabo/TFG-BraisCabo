@@ -12,6 +12,10 @@
   background-color: #414550;
 }
 
+.hover-effect-red:hover {
+  background-color: #d96060;
+}
+
 mat-grid-list{
   padding: unset;
   border: unset;

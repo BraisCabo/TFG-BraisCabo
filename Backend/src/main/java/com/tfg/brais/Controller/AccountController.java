@@ -1,6 +1,8 @@
 package com.tfg.brais.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
-
-import java.util.List;
 
 import com.tfg.brais.Model.User;
 import com.tfg.brais.Service.AccountService;
@@ -36,8 +36,8 @@ public class AccountController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<User>> findAll() {
-        return this.accountService.findAll();
+    public ResponseEntity<Page<User>> findAll(String name, int page, int size) {
+        return this.accountService.findAll(PageRequest.of(page, size), name);
     }
 
     @GetMapping("/me")

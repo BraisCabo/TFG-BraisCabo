@@ -1,9 +1,10 @@
 package com.tfg.brais.Service;
 
 import java.security.Principal;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -60,10 +61,13 @@ public class AccountService {
                 .headers(userService.generateFreshToken(user.getEmail())).body(user);
     }
 
-    public ResponseEntity<List<User>> findAll() {
-        List<User> list = userRepository.findAll();
-        if (list.isEmpty()) {
-            return new ResponseEntity<List<User>>(HttpStatusCode.valueOf(404));
+    public ResponseEntity<Page<User>> findAll(PageRequest pageRequest, String name) {
+        if (name == null){
+            name = "";
+        }
+        Page<User> list = userRepository.findAllByName(name, pageRequest);
+        if (!list.hasContent()) {
+            return new ResponseEntity<Page<User>>(HttpStatusCode.valueOf(404));
         } else {
             return ResponseEntity.ok(list);
         }

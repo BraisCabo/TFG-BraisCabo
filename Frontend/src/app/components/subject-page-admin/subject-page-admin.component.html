@@ -1,0 +1,72 @@
+<mat-grid-list cols="1">
+  <div style="display: flex; justify-content: flex-end; margin-top: 2vh;">
+  <button mat-icon-button color="primary" (click)="closeDialog()" style="margin-bottom: 2vh;">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<span class="title">{{name}}</span>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title><span class="title">Profesores</span></mat-card-title>
+      </mat-card-header>
+      <br>
+      <mat-card-content>
+        <mat-form-field appearance="fill">
+          <mat-label>Buscar</mat-label>
+          <input matInput [(ngModel)]="this.teachersName">
+          <button mat-icon-button color="primary" (click)="this.searchTeachers()" matSuffix>
+            <mat-icon>search</mat-icon>
+          </button>
+        </mat-form-field>
+        <br>
+        <mat-list *ngIf="this.teachers.length > 0; else noTeachers">
+        <mat-divider></mat-divider>
+        <div  *ngFor="let teacher of this.teachers">
+        <mat-list-item>
+            {{teacher.name}} {{teacher.lastName}}
+        </mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-paginator #paginator class="demo-paginator" (page)="handlePageEventTeachers($event)" [length]="totalSizeT"
+          [pageSize]="teacherPageSize" [pageSizeOptions]="[5, 10, 25]">
+        </mat-paginator>
+      </div>
+      </mat-list>
+      <ng-template #noTeachers>
+        No hay profesores en esta asignatura
+      </ng-template>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title><span class="title">Estudiantes</span></mat-card-title>
+      </mat-card-header>
+      <br>
+      <mat-card-content>
+        <mat-form-field appearance="fill">
+          <mat-label>Buscar</mat-label>
+          <input matInput [(ngModel)]="this.studentsName">
+          <button mat-icon-button color="primary" (click)="this.searchStudents()" matSuffix>
+            <mat-icon>search</mat-icon>
+          </button>
+        </mat-form-field>
+        <br>
+        <mat-list *ngIf="this.students.length > 0; else noStudents">
+        <mat-divider></mat-divider>
+        <div  *ngFor="let student of this.students">
+        <mat-list-item>
+         {{student.name}} {{student.lastName}}
+        </mat-list-item>
+        <mat-divider></mat-divider>
+      </div>
+      <mat-paginator #paginator class="demo-paginator" (page)="handlePageEventStudents($event)" [length]="totalSizeS"
+          [pageSize]="studentPageSize" [pageSizeOptions]="[5, 10, 25]">
+        </mat-paginator>
+      </mat-list>
+      <ng-template #noStudents>
+        No hay estudiantes disponibles
+      </ng-template>
+      </mat-card-content>
+    </mat-card>
+    <button mat-raised-button color="primary" (click)="closeDialog()">Cerrar</button>
+</mat-grid-list>

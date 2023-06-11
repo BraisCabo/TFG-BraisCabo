@@ -53,4 +53,10 @@ export class AuthService {
   isAdmin(): boolean {
     return this.currentUser.roles.includes("ADMIN");
   }
+
+  logout() {
+    this.logged = false;
+    this.currentUser = null as any;
+    this.http.post(BASE_URL + 'logout', {}).subscribe();
+  }
 }

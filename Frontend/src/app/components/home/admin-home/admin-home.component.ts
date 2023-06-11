@@ -4,6 +4,9 @@ import { SubjectService } from 'src/app/services/SubjectService';
 import { ConfirmDialog } from '../../dialogs/ConfirmDialog';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SubjectEditingDialog } from '../../edit-subject/edit-subject.component';
+import { SubjectPageAdminComponent } from '../../subject-page-admin/subject-page-admin.component';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-admin-home',
@@ -12,6 +15,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class AdminHomeComponent {
   subjects: Subject[] = [];
+  totalSize: number = 0;
+  page: number = 0;
+  pageSize: number = 5;
+  name: string = '';
 
   constructor(
     private subjectService: SubjectService,
@@ -22,9 +29,25 @@ export class AdminHomeComponent {
   }
 
   loadSubjects() {
-    this.subjectService.getAllSubjects().subscribe((data: Subject[]) => {
-      this.subjects = data;
+    this.subjectService.getAllSubjects(this.name, this.page, this.pageSize).subscribe((data: any) => {
+      this.totalSize = data.totalElements;
+      this.subjects = data.content;
+    },
+    _ => {
+      this.totalSize = 0;
+      this.subjects = [];
     });
+  }
+
+  searchSubjects() {
+    this.page = 0;
+    this.loadSubjects();
+  }
+
+  handlePageEventSubjects(e: PageEvent) {
+    this.pageSize = e.pageSize;
+    this.page = e.pageIndex;
+    this.loadSubjects()
   }
 
   getTeachers(subject: Subject): String {
@@ -65,12 +88,12 @@ export class AdminHomeComponent {
   }
 
   deleteSubject(subject: Subject) {
-    this.openDialog(subject);
+    this.openDialogDelete(subject);
   }
 
-  openDialog(subject: Subject): void {
+  openDialogDelete(subject: Subject): void {
     let dialogRef = this.dialog.open(ConfirmDialog, {
-      data: { message: "¿Borrar la asignatura " + subject.name +"?" },
+      data: { message: '¿Borrar la asignatura ' + subject.name + '?' },
       width: '250px',
     });
 
@@ -78,22 +101,54 @@ export class AdminHomeComponent {
       if (result) {
         this.subjectService.deleteSubjectById(subject.id).subscribe(
           (_) => {
-            this.loadSubjects()
-            this.openSnackBar("Asignatura " + subject.name + " eliminada.");
+            this.loadSubjects();
+            this.openSnackBar('Asignatura ' + subject.name + ' eliminada.');
           },
           (_) => {
-            this.openSnackBar("Error al eliminar la asignatura " + subject.name + ".")
+            this.openSnackBar(
+              'Error al eliminar la asignatura ' + subject.name + '.'
+            );
           }
         );
       }
     });
   }
 
+  openDialogEdit(subject: Subject): void {
+    let dialogRef = this.dialog.open(SubjectEditingDialog, {
+      data: { id: subject.id },
+      width: '90%',
+      height: '90%',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadSubjects();
+      }
+    });
+  }
+
+  viewSubject(subject: Subject) {
+    this.openDialogView(subject);
+  }
+
+  openDialogView(subject: Subject): void {
+    this.dialog.open(SubjectPageAdminComponent, {
+      data: { id: subject.id },
+      width: '90%',
+      height: '90%',
+    });
+  }
+
+  editSubject(subject: Subject) {
+    this.openDialogEdit(subject);
+  }
+
   openSnackBar(message: string) {
-    this._snackBar.open(message, "Aceptar", {
-      horizontalPosition: "center",
-      verticalPosition: "top",
-      duration: 5000
+    this._snackBar.open(message, 'Aceptar', {
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      duration: 5000,
     });
   }
 

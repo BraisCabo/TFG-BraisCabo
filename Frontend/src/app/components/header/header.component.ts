@@ -27,4 +27,17 @@ export class HeaderComponent {
   navigateToLogin(){
     this.router.navigate(['/login']);
   }
+
+  userName(){
+    return this.authService.getCurrentUser().name;
+  }
+
+  isAdmin(){
+    return this.authService.isAdmin();
+  }
+
+  logout(){
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 }

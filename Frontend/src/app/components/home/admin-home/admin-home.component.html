@@ -1,24 +1,45 @@
-
 <mat-grid-list cols="1">
-  <button mat-raised-button color="primary" [routerLink]="['/newSubject']">  <mat-icon>add</mat-icon> Nueva asignatura</button>
-  <mat-card *ngFor="let subject of this.subjects">
-    <mat-card-header>
-      <mat-card-title style="font-size: x-large;">
-        {{subject.name}}
-      </mat-card-title>
-      <mat-card-subtitle>
+  <button mat-raised-button color="primary" [routerLink]="['/newSubject']" style="margin-bottom: 2vh;"> <mat-icon>add</mat-icon> Nueva
+    asignatura</button>
+    <br>
+    <mat-form-field appearance="fill">
+      <mat-label>Buscar</mat-label>
+      <input matInput [(ngModel)]="this.name">
+      <button mat-icon-button color="primary" (click)="this.searchSubjects()" matSuffix>
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
+  <div *ngIf="this.subjects.length > 0; else noSubjects">
+    <mat-card *ngFor="let subject of this.subjects">
+      <mat-card-header>
+        <mat-card-title style="font-size: x-large;">
+          {{subject.name}}
+        </mat-card-title>
+        <mat-card-subtitle>
           {{this.getTeachers(subject)}}
           <br>
           {{this.getStudents(subject)}}
-      </mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-actions align="end">
-      <button mat-icon-button color="primary" (click)="deleteSubject(subject)">
-        <mat-icon>delete</mat-icon>
-      </button>
-      <button mat-icon-button color="primary">
-        <mat-icon>edit</mat-icon>
-      </button>
-    </mat-card-actions>
-  </mat-card>
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions align="end">
+        <button mat-icon-button color="primary" (click)="viewSubject(subject)">
+          <mat-icon>remove_red_eye</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" (click)="editSubject(subject)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" (click)="deleteSubject(subject)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+    <mat-paginator #paginator class="demo-paginator" (page)="handlePageEventSubjects($event)" [length]="totalSize"
+      [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 25]">
+    </mat-paginator>
+  </div>
+  <ng-template #noSubjects style="margin-top: 2vh;">
+    <div>
+      No se han encontrado asignaturas
+    </div>
+  </ng-template>
 </mat-grid-list>

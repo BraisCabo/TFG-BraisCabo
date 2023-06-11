@@ -4,6 +4,8 @@ import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,12 +23,12 @@ public class SubjectService {
     @Autowired
     private AccountService accountService;
 
-    public ResponseEntity<List<Subject>> findAll(){
-        List<Subject> list = subjectRepository.findAll();
-        if (list.isEmpty()){
-            return new ResponseEntity<List<Subject>>(HttpStatusCode.valueOf(404));
+    public ResponseEntity<Page<Subject>> findAll(String name, PageRequest pageRequest){
+        Page<Subject> page = subjectRepository.findAllByName(name, pageRequest);
+        if (!page.hasContent()){
+            return new ResponseEntity<Page<Subject>>(HttpStatusCode.valueOf(404));
         }else{
-            return ResponseEntity.ok(list);
+            return ResponseEntity.ok(page);
         }
     }
 
@@ -38,7 +40,7 @@ public class SubjectService {
          }
     }
 
-    private ResponseEntity<List<User>> checkIfCanSee(long id, Principal userPrincipal){
+    private ResponseEntity<Page<User>> checkIfCanSee(long id, Principal userPrincipal){
         if (userPrincipal == null){
             return new ResponseEntity<>(HttpStatusCode.valueOf(403));
         }
@@ -65,32 +67,38 @@ public class SubjectService {
             return new ResponseEntity<>(HttpStatusCode.valueOf(200));
     }
 
-    public ResponseEntity<List<User>> findAllStudents(long id, Principal userPrincipal) {
-        ResponseEntity<List<User>> response = checkIfCanSee(id, userPrincipal);
+    public ResponseEntity<Page<User>> searchStudents(long id, Principal userPrincipal, String name, PageRequest pageRequest) {
+        if (name == null){
+            name = "";
+        }
+        ResponseEntity<Page<User>> response = checkIfCanSee(id, userPrincipal);
         if (response.getStatusCode().is4xxClientError()){
             return response;
         }
 
-        Subject subject = subjectRepository.findById(id).get();
+        Page<User> page = subjectRepository.findAllStudentBySubjectIdAndName(id, name, pageRequest);
 
-        if (subject.getStudents().isEmpty()){
-            return new ResponseEntity<List<User>>(HttpStatusCode.valueOf(404));
+        if (!page.hasContent()){
+            return new ResponseEntity<Page<User>>(HttpStatusCode.valueOf(404));
         }
-        return ResponseEntity.ok(subject.getStudents());
+        return ResponseEntity.ok(page);
 
     }
 
-    public ResponseEntity<List<User>> findAllTeachers(long id, Principal userPrincipal) {
-        ResponseEntity<List<User>> response = checkIfCanSee(id, userPrincipal);
+    public ResponseEntity<Page<User>> searchTeachers(long id, Principal userPrincipal, String name, PageRequest pageRequest) {
+        if (name == null){
+            name = "";
+        }
+        ResponseEntity<Page<User>> response = checkIfCanSee(id, userPrincipal);
         if (response.getStatusCode().is4xxClientError()){
             return response;
         }
 
-        Subject subject = subjectRepository.findById(id).get();
+        Page<User> page = subjectRepository.findAllTeachersBySubjectIdAndName(id, name, pageRequest);
 
-        if (subject.getTeachers().isEmpty()){
-            return new ResponseEntity<List<User>>(HttpStatusCode.valueOf(404));
+        if (!page.hasContent()){
+            return new ResponseEntity<Page<User>>(HttpStatusCode.valueOf(404));
         }
-        return ResponseEntity.ok(subject.getTeachers());
+        return ResponseEntity.ok(page);
     }
 }

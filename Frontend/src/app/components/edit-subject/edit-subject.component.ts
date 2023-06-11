@@ -1,25 +1,28 @@
 import { BooleanInput } from '@angular/cdk/coercion';
-import { Component } from '@angular/core';
-
-import { User } from 'src/app/models/User';
-import { UserService } from 'src/app/services/UserService';
-import {PageEvent} from '@angular/material/paginator';
+import { Component, Inject } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import {
-  FormControl,
-  Validators
-} from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialog } from '../dialogs/ConfirmDialog';
-import { SubjectService } from 'src/app/services/SubjectService';
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { User } from 'src/app/models/User';
+import { SubjectService } from 'src/app/services/SubjectService';
+import { UserService } from 'src/app/services/UserService';
+import { ConfirmDialog } from '../dialogs/ConfirmDialog';
+import { Subject } from 'src/app/models/Subject';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
-  selector: 'app-create-subject',
-  templateUrl: './create-subject.component.html',
-  styleUrls: ['./create-subject.component.css'],
+  selector: 'dialog-animations-example-dialog',
+  templateUrl: 'edit-subject.component.html',
+  styleUrls: ['./edit-subject.component.css'],
+
 })
-export class CreateSubjectComponent {
+export class SubjectEditingDialog {
+  id: number;
   teachers: Number[] = [];
   students: Number[] = [];
   allUsersT: User[] = [];
@@ -36,13 +39,19 @@ export class CreateSubjectComponent {
   studentsName : string = ''
 
   constructor(
+    @Inject(MAT_DIALOG_DATA) public data: { id: number },
+    public dialogRef: MatDialogRef<SubjectEditingDialog>,
     private userService: UserService,
     private dialog: MatDialog,
     private subjectService: SubjectService,
-    private _snackBar: MatSnackBar,
-    private router: Router
-
+    private _snackBar: MatSnackBar
   ) {
+    this.id = data.id;
+    this.subjectService.getSubjectById(this.id).subscribe((data: Subject) => {
+      this.name.setValue(data.name.toString());
+      this.teachers = data.teachers.map((teacher) => teacher.id);
+      this.students = data.students.map((student) => student.id);
+    });
     this.loadUsersTeachers()
     this.loadUsersStudents()
   }
@@ -70,6 +79,10 @@ export class CreateSubjectComponent {
     });
   }
 
+  closeDialog(event: boolean) {
+    this.dialogRef.close(event);
+  }
+
   isTeacher(user: User): BooleanInput {
     return this.teachers.includes(user.id);
   }
@@ -94,50 +107,6 @@ export class CreateSubjectComponent {
     }
   }
 
-  getErrorMessage() {
-    return 'No puedes dejar este campo vacío';
-  }
-
-  canCreateSubject(): BooleanInput {
-    return this.name.valid;
-  }
-
-  openDialog(): void {
-    let dialogRef = this.dialog.open(ConfirmDialog, {
-      data: { message: `¿Crear la asignatura ${this.name.value}?`},
-      width: '250px',
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.subjectService
-          .createSubject(this.name.value ?? '', this.students, this.teachers)
-          .subscribe(
-            (_) => {
-              this.router.navigate(['/']);
-            },
-            (_) => {
-              this.openSnackBar(
-                "No se ha podido crear la asignatura por que ya existe una con ese nombre"
-              );
-            }
-          );
-      }
-    });
-  }
-
-  openSnackBar(message: string) {
-    this._snackBar.open(message, "Aceptar", {
-      horizontalPosition: "center",
-      verticalPosition: "top",
-      duration: 5000
-    });
-  }
-
-  createSubject() {
-    this.openDialog()
-  }
-
   handlePageEventTeachers(e: PageEvent) {
     this.teacherPageSize = e.pageSize;
     this.teacherCurrentPage = e.pageIndex;
@@ -148,6 +117,54 @@ export class CreateSubjectComponent {
     this.studentPageSize = e.pageSize;
     this.studentCurrentPage = e.pageIndex;
     this.loadUsersStudents()
+  }
+
+  getErrorMessage() {
+    return 'No puedes dejar este campo vacío';
+  }
+
+  canEditSubject(): BooleanInput {
+    return this.name.valid;
+  }
+
+  openDialog(): void {
+    let dialogRef = this.dialog.open(ConfirmDialog, {
+      data: { message: `¿Editar la asignatura ${this.name.value}?` },
+      width: '250px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.subjectService
+          .editSubject(this.name.value ?? '', this.students, this.teachers, this.id)
+          .subscribe(
+            (_) => {
+              this.closeDialog(true);
+            },
+            (_) => {
+              this.openSnackBar(
+                'No se ha podido editar la asignatura por que ya existe una con ese nombre'
+              );
+            }
+          );
+      }
+    });
+  }
+
+  openSnackBar(message: string) {
+    this._snackBar.open(message, 'Aceptar', {
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      duration: 5000,
+    });
+  }
+
+  editSubject() {
+    this.openDialog();
+  }
+
+  cancellEdition(){
+    this.closeDialog(false);
   }
 
   searchTeachers(){

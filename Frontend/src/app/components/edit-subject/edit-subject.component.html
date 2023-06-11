@@ -1,4 +1,9 @@
 <mat-grid-list cols="1">
+  <div style="display: flex; justify-content: flex-end; margin-top: 2vh;">
+    <button mat-icon-button color="primary" (click)="cancellEdition()" style="margin-bottom: 2vh;">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
   <mat-card>
     <mat-card-header>
       <mat-card-title><span class="title">Nombre</span></mat-card-title>
@@ -64,7 +69,6 @@
       </mat-form-field>
       <br>
       <mat-list *ngIf="this.allUsersS.length > 0; else noStudents">
-
         <mat-divider></mat-divider>
         <div *ngFor="let student of this.allUsersS">
           <mat-list-item [disabled]="this.isTeacher(student)">
@@ -83,7 +87,7 @@
       </ng-template>
     </mat-card-content>
   </mat-card>
-  <button [disabled]="!canCreateSubject()" mat-raised-button color="primary" (click)="createSubject()"
-    style="margin-right: 2vw;">Crear Asignatura</button>
-  <button mat-raised-button color="primary" [routerLink]="['/']">Cancelar</button>
+  <button [disabled]="!canEditSubject()" mat-raised-button color="primary" (click)="editSubject()"
+    style="margin-right: 2vw;">Editar Asignatura</button>
+  <button mat-raised-button color="primary" (click)="cancellEdition()">Cancelar</button>
 </mat-grid-list>

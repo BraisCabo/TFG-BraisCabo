@@ -3,6 +3,8 @@ package com.tfg.brais.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,8 +24,8 @@ public class SubjectController {
     private SubjectService subjectService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Subject>> findAll(){
-        return subjectService.findAll();
+    public ResponseEntity<Page<Subject>> findAll(String name, int page, int size){
+        return subjectService.findAll(name, PageRequest.of(page, size));
     }
 
     @GetMapping("/{id}")
@@ -32,12 +34,12 @@ public class SubjectController {
     }
 
     @GetMapping("/{id}/students/")
-    public ResponseEntity<List<User>> findAllStudents(@PathVariable long id, HttpServletRequest request){
-        return this.subjectService.findAllStudents(id, request.getUserPrincipal());
+    public ResponseEntity<Page<User>> findAllStudents(@PathVariable long id, HttpServletRequest request, String name, int page, int size){
+        return this.subjectService.searchStudents(id, request.getUserPrincipal(), name, PageRequest.of(page, size));
     }
 
     @GetMapping("/{id}/teachers/")
-    public ResponseEntity<List<User>> findAllTeachers(@PathVariable long id, HttpServletRequest request){
-        return this.subjectService.findAllTeachers(id, request.getUserPrincipal());
+    public ResponseEntity<Page<User>> findAllTeachers(@PathVariable long id, HttpServletRequest request, String name, int page, int size){
+        return this.subjectService.searchTeachers(id, request.getUserPrincipal(), name, PageRequest.of(page, size));
     }
 }
