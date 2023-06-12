@@ -33,7 +33,7 @@
     </button>
   </div>
     <ng-template #noLogged>
-      <button mat-button color="basic" (click)="this.navigateToRegister()" class="hover-effect" >
+      <button mat-button color="basic" [routerLink]="['/register']" class="hover-effect" >
         Registro
       </button>
       <button mat-button color="basic" (click)="this.navigateToLogin()" class="hover-effect">

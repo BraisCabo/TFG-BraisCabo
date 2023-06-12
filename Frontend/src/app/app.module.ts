@@ -32,6 +32,7 @@ import { SubjectEditingDialog } from './components/edit-subject/edit-subject.com
 import { SubjectPageAdminComponent } from './components/subject-page-admin/subject-page-admin.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatMenuModule} from '@angular/material/menu';
+import { RegisterComponent } from './components/register/register.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import {MatMenuModule} from '@angular/material/menu';
     UserHomeComponent,
     CreateSubjectComponent,
     SubjectEditingDialog,
-    SubjectPageAdminComponent
+    SubjectPageAdminComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,

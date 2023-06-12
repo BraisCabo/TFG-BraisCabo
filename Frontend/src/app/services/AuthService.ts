@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../models/User';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, last, throwError } from 'rxjs';
 
 const BASE_URL = '/api/auth/';
 
@@ -10,8 +10,16 @@ interface UserCredentials {
   password: string;
 }
 
+interface UserRegister{
+  name: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+
   private currentUser!: User;
   private logged: boolean = false;
 
@@ -58,5 +66,15 @@ export class AuthService {
     this.logged = false;
     this.currentUser = null as any;
     this.http.post(BASE_URL + 'logout', {}).subscribe();
+  }
+
+  register(name: string, lastname: string, email: string, password: string) : Observable<User> {
+    const userRegister : UserRegister = {
+      name: name,
+      lastName: lastname,
+      email: email,
+      password: password
+    }
+    return this.http.post("/api/users/", userRegister) as Observable<User>;
   }
 }
