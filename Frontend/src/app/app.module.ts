@@ -33,6 +33,7 @@ import { SubjectPageAdminComponent } from './components/subject-page-admin/subje
 import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatMenuModule} from '@angular/material/menu';
 import { RegisterComponent } from './components/register/register.component';
+import { DrawerComponent } from './components/drawer/drawer.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { RegisterComponent } from './components/register/register.component';
     CreateSubjectComponent,
     SubjectEditingDialog,
     SubjectPageAdminComponent,
-    RegisterComponent
+    RegisterComponent,
+    DrawerComponent
   ],
   imports: [
     BrowserModule,

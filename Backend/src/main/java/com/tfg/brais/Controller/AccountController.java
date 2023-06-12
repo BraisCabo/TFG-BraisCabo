@@ -17,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 import com.tfg.brais.Model.User;
+import com.tfg.brais.Model.UserSubjectDTO;
 import com.tfg.brais.Service.AccountService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,6 +49,11 @@ public class AccountController {
     @PutMapping("/{id}")
     public ResponseEntity<User> editUser(HttpServletRequest request, @PathVariable long id, @RequestBody User user){
         return this.accountService.editUser(request.getUserPrincipal(), id, user);
+    }
+
+    @GetMapping("/{id}/subjects/")
+    public ResponseEntity<UserSubjectDTO> findAllSubjects(@PathVariable long id, HttpServletRequest request){
+        return this.accountService.findAllUserSubjects(id, request.getUserPrincipal());
     }
 
 }

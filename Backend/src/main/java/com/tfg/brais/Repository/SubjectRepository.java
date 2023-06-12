@@ -1,5 +1,6 @@
 package com.tfg.brais.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -29,4 +30,10 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
 
     @Query("SELECT s FROM Subject s WHERE LOWER(s.name) LIKE %?1%")
     Page<Subject> findAllByName(String name, Pageable pageable);
+
+    @Query("SELECT s FROM Subject s JOIN s.teachers u WHERE u.id = ?1")
+    List<Subject> findAllTeachedSubjects(Long teacherId);
+
+    @Query("SELECT s FROM Subject s JOIN s.students u WHERE u.id = ?1")
+    List<Subject> findAllStudiedSubjects(Long studentID);
 }

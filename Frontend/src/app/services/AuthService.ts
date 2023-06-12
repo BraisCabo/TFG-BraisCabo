@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../models/User';
-import { Observable, catchError, last, throwError } from 'rxjs';
+import { Observable, catchError, Observer, throwError } from 'rxjs';
 
 const BASE_URL = '/api/auth/';
 
@@ -77,4 +77,28 @@ export class AuthService {
     }
     return this.http.post("/api/users/", userRegister) as Observable<User>;
   }
+
+  currentUserObserver(): Observable<User> {
+    let userEmitted = false;
+
+    return new Observable((observer: Observer<User>) => {
+      if (this.currentUser && !userEmitted) {
+        observer.next(this.currentUser);
+        userEmitted = true;
+      }
+
+      const intervalId = setInterval(() => {
+        if (this.currentUser && !userEmitted) {
+          observer.next(this.currentUser);
+          userEmitted = true;
+        }
+      }, 1000);
+
+      return () => {
+        clearInterval(intervalId);
+      };
+    });
+  }
+
+
 }

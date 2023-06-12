@@ -6,12 +6,8 @@
     <div  *ngFor="let subject of this.teachedSubjects">
       <mat-card class="button-like-card"  (click)="goToSubject(subject)">
         <mat-card-content>
-          <span style="font-size: x-large;">
+          <span style="font-size: x-large; color: #cb0017">
             {{subject.name}}
-          </span>
-          <br>
-          <span style="color: grey;">
-            {{this.getTeachers(subject)}}
           </span>
         </mat-card-content>
       </mat-card>
@@ -24,13 +20,10 @@
     <div  *ngFor="let subject of this.studiedSubjects">
     <mat-card class="button-like-card"  (click)="goToSubject(subject)">
       <mat-card-content>
-        <span style="font-size: x-large;">
+        <span style="font-size: x-large; color: #cb0017">
           {{subject.name}}
         </span>
         <br>
-        <span style="color: grey;">
-          {{this.getTeachers(subject)}}
-        </span>
       </mat-card-content>
     </mat-card>
   </div>

@@ -1,7 +1,9 @@
 <app-header></app-header>
 
 <mat-drawer-container class="drawer-container" (backdropClick)="this.backdropClick()">
-  <mat-drawer #drawer mode="over" [opened]="this.drawerService.opened" position="end" autoFocus="false">I'm a drawer</mat-drawer>
+  <mat-drawer #drawer mode="over" [opened]="this.drawerService.opened" position="end" autoFocus="false">
+    <app-drawer></app-drawer>
+  </mat-drawer>
   <mat-drawer-content class="content">
     <div class="content-wrapper">
       <router-outlet></router-outlet>

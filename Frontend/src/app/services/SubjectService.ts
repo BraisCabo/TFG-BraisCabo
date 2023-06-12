@@ -53,5 +53,9 @@ export class SubjectService {
     return this.http.post(BASE_URL, subjectDTO) as Observable<Subject>;
   }
 
+  getUserSubject(id: Number) : Observable<any> {
+    return this.http.get("/api/users/" + id + "/subjects/") as Observable<any>;
+  }
+
 
 }

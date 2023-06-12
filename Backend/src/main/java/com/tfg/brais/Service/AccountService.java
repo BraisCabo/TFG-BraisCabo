@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.tfg.brais.Model.User;
+import com.tfg.brais.Model.UserSubjectDTO;
+import com.tfg.brais.Repository.SubjectRepository;
 import com.tfg.brais.Repository.UserRepository;
 import com.tfg.brais.security.jwt.Encoder;
 import com.tfg.brais.security.jwt.UserLoginService;
@@ -29,6 +31,9 @@ public class AccountService {
 
     @Autowired
     private UserLoginService userService;
+
+    @Autowired
+    private SubjectRepository subjectRepository;
 
     private boolean emailUsed(String email) {
         return this.userRepository.findByEmail(email).isPresent();
@@ -127,6 +132,28 @@ public class AccountService {
         userRepository.save(oldUser);
 
         return ResponseEntity.ok().headers(userService.generateFreshToken(user.getEmail())).body(oldUser);
+    }
+
+    public ResponseEntity<UserSubjectDTO> findAllUserSubjects(long id, Principal userPrincipal) {
+        if (userPrincipal == null) {
+            return new ResponseEntity<UserSubjectDTO>(HttpStatusCode.valueOf(403));
+        }
+        ResponseEntity<User> response = this.findByMail(userPrincipal.getName());
+
+        if (response.getStatusCode().is4xxClientError()) {
+            return new ResponseEntity<UserSubjectDTO>(HttpStatusCode.valueOf(404));
+        }
+
+        User user = response.getBody();
+
+        if (!user.getId().equals(id)) {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+
+        UserSubjectDTO userSubjectDTO = new UserSubjectDTO();
+        userSubjectDTO.setStudiedSubject(subjectRepository.findAllStudiedSubjects(user.getId()));
+        userSubjectDTO.setTeachedSubject(subjectRepository.findAllTeachedSubjects(user.getId()));
+        return ResponseEntity.ok(userSubjectDTO);
     }
 
 }
