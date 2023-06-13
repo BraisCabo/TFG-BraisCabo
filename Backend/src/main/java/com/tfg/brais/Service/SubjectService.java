@@ -39,7 +39,7 @@ public class SubjectService {
          }
     }
 
-    private ResponseEntity<Page<User>> checkIfCanSee(long id, Principal userPrincipal){
+    public ResponseEntity<Page<User>> checkIfCanSee(long id, Principal userPrincipal){
         if (userPrincipal == null){
             return new ResponseEntity<>(HttpStatusCode.valueOf(403));
         }
@@ -99,5 +99,13 @@ public class SubjectService {
             return new ResponseEntity<Page<User>>(HttpStatusCode.valueOf(404));
         }
         return ResponseEntity.ok(page);
+    }
+
+    public ResponseEntity<Boolean> isTeacherOfSubject(long userId, long subjectId){
+        try{
+            return ResponseEntity.ok(subjectRepository.countBySubjectIdAndTeacherId(subjectId, userId) > 0);
+        } catch (Exception e){
+            return new ResponseEntity<Boolean>(HttpStatusCode.valueOf(404));
+        }
     }
 }

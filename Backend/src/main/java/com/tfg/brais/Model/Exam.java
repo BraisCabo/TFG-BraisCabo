@@ -1,12 +1,16 @@
 package com.tfg.brais.Model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Entity
@@ -18,23 +22,34 @@ public class Exam {
 
     private String name;
 
-    private String type;
+    private String type = "UPLOAD";
 
-    private String calification;
-
-    private String lastCalificationPercentaje;
+    private String calificationPercentaje = "0";
 
     @ManyToOne
     private Subject subject;
 
-    @ManyToOne
-    private User user;
+    @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ExerciseUpload> exerciseUploads = new ArrayList<>();
 
-    private boolean isVisible;
+    private boolean visibleExam = true;
 
-    private boolean calificationVisible;
+    private boolean calificationVisible = true;
 
-    private LocalDateTime openingDate;
+    private LocalDateTime openingDate = LocalDateTime.now();
 
-    private LocalDateTime closingDate;
+    private LocalDateTime closingDate = LocalDateTime.now();
+
+    private List<String> questions = new ArrayList<>();
+
+    public void update(Exam exam) {
+        this.name = exam.getName();
+        this.calificationPercentaje = exam.getCalificationPercentaje();
+        this.visibleExam = exam.isVisibleExam();
+        this.calificationVisible = exam.isCalificationVisible();
+        this.openingDate = exam.getOpeningDate();
+        this.closingDate = exam.getClosingDate();
+    }
+
+
 }

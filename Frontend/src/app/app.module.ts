@@ -34,6 +34,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatMenuModule} from '@angular/material/menu';
 import { RegisterComponent } from './components/register/register.component';
 import { DrawerComponent } from './components/drawer/drawer.component';
+import { SubjectPageComponent } from './components/subject-page/subject-page.component';
+import { StudentPageComponent } from './components/subject-page/student-page/student-page.component';
+import { TeacherPageComponent } from './components/subject-page/teacher-page/teacher-page.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +51,10 @@ import { DrawerComponent } from './components/drawer/drawer.component';
     SubjectEditingDialog,
     SubjectPageAdminComponent,
     RegisterComponent,
-    DrawerComponent
+    DrawerComponent,
+    SubjectPageComponent,
+    StudentPageComponent,
+    TeacherPageComponent
   ],
   imports: [
     BrowserModule,
