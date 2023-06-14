@@ -18,7 +18,8 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 
 import com.tfg.brais.Model.User;
 import com.tfg.brais.Model.UserSubjectDTO;
-import com.tfg.brais.Service.AccountService;
+import com.tfg.brais.Service.ControllerServices.AccountService;
+import com.tfg.brais.Service.ControllerServices.UserSubjectService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -29,6 +30,9 @@ public class AccountController {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private UserSubjectService userSubjectService;
 
     @PostMapping("/")
     public ResponseEntity<User> register(@RequestBody User user) {
@@ -53,7 +57,7 @@ public class AccountController {
 
     @GetMapping("/{id}/subjects/")
     public ResponseEntity<UserSubjectDTO> findAllSubjects(@PathVariable long id, HttpServletRequest request){
-        return this.accountService.findAllUserSubjects(id, request.getUserPrincipal());
+        return this.userSubjectService.findAllUserSubjects(id, request.getUserPrincipal());
     }
 
 }

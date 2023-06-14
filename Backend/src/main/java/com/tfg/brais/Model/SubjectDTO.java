@@ -16,5 +16,5 @@ public class SubjectDTO {
         s.setName(name);
         return s;
     }
-    
+
 }

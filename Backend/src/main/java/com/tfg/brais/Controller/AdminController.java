@@ -15,7 +15,7 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 
 import com.tfg.brais.Model.Subject;
 import com.tfg.brais.Model.SubjectDTO;
-import com.tfg.brais.Service.AdminService;
+import com.tfg.brais.Service.ControllerServices.AdminService;
 
 @RequestMapping("/api")
 @RestController

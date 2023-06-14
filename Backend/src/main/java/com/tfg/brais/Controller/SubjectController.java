@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tfg.brais.Model.Subject;
 import com.tfg.brais.Model.User;
-import com.tfg.brais.Service.SubjectService;
+import com.tfg.brais.Service.ControllerServices.SubjectService;
+import com.tfg.brais.Service.ControllerServices.UserSubjectService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -20,6 +21,9 @@ import jakarta.servlet.http.HttpServletRequest;
 public class SubjectController {
     @Autowired
     private SubjectService subjectService;
+
+    @Autowired
+    private UserSubjectService userSubjectService;
 
     @GetMapping("/")
     public ResponseEntity<Page<Subject>> findAll(String name, int page, int size){
@@ -33,11 +37,11 @@ public class SubjectController {
 
     @GetMapping("/{id}/students/")
     public ResponseEntity<Page<User>> findAllStudents(@PathVariable long id, HttpServletRequest request, String name, int page, int size){
-        return this.subjectService.searchStudents(id, request.getUserPrincipal(), name, PageRequest.of(page, size));
+        return this.userSubjectService.searchStudents(id, request.getUserPrincipal(), name, PageRequest.of(page, size));
     }
 
     @GetMapping("/{id}/teachers/")
     public ResponseEntity<Page<User>> findAllTeachers(@PathVariable long id, HttpServletRequest request, String name, int page, int size){
-        return this.subjectService.searchTeachers(id, request.getUserPrincipal(), name, PageRequest.of(page, size));
+        return this.userSubjectService.searchTeachers(id, request.getUserPrincipal(), name, PageRequest.of(page, size));
     }
 }

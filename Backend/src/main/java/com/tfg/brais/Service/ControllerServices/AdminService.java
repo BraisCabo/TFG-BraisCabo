@@ -1,4 +1,4 @@
-package com.tfg.brais.Service;
+package com.tfg.brais.Service.ControllerServices;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import com.tfg.brais.Model.SubjectDTO;
 import com.tfg.brais.Model.User;
 import com.tfg.brais.Repository.SubjectRepository;
 import com.tfg.brais.Repository.UserRepository;
-
+import com.tfg.brais.Service.ComplementaryServices.SubjectCheckService;
 @Service
 public class AdminService {
 
@@ -21,17 +21,13 @@ public class AdminService {
     private SubjectRepository subjectRepository;
 
     @Autowired
-    private SubjectService subjectService;
-
-    @Autowired
     private UserRepository userRepository;
 
-    private boolean existSubject(String name){
-        return this.subjectRepository.findByName(name).isPresent();
-    }
+    @Autowired
+    private SubjectCheckService subjectCheckService;
 
     public ResponseEntity<Subject> createSubject(SubjectDTO subjectDTO, UriComponentsBuilder path){
-        if (existSubject(subjectDTO.getName()) || checkSubject(subjectDTO.getStudents(), subjectDTO.getTeachers())){
+        if (subjectCheckService.canCreateSubject(subjectDTO)){
             return new ResponseEntity<Subject>(HttpStatusCode.valueOf(403));
         }
         Subject subject = subjectDTO.generateSubject();
@@ -45,17 +41,8 @@ public class AdminService {
         return userRepository.findAllById(userList);
     }
 
-    public boolean checkSubject(List<Long> studentList, List<Long> teacherList){
-        for(Long id : teacherList){
-            if (studentList.contains(id)){
-                return true;
-            }
-        }
-        return false;
-    }
-
     public ResponseEntity<Subject> deleteById(long id){
-        ResponseEntity<Subject> response = subjectService.findById(id);
+        ResponseEntity<Subject> response = subjectCheckService.findById(id);
         if (response.getStatusCode().is2xxSuccessful()){
             subjectRepository.deleteById(id);
             return response;
@@ -64,17 +51,11 @@ public class AdminService {
     }
 
     public ResponseEntity<Subject> editSubject(long id, SubjectDTO subjectDto){
-        ResponseEntity<Subject> response = subjectService.findById(id);
+        ResponseEntity<Subject> response = subjectCheckService.canEditSubject(id, subjectDto);
         if (response.getStatusCode().is4xxClientError()){
             return response;
         }
-        if (checkSubject(subjectDto.getStudents(), subjectDto.getTeachers())){
-            return new ResponseEntity<Subject>(HttpStatusCode.valueOf(403));
-        }
         Subject subject = response.getBody();
-        if (existSubject(subjectDto.getName()) && !subject.getName().equals(subjectDto.getName())){
-            return new ResponseEntity<Subject>(HttpStatusCode.valueOf(403));
-        }
         subject.setName(subjectDto.getName());
         subject.setStudents(loadUsers(subjectDto.getStudents()));
         subject.setTeachers(loadUsers(subjectDto.getTeachers()));

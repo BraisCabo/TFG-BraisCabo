@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tfg.brais.Model.Exam;
-import com.tfg.brais.Service.ExamService;
+import com.tfg.brais.Service.ControllerServices.ExamService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
