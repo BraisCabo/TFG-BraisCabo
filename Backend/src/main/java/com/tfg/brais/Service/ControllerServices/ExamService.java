@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.tfg.brais.Model.Exam;
 import com.tfg.brais.Model.User;
@@ -90,13 +91,13 @@ public class ExamService {
         return ResponseEntity.ok(examToUpdate);
     }
 
-    public ResponseEntity<Exam> createExam(long id, Exam exam, Principal userPrincipal) {
+    public ResponseEntity<Exam> createExam(long id, Exam exam, Principal userPrincipal, UriComponentsBuilder uBuilder) {
         ResponseEntity<Exam> checkIfCanCreate = examCheckService.checkIfCanCreate(id, exam, userPrincipal);
         if (checkIfCanCreate.getStatusCode().is4xxClientError()) {
             return checkIfCanCreate;
         }
         exam.setSubject(subjectService.findById(id).getBody());
         examRepository.save(exam);
-        return ResponseEntity.ok(exam);
+        return ResponseEntity.created(uBuilder.buildAndExpand(exam.getId()).toUri()).body(exam);
     }
 }

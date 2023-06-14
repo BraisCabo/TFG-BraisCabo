@@ -27,6 +27,13 @@ public class UserSubjectService {
     @Autowired
     private SubjectCheckService subjectCheckService;
 
+    public UserSubjectService(UserCheckService userCheckService, SubjectRepository subjectRepository,
+            SubjectCheckService subjectCheckService) {
+        this.userCheckService = userCheckService;
+        this.subjectRepository = subjectRepository;
+        this.subjectCheckService = subjectCheckService;
+    }
+
     public ResponseEntity<UserSubjectDTO> findAllUserSubjects(long id, Principal userPrincipal) {
         ResponseEntity<User> userCheckResponse = userCheckService.loadUserPrincipal(id, userPrincipal);
 
@@ -38,6 +45,10 @@ public class UserSubjectService {
         UserSubjectDTO userSubjectDTO = new UserSubjectDTO();
         userSubjectDTO.setStudiedSubject(subjectRepository.findAllStudiedSubjects(user.getId()));
         userSubjectDTO.setTeachedSubject(subjectRepository.findAllTeachedSubjects(user.getId()));
+
+        if (userSubjectDTO.getStudiedSubject().isEmpty() && userSubjectDTO.getTeachedSubject().isEmpty()) {
+            return new ResponseEntity<UserSubjectDTO>(HttpStatusCode.valueOf(404));
+        }
         return ResponseEntity.ok(userSubjectDTO);
     }
 

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 import com.tfg.brais.Model.Exam;
 import com.tfg.brais.Service.ControllerServices.ExamService;
@@ -26,7 +27,7 @@ public class ExamController {
 
     @PostMapping("{id}/exams/")
     public ResponseEntity<Exam> createExam(@PathVariable long id, @RequestBody Exam exam, HttpServletRequest request){
-        return this.examService.createExam(id, exam, request.getUserPrincipal());
+        return this.examService.createExam(id, exam, request.getUserPrincipal(), fromCurrentRequest().path("/{id}"));
     }
 
     @GetMapping("{id}/exams/")

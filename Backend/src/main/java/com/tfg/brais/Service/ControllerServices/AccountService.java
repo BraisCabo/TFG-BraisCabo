@@ -31,8 +31,11 @@ public class AccountService {
     @Autowired
     private UserCheckService userCheckService;
 
-    public AccountService(UserRepository userRepository){
+    public AccountService(UserRepository userRepository, Encoder passwordEncoder, UserLoginService userLoginService, UserCheckService userCheckService) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.userLoginService = userLoginService;
+        this.userCheckService = userCheckService;
     }
 
     public ResponseEntity<User> register(User user, UriComponentsBuilder path) {

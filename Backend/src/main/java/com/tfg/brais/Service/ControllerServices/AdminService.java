@@ -26,8 +26,14 @@ public class AdminService {
     @Autowired
     private SubjectCheckService subjectCheckService;
 
+    public AdminService(SubjectRepository subjectRepository, UserRepository userRepository, SubjectCheckService subjectCheckService) {
+        this.subjectRepository = subjectRepository;
+        this.userRepository = userRepository;
+        this.subjectCheckService = subjectCheckService;
+    }
+
     public ResponseEntity<Subject> createSubject(SubjectDTO subjectDTO, UriComponentsBuilder path){
-        if (subjectCheckService.canCreateSubject(subjectDTO)){
+        if (!subjectCheckService.canCreateSubject(subjectDTO)){
             return new ResponseEntity<Subject>(HttpStatusCode.valueOf(403));
         }
         Subject subject = subjectDTO.generateSubject();
@@ -37,7 +43,7 @@ public class AdminService {
         return ResponseEntity.created(path.buildAndExpand(subject.getId()).toUri()).body(subject);
     }
 
-    public List<User> loadUsers(List<Long> userList){
+    private List<User> loadUsers(List<Long> userList){
         return userRepository.findAllById(userList);
     }
 
