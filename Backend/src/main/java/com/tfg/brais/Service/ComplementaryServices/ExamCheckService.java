@@ -1,5 +1,6 @@
 package com.tfg.brais.Service.ComplementaryServices;
 
+
 import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class ExamCheckService {
     }
 
     private ResponseEntity<Exam> checkIfCanCreateOrEdit(long id, Exam exam, Principal userPrincipal) {
-        ResponseEntity<User> userCheckResponse = userCheckService.loadUserPrincipal(id, userPrincipal);
+        ResponseEntity<User> userCheckResponse = userCheckService.loadUserNoCkeck(userPrincipal);
         if (userCheckResponse.getStatusCode().is4xxClientError()) {
             return new ResponseEntity<Exam>(userCheckResponse.getStatusCode());
         }
@@ -81,7 +82,7 @@ public class ExamCheckService {
     }
 
     public ResponseEntity<Exam> checkIfCanEdit(long id, long subjectId, Exam exam, Principal userPrincipal) {
-        ResponseEntity<Exam> checkIfCanCreateOrEdit = checkIfCanCreateOrEdit(id, exam, userPrincipal);
+        ResponseEntity<Exam> checkIfCanCreateOrEdit = checkIfCanCreateOrEdit(subjectId, exam, userPrincipal);
         if (checkIfCanCreateOrEdit.getStatusCode().is4xxClientError()) {
             return new ResponseEntity<Exam>(checkIfCanCreateOrEdit.getStatusCode());
         }

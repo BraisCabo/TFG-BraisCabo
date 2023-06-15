@@ -129,4 +129,20 @@ public class UserSubjectServiceTest {
 
     }
 
+    @Nested
+    public class isTeacherOfSubjectTest{
+
+                @Test
+                public void isTeacherOfSubjectIsntTeacher(){
+                    when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(false);
+                    assertTrue(userSubjectService.isTeacherOfSubject(1L, 1L).getStatusCode().is4xxClientError());
+                }
+
+                @Test
+                public void isTeacherOfSubjectIsTeacher(){
+                    when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(true);
+                    assertTrue(userSubjectService.isTeacherOfSubject(1L, 1L).getStatusCode().is2xxSuccessful());
+                }
+    }
+
 }

@@ -34,7 +34,7 @@ public class SubjectCheckService {
     }
     
 
-    public Boolean isTeacherOfSubject(long userId, long subjectId) {
+    public Boolean isTeacherOfSubject(long subjectId, long userId) {
         if (subjectRepository.countBySubjectIdAndTeacherId(subjectId, userId) > 0) {
             return true;
         }

@@ -1,4 +1,5 @@
 <mat-grid-list cols="1" >
+  <div *ngIf="!isLoading(); else loading">
   <div *ngIf="isSubjects(); else noSubjects">
   <div  *ngIf="this.teachedSubjects.length > 0">
   <p class="title">Asignaturas que impartes</p>
@@ -41,5 +42,9 @@
   <div class="title">
     No se han encontrado asignaturas
   </div>
+</ng-template>
+</div>
+<ng-template #loading>
+  <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
 </ng-template>
 </mat-grid-list>

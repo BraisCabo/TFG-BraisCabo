@@ -20,7 +20,8 @@
   <mat-form-field>
     <mat-label>Contraseña</mat-label>
     <input matInput [formControl]="password" [type]="hidePassword ? 'password' : 'text'" required>
-    <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+    <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'"
+      [attr.aria-pressed]="hidePassword">
       <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
     </button>
     <mat-error *ngIf="password.invalid">{{getErrorMessagePassword()}}</mat-error>
@@ -28,11 +29,16 @@
   <mat-form-field>
     <mat-label>Confirmar contraseña</mat-label>
     <input matInput [formControl]="repeatPassword" [type]="hideRepeatPassword ? 'password' : 'text'" required>
-    <button mat-icon-button matSuffix (click)="hideRepeatPassword = !hideRepeatPassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideRepeatPassword">
+    <button mat-icon-button matSuffix (click)="hideRepeatPassword = !hideRepeatPassword"
+      [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideRepeatPassword">
       <mat-icon>{{hideRepeatPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
     </button>
   </mat-form-field>
   <br>
-  <button [disabled]="!correctData()" (click)="register()" mat-raised-button color="primary">Registrarse</button>
+  <div *ngIf="!loading; else isLoading">
+    <button [disabled]="!correctData()" (click)="register()" mat-raised-button color="primary">Registrarse</button>
+  </div>
+  <ng-template #isLoading>
+    <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+  </ng-template>
 </mat-grid-list>
-

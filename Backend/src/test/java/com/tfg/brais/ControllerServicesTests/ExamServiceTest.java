@@ -89,7 +89,7 @@ public class ExamServiceTest {
             user.setId(1L);
             when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
             when(examRepository.findAllBySubjectIdAndVisible(anyLong())).thenReturn(new ArrayList<>());
-            assertTrue(examService.findAllExamsBySubjectId(1L, null).getStatusCode().is4xxClientError());
+            assertTrue(examService.findAllExamsBySubjectId(1L, null).getStatusCode().is2xxSuccessful());
         }
 
         @Test

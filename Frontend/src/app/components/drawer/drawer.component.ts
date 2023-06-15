@@ -21,7 +21,6 @@ export class DrawerComponent {
    ngOnInit(){
     this.authService.currentUserObserver().subscribe((user) => {
       this.subjectService.getUserSubject(user.id).subscribe((response) => {
-        console.log(response)
         this.studiedSubjects = response.studiedSubject;
         this.teachedSubjects = response.teachedSubject;
       });

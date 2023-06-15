@@ -44,4 +44,12 @@ public class SubjectController {
     public ResponseEntity<Page<User>> findAllTeachers(@PathVariable long id, HttpServletRequest request, String name, int page, int size){
         return this.userSubjectService.searchTeachers(id, request.getUserPrincipal(), name, PageRequest.of(page, size));
     }
+
+    @GetMapping("/{id}/users/{teacherId}/")
+    public ResponseEntity<Boolean> isTeacherOfSubject(@PathVariable long id, @PathVariable long teacherId){
+        return this.userSubjectService.isTeacherOfSubject(id, teacherId);
+    }
+
+
+
 }

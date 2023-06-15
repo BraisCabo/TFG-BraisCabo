@@ -80,4 +80,11 @@ public class UserSubjectService {
         }
         return ResponseEntity.ok(users);
     }
+
+    public ResponseEntity<Boolean> isTeacherOfSubject(long id, long userId) {
+        if (subjectCheckService.isTeacherOfSubject(id, userId)) {
+            return ResponseEntity.ok(true);
+        }
+        return new ResponseEntity<Boolean>(false, HttpStatusCode.valueOf(404));
+    }
 }

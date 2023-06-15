@@ -13,16 +13,19 @@ export class LoginComponent {
    email: string = "";
    password: string = "";
    hide = true;
+   loading = false;
 
    constructor(private authService: AuthService, private dialog: MatDialog, private router: Router) { }
 
    login(){
+    this.loading = true;
     this.authService.login(this.email, this.password).subscribe(
       _ => {
         this.authService.loadUser()
         this.router.navigate(['/']);
       },
-      _ => this.openDialog("0ms", "0ms")
+      _ => {this.openDialog("0ms", "0ms")
+      this.loading = false;}
     )
    }
 

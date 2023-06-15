@@ -35,8 +35,13 @@ import {MatMenuModule} from '@angular/material/menu';
 import { RegisterComponent } from './components/register/register.component';
 import { DrawerComponent } from './components/drawer/drawer.component';
 import { SubjectPageComponent } from './components/subject-page/subject-page.component';
-import { StudentPageComponent } from './components/subject-page/student-page/student-page.component';
-import { TeacherPageComponent } from './components/subject-page/teacher-page/teacher-page.component';
+import { ErrorComponentComponent } from './components/error-component/error-component.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { CreateExamComponent } from './components/create-exam/create-exam.component';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatNativeDateModule} from '@angular/material/core';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 
 @NgModule({
   declarations: [
@@ -53,8 +58,8 @@ import { TeacherPageComponent } from './components/subject-page/teacher-page/tea
     RegisterComponent,
     DrawerComponent,
     SubjectPageComponent,
-    StudentPageComponent,
-    TeacherPageComponent
+    ErrorComponentComponent,
+    CreateExamComponent
   ],
   imports: [
     BrowserModule,
@@ -78,7 +83,12 @@ import { TeacherPageComponent } from './components/subject-page/teacher-page/tea
     MatCheckboxModule,
     ReactiveFormsModule,
     MatPaginatorModule,
-    MatMenuModule
+    MatMenuModule,
+    MatProgressSpinnerModule,
+    MatRadioModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
+    NgxMaterialTimepickerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

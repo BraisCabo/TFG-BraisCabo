@@ -19,6 +19,7 @@ export class AdminHomeComponent {
   page: number = 0;
   pageSize: number = 5;
   name: string = '';
+  loadingSubjects : boolean = true;
 
   constructor(
     private subjectService: SubjectService,
@@ -29,13 +30,16 @@ export class AdminHomeComponent {
   }
 
   loadSubjects() {
+    this.loadingSubjects = true;
     this.subjectService.getAllSubjects(this.name, this.page, this.pageSize).subscribe((data: any) => {
       this.totalSize = data.totalElements;
       this.subjects = data.content;
+      this.loadingSubjects = false;
     },
     _ => {
       this.totalSize = 0;
       this.subjects = [];
+      this.loadingSubjects = false;
     });
   }
 

@@ -1,17 +1,19 @@
 import { HttpClient } from "@angular/common/http";
 import { Exam } from "../models/Exam";
 import { Observable } from "rxjs/internal/Observable";
+import { Injectable } from "@angular/core";
 
 const BASE_URL = "/api/subjects/"
 
+@Injectable({ providedIn: 'root' })
 export class ExamService {
   constructor(private http: HttpClient) { }
 
-  getSubjectExams(subjectId: Number, exam : Exam) : Observable<Exam[]> {
+  getSubjectExams(subjectId: Number) : Observable<Exam[]> {
     return this.http.get(BASE_URL + subjectId + "/exams/") as Observable<Exam[]>;
   }
 
-  getExam(subjectId: Number, examId: Number) : Observable<Exam> {
+  getExams(subjectId: Number, examId: Number) : Observable<Exam> {
     return this.http.get(BASE_URL + subjectId + "/exams/" + examId) as Observable<Exam>;
   }
 
@@ -20,6 +22,8 @@ export class ExamService {
   }
 
   updateExam(subjectId: Number, exam: Exam) : Observable<Exam> {
+    console.log(subjectId)
+    console.log(exam)
     return this.http.put(BASE_URL + subjectId + "/exams/" + exam.id, exam) as Observable<Exam>;
   }
 

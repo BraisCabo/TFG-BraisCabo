@@ -13,11 +13,13 @@ export class UserHomeComponent {
 
   studiedSubjects : Subject[] = []
   teachedSubjects : Subject[] = []
+  loadingTeachers : boolean = true;
 
   constructor(private subjectService: SubjectService, private authService: AuthService, private router: Router) {
     this.subjectService.getUserSubject(authService.getCurrentUser().id).subscribe((response) => {
       this.studiedSubjects = response.studiedSubject;
       this.teachedSubjects = response.teachedSubject;
+      this.loadingTeachers = false;
     });
    }
 
@@ -53,6 +55,10 @@ export class UserHomeComponent {
 
   isSubjects(){
     return this.studiedSubjects.length > 0 || this.teachedSubjects.length > 0;
+  }
+
+  isLoading() : boolean{
+    return this.loadingTeachers;
   }
 
 }

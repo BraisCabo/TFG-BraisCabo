@@ -4,12 +4,19 @@ import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { CreateSubjectComponent } from './components/create-subject/create-subject.component';
 import { RegisterComponent } from './components/register/register.component';
+import { ErrorComponentComponent } from './components/error-component/error-component.component';
+import { SubjectPageComponent } from './components/subject-page/subject-page.component';
+import { CreateExamComponent } from './components/create-exam/create-exam.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent},
   { path: 'login', component : LoginComponent },
   { path: 'newSubject', component: CreateSubjectComponent},
-  { path: 'register', component: RegisterComponent}
+  { path: 'register', component: RegisterComponent},
+  { path: 'error', component: ErrorComponentComponent},
+  { path: 'subject/:id', component: SubjectPageComponent},
+  { path: 'subject/:id/newExam', component: CreateExamComponent},
+  { path: '**', redirectTo: 'error'}
 
 ];
 

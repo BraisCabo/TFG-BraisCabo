@@ -19,7 +19,7 @@
       <mat-card-subtitle>Selecciona a los profesores que van a impartir la asignatura</mat-card-subtitle>
     </mat-card-header>
     <br>
-    <mat-card-content>
+    <mat-card-content *ngIf="!loadingTeachers; else isLoadingTeachers">
       <mat-form-field appearance="fill">
         <mat-label>Buscar</mat-label>
         <input matInput [(ngModel)]="this.teachersName">
@@ -46,6 +46,11 @@
         No hay profesores disponibles
       </ng-template>
     </mat-card-content>
+    <ng-template #isLoadingTeachers>
+      <mat-card-content>
+        <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+      </mat-card-content>
+    </ng-template>
   </mat-card>
 
   <mat-card>
@@ -54,7 +59,7 @@
       <mat-card-subtitle>Selecciona a los estudiantes que están matriculados en la asignatura</mat-card-subtitle>
     </mat-card-header>
     <br>
-    <mat-card-content>
+    <mat-card-content  *ngIf="!loadingStudents; else isLoadingStudents">
       <mat-form-field appearance="fill">
         <mat-label>Buscar</mat-label>
         <input matInput [(ngModel)]="this.studentsName">
@@ -82,6 +87,11 @@
         No hay estudiantes disponibles
       </ng-template>
     </mat-card-content>
+    <ng-template #isLoadingStudents>
+      <mat-card-content>
+        <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+      </mat-card-content>
+    </ng-template>
   </mat-card>
   <button [disabled]="!canCreateSubject()" mat-raised-button color="primary" (click)="createSubject()"
     style="margin-right: 2vw;">Crear Asignatura</button>

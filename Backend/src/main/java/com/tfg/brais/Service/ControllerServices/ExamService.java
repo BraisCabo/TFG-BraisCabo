@@ -58,7 +58,7 @@ public class ExamService {
     }
 
     public ResponseEntity<List<Exam>> findAllExamsBySubjectId(long subjectId, Principal userPrincipal) {
-        ResponseEntity<User> userCheckResponse = userCheckService.loadUserPrincipal(subjectId, userPrincipal);
+        ResponseEntity<User> userCheckResponse = userCheckService.loadUserNoCkeck(userPrincipal);
         if (userCheckResponse.getStatusCode().is4xxClientError()) {
             return new ResponseEntity<List<Exam>>(userCheckResponse.getStatusCode());
         }
@@ -72,11 +72,7 @@ public class ExamService {
             exams = examRepository.findAllBySubjectId(subjectId);
         }
 
-        if (exams.isEmpty()) {
-            return new ResponseEntity<List<Exam>>(HttpStatusCode.valueOf(404));
-        } else {
-            return ResponseEntity.ok(exams);
-        }
+        return ResponseEntity.ok(exams);
     }
 
     public ResponseEntity<Exam> updateExam(long subjectId, long id, Exam exam, Principal userPrincipal) {

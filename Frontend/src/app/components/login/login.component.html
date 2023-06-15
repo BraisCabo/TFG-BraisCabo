@@ -25,7 +25,12 @@
         </div>
       </mat-card-content>
       <mat-card-actions style="justify-content: center;">
+        <div *ngIf="!loading; else isLoading">
         <button (click)="login()" mat-raised-button color="primary">Login</button>
+      </div>
+        <ng-template #isLoading>
+          <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+        </ng-template>
       </mat-card-actions>
     </mat-card>
   </mat-grid-tile>

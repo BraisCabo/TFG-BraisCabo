@@ -59,6 +59,13 @@ public class UserCheckService {
         return ResponseEntity.ok(user);
     }
 
+    public ResponseEntity<User> loadUserNoCkeck(Principal userPrincipal){
+        if(userPrincipal == null) {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+        }
+        return  this.findByMail(userPrincipal.getName());
+    }
+
     public ResponseEntity<User> findByMail(String mail) {
         if(mail == null || mail.isEmpty() || mail.isBlank()) {
             return new ResponseEntity<>(HttpStatusCode.valueOf(404));

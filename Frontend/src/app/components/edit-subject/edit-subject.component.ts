@@ -33,6 +33,8 @@ export class SubjectEditingDialog {
   public totalSizeT : number = 0
   public totalSizeS : number = 0
   teachersName : string = ''
+  loadingTeachers : boolean = true;
+  loadingStudents : boolean = true;
 
   public studentPageSize : number = 5
   public studentCurrentPage : number = 0
@@ -57,25 +59,31 @@ export class SubjectEditingDialog {
   }
 
   loadUsersTeachers(){
+    this.loadingTeachers = true;
     this.userService.getAllUsers(this.teachersName, this.teacherPageSize, this.teacherCurrentPage).subscribe((data: any) => {
       this.totalSizeT = data.totalElements;
       this.allUsersT = data.content;
+      this.loadingTeachers = false;
     },
     _ => {
       this.totalSizeT = 0;
       this.allUsersT = [];
+      this.loadingTeachers = false;
     }
     );
   }
 
   loadUsersStudents(){
+    this.loadingStudents = true;
     this.userService.getAllUsers(this.studentsName, this.studentPageSize, this.studentCurrentPage).subscribe((data: any) => {
       this.totalSizeS = data.totalElements;
       this.allUsersS = data.content;
+      this.loadingStudents = false;
     },
     _ => {
       this.totalSizeS = 0;
       this.allUsersS = [];
+      this.loadingStudents = false;
     });
   }
 

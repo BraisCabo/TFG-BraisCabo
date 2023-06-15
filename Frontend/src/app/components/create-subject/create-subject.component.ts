@@ -35,6 +35,9 @@ export class CreateSubjectComponent {
   public studentCurrentPage : number = 0
   studentsName : string = ''
 
+  loadingTeachers : boolean = true;
+  loadingStudents : boolean = true;
+
   constructor(
     private userService: UserService,
     private dialog: MatDialog,
@@ -48,25 +51,31 @@ export class CreateSubjectComponent {
   }
 
   loadUsersTeachers(){
+    this.loadingTeachers = true;
     this.userService.getAllUsers(this.teachersName, this.teacherPageSize, this.teacherCurrentPage).subscribe((data: any) => {
       this.totalSizeT = data.totalElements;
       this.allUsersT = data.content;
+      this.loadingTeachers = false;
     },
     _ => {
       this.totalSizeT = 0;
       this.allUsersT = [];
+      this.loadingTeachers = false;
     }
     );
   }
 
   loadUsersStudents(){
+    this.loadingStudents = true;
     this.userService.getAllUsers(this.studentsName, this.studentPageSize, this.studentCurrentPage).subscribe((data: any) => {
       this.totalSizeS = data.totalElements;
       this.allUsersS = data.content;
+      this.loadingStudents = false;
     },
     _ => {
       this.totalSizeS = 0;
       this.allUsersS = [];
+      this.loadingStudents = false;
     });
   }
 
