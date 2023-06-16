@@ -88,7 +88,7 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
     MatRadioModule,
     MatNativeDateModule,
     MatDatepickerModule,
-    NgxMaterialTimepickerModule
+    NgxMaterialTimepickerModule.setOpts('es-ES', 'spanish')
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,7 +1,7 @@
 package com.tfg.brais.Model;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -39,9 +39,9 @@ public class Exam {
 
     private boolean calificationVisible = true;
 
-    private LocalDateTime openingDate = LocalDateTime.now();
+    private Date openingDate = new Date();
 
-    private LocalDateTime closingDate = LocalDateTime.now();
+    private Date closingDate = new Date();
 
     private List<String> questions = new ArrayList<>();
 
@@ -53,6 +53,4 @@ public class Exam {
         this.openingDate = exam.getOpeningDate();
         this.closingDate = exam.getClosingDate();
     }
-
-
 }

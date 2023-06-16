@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SubjectEditingDialog } from '../../edit-subject/edit-subject.component';
 import { SubjectPageAdminComponent } from '../../subject-page-admin/subject-page-admin.component';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-home',
@@ -24,7 +25,8 @@ export class AdminHomeComponent {
   constructor(
     private subjectService: SubjectService,
     private dialog: MatDialog,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private router: Router
   ) {
     this.loadSubjects();
   }
@@ -37,9 +39,7 @@ export class AdminHomeComponent {
       this.loadingSubjects = false;
     },
     _ => {
-      this.totalSize = 0;
-      this.subjects = [];
-      this.loadingSubjects = false;
+      this.router.navigate(["/error"])
     });
   }
 

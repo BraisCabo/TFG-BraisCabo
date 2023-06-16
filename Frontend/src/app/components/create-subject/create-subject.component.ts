@@ -58,9 +58,7 @@ export class CreateSubjectComponent {
       this.loadingTeachers = false;
     },
     _ => {
-      this.totalSizeT = 0;
-      this.allUsersT = [];
-      this.loadingTeachers = false;
+      this.router.navigate(["/error"])
     }
     );
   }

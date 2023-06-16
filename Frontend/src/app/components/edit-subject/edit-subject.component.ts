@@ -14,6 +14,7 @@ import { UserService } from 'src/app/services/UserService';
 import { ConfirmDialog } from '../dialogs/ConfirmDialog';
 import { Subject } from 'src/app/models/Subject';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'dialog-animations-example-dialog',
@@ -46,7 +47,8 @@ export class SubjectEditingDialog {
     private userService: UserService,
     private dialog: MatDialog,
     private subjectService: SubjectService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private router : Router
   ) {
     this.id = data.id;
     this.subjectService.getSubjectById(this.id).subscribe((data: Subject) => {
@@ -66,9 +68,7 @@ export class SubjectEditingDialog {
       this.loadingTeachers = false;
     },
     _ => {
-      this.totalSizeT = 0;
-      this.allUsersT = [];
-      this.loadingTeachers = false;
+      this.router.navigate(['/error']);
     }
     );
   }

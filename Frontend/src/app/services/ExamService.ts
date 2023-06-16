@@ -29,6 +29,7 @@ export class ExamService {
   }
 
   createExam(subjectId: Number, exam: ExamDTO) : Observable<Exam> {
+    console.log(exam.closingDate)
     return this.http.post(BASE_URL + subjectId + "/exams/", exam) as Observable<Exam>;
   }
 

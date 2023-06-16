@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from 'src/app/services/AuthService';
 import { ExamService } from 'src/app/services/ExamService';
 import { SubjectService } from 'src/app/services/SubjectService';
 
@@ -56,15 +57,29 @@ export class CreateExamComponent {
     private router: Router,
     private subjectService: SubjectService,
     private activatedRoute: ActivatedRoute,
-    private examService: ExamService
+    private examService: ExamService,
+    private authService: AuthService
   ) {
     this.subjectId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
     subjectService.getSubjectById(this.subjectId).subscribe(
-      (subject) => {},
-      (error) => {
+      (_) => {},
+      (_) => {
         this.router.navigate(['/error']);
       }
     );
+    this.authService.currentUserObserver().subscribe((user) => {
+      if (user) {
+        this.subjectService
+          .isSubjectTeacher(authService.getCurrentUser().id, this.subjectId)
+          .subscribe((isTeacher) => {
+            if (!isTeacher){
+              router.navigate(['/error']);
+            }
+          });
+      }else{
+        router.navigate(['/error']);
+      }
+    });
     this.date.setHours(0);
     this.date.setMinutes(0);
     this.date.setSeconds(0);
@@ -96,6 +111,7 @@ export class CreateExamComponent {
     let date: Date = new Date(this.openingDate.value);
     date.setHours(event.split(':')[0]);
     date.setMinutes(event.split(':')[1]);
+    console.log(date)
     this.openingDate.setValue(date);
   }
 

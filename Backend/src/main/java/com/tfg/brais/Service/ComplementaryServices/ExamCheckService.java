@@ -61,7 +61,7 @@ public class ExamCheckService {
             return new ResponseEntity<Exam>(HttpStatusCode.valueOf(403));
         }
 
-        if (exam.getClosingDate().isBefore(exam.getOpeningDate())) {
+        if (exam.getClosingDate().before(exam.getOpeningDate())) {
             return new ResponseEntity<Exam>(HttpStatusCode.valueOf(403));
         }
 

@@ -22,7 +22,7 @@ export class UserHomeComponent {
       this.loadingTeachers = false;
     },
     (_) => {
-      this.loadingTeachers = false;
+      this.router.navigate(['/error']);
     });
    }
 

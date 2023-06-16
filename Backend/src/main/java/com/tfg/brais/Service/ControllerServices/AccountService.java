@@ -52,11 +52,7 @@ public class AccountService {
 
     public ResponseEntity<Page<User>> findAll(PageRequest pageRequest, String name) {
         Page<User> page = userRepository.findAllByName((name == null ? "" : name ), pageRequest);
-        if (!page.hasContent()) {
-            return new ResponseEntity<Page<User>>(HttpStatusCode.valueOf(404));
-        } else {
-            return ResponseEntity.ok(page);
-        }
+        return ResponseEntity.ok(page);
     }
 
     public ResponseEntity<User> getMe(Principal userPrincipal) {

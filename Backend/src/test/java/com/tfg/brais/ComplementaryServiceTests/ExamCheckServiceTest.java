@@ -6,7 +6,9 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -135,8 +137,8 @@ public class ExamCheckServiceTest {
             Exam exam = new Exam();
             exam.setName("test");
             exam.setType("UPLOAD");
-            exam.setOpeningDate(LocalDateTime.now().plusDays(1));
-            exam.setClosingDate(LocalDateTime.now());
+            exam.setClosingDate(Date.from(Instant.now()));
+            exam.setOpeningDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
             User user = new User();
             user.setId(1L);
             when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
@@ -152,8 +154,8 @@ public class ExamCheckServiceTest {
             exam.setName("test");
             exam.setType("QUESTIONS");
             exam.getQuestions().add("Primera pregunta");
-            exam.setOpeningDate(LocalDateTime.now());
-            exam.setClosingDate(LocalDateTime.now().plusDays(1));
+            exam.setOpeningDate(Date.from(Instant.now()));
+            exam.setClosingDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
             User user = new User();
             user.setId(1L);
             when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
@@ -169,8 +171,8 @@ public class ExamCheckServiceTest {
             Exam exam = new Exam();
             exam.setName("test");
             exam.setType("UPLOAD");
-            exam.setOpeningDate(LocalDateTime.now());
-            exam.setClosingDate(LocalDateTime.now().plusDays(1));
+            exam.setOpeningDate(Date.from(Instant.now()));
+            exam.setClosingDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
             User user = new User();
             user.setId(1L);
             when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
@@ -187,8 +189,8 @@ public class ExamCheckServiceTest {
             exam.setName("test");
             exam.setType("QUESTIONS");
             exam.getQuestions().add("Primera pregunta");
-            exam.setOpeningDate(LocalDateTime.now());
-            exam.setClosingDate(LocalDateTime.now().plusDays(1));
+            exam.setOpeningDate(Date.from(Instant.now()));
+            exam.setClosingDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
             User user = new User();
             user.setId(1L);
             when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
@@ -290,8 +292,8 @@ public class ExamCheckServiceTest {
             Exam exam = new Exam();
             exam.setName("test");
             exam.setType("UPLOAD");
-            exam.setOpeningDate(LocalDateTime.now().plusDays(1));
-            exam.setClosingDate(LocalDateTime.now());
+            exam.setClosingDate(Date.from(Instant.now()));
+            exam.setOpeningDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
             User user = new User();
             user.setId(1L);
             when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
@@ -307,8 +309,8 @@ public class ExamCheckServiceTest {
             exam.setName("test");
             exam.setType("QUESTIONS");
             exam.getQuestions().add("Primera pregunta");
-            exam.setOpeningDate(LocalDateTime.now());
-            exam.setClosingDate(LocalDateTime.now().plusDays(1));
+            exam.setOpeningDate(Date.from(Instant.now()));
+            exam.setClosingDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
             User user = new User();
             user.setId(1L);
             when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
@@ -325,15 +327,15 @@ public class ExamCheckServiceTest {
             exam.setName("test");
             exam.setType("QUESTIONS");
             exam.getQuestions().add("Primera pregunta");
-            exam.setOpeningDate(LocalDateTime.now());
-            exam.setClosingDate(LocalDateTime.now().plusDays(1));
+            exam.setOpeningDate(Date.from(Instant.now()));
+            exam.setClosingDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
 
             Exam exam2 = new Exam();
             exam.setName("test2");
             exam.setType("QUESTIONS");
             exam.getQuestions().add("Primera pregunta");
-            exam.setOpeningDate(LocalDateTime.now());
-            exam.setClosingDate(LocalDateTime.now().plusDays(1));
+            exam.setOpeningDate(Date.from(Instant.now()));
+            exam.setClosingDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
             User user = new User();
             user.setId(1L);
 
@@ -352,8 +354,8 @@ public class ExamCheckServiceTest {
             exam.setName("test");
             exam.setType("QUESTIONS");
             exam.getQuestions().add("Primera pregunta");
-            exam.setOpeningDate(LocalDateTime.now());
-            exam.setClosingDate(LocalDateTime.now().plusDays(1));
+            exam.setOpeningDate(Date.from(Instant.now()));
+            exam.setClosingDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
 
             User user = new User();
             user.setId(1L);

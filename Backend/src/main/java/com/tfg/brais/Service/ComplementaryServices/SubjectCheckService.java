@@ -69,7 +69,7 @@ public class SubjectCheckService {
     }
 
     private ResponseEntity<Page<User>> checkIfCanSee(long id, Principal userPrincipal, BooleanFunction predicate) {
-        ResponseEntity<User> userCheckResponse = userCheckService.loadUserPrincipal(id, userPrincipal);
+        ResponseEntity<User> userCheckResponse = userCheckService.loadUserNoCkeck(userPrincipal);
         if (userCheckResponse.getStatusCode().is4xxClientError()) {
             return new ResponseEntity<>(userCheckResponse.getStatusCode());
         }
