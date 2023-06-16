@@ -1,0 +1,21 @@
+mat-form-field{
+  margin-right: 3vw;
+  margin-top: 3vh;
+
+}
+
+.title{
+  font-size: x-large;
+  color: #cb0017;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+}
+
+.container2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

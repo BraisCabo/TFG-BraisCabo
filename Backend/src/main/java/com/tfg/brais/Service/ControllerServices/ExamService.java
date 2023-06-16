@@ -1,7 +1,7 @@
 package com.tfg.brais.Service.ControllerServices;
 
 import java.security.Principal;
-
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -76,11 +76,14 @@ public class ExamService {
     }
 
     public ResponseEntity<Exam> updateExam(long subjectId, long id, Exam exam, Principal userPrincipal) {
-        ResponseEntity<Exam> checkIfCanCreateOrEdit = examCheckService.checkIfCanEdit(id, subjectId, exam, userPrincipal);
+        ResponseEntity<Exam> checkIfCanCreateOrEdit = examCheckService.checkIfCanEdit(id, subjectId, exam,
+                userPrincipal);
         if (checkIfCanCreateOrEdit.getStatusCode().is4xxClientError()) {
             return checkIfCanCreateOrEdit;
         }
-
+        if (exam.getType() == "UPLOAD") {
+            exam.setQuestions(new ArrayList<>());
+        }
         Exam examToUpdate = checkIfCanCreateOrEdit.getBody();
         examToUpdate.update(exam);
         examRepository.save(examToUpdate);
@@ -91,6 +94,9 @@ public class ExamService {
         ResponseEntity<Exam> checkIfCanCreate = examCheckService.checkIfCanCreate(id, exam, userPrincipal);
         if (checkIfCanCreate.getStatusCode().is4xxClientError()) {
             return checkIfCanCreate;
+        }
+        if (exam.getType() == "UPLOAD") {
+            exam.setQuestions(new ArrayList<>());
         }
         exam.setSubject(subjectService.findById(id).getBody());
         examRepository.save(exam);

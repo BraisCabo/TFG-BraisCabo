@@ -20,6 +20,9 @@ export class UserHomeComponent {
       this.studiedSubjects = response.studiedSubject;
       this.teachedSubjects = response.teachedSubject;
       this.loadingTeachers = false;
+    },
+    (_) => {
+      this.loadingTeachers = false;
     });
    }
 
