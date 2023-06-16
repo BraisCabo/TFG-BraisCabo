@@ -8,10 +8,13 @@ import {
   Validators,
 } from '@angular/forms';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/AuthService';
 import { ExamService } from 'src/app/services/ExamService';
 import { SubjectService } from 'src/app/services/SubjectService';
+import { ConfirmDialog } from '../dialogs/ConfirmDialog';
 
 export function dateValidator(openingDate: any): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -50,6 +53,7 @@ export class CreateExamComponent {
   questions: string[] = [];
   date: Date = new Date();
   subjectId!: number;
+  loading: boolean = false;
 
   constructor(
     private _adapter: DateAdapter<any>,
@@ -58,7 +62,9 @@ export class CreateExamComponent {
     private subjectService: SubjectService,
     private activatedRoute: ActivatedRoute,
     private examService: ExamService,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialog: MatDialog,
+    private _snackBar: MatSnackBar,
   ) {
     this.subjectId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
     subjectService.getSubjectById(this.subjectId).subscribe(
@@ -95,6 +101,19 @@ export class CreateExamComponent {
 
   getNameError() {
     return 'El nombre es obligatorio';
+  }
+
+  openCreateExamDialog(): void {
+    let dialogRef = this.dialog.open(ConfirmDialog, {
+      data: { message: `¿Deseas crear el examen ${this.name.value}?`},
+      width: '250px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.createExam();
+      }
+    });
   }
 
   getCalificationPercentajeError() {
@@ -143,6 +162,7 @@ export class CreateExamComponent {
   }
 
   createExam() {
+    this.loading = true;
     const examDTO: ExamDTO = {
       name: this.name.value,
       calificationPercentaje: this.calificationPercentaje.value,
@@ -158,9 +178,19 @@ export class CreateExamComponent {
         this.router.navigate(['/subject/' + this.subjectId]);
       },
       (_) => {
-        this.router.navigate(['/error']);
+        this.openSnackBar(
+          "No se ha podido crear el examen por que ya existe otro con ese nombre"
+        );
+        this.loading = false;
       }
     );
+  }
+  openSnackBar(message: string) {
+    this._snackBar.open(message, "Aceptar", {
+      horizontalPosition: "center",
+      verticalPosition: "top",
+      duration: 5000
+    });
   }
 
   isValidExam() {

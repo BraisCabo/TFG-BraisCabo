@@ -107,6 +107,8 @@
     <button (click)="newQuestion()" mat-raised-button color="primary"  style="margin-top: 2vh;"> <mat-icon>add</mat-icon>Añadir Pregunta</button>
   </div>
 
-  <button [disabled]="!isValidExam()" mat-raised-button color="primary" (click)="createExam()" style="margin-top: 3vh;">Crear Examen</button>
-
+  <button *ngIf="!loading; else isLoading" [disabled]="!isValidExam()" mat-raised-button color="primary" (click)="openCreateExamDialog()" style="margin-top: 3vh;">Crear Examen</button>
+  <ng-template #isLoading>
+    <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+  </ng-template>
 </mat-grid-list>
