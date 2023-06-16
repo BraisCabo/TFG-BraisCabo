@@ -6,7 +6,7 @@ import { ExamService } from 'src/app/services/ExamService';
 @Component({
   selector: 'app-teacher-exam-page',
   templateUrl: './teacher-exam-page.component.html',
-  styleUrls: ['./teacher-exam-page.component.css']
+  styleUrls: ['./teacher-exam-page.component.css'],
 })
 export class TeacherExamPageComponent {
   loadingExam: boolean = true;
@@ -52,24 +52,36 @@ export class TeacherExamPageComponent {
   }
 
   getRemainingTime(): string {
-    let remainingTime = this.exam.closingDate.getTime() - Date.now();
-    if (remainingTime < 0) {
-      return '00:00:00';
-    }
-    let hours = Math.floor(remainingTime / 3600000);
-    remainingTime -= hours * 3600000;
-    let minutes = Math.floor(remainingTime / 60000);
-    remainingTime -= minutes * 60000;
-    let seconds = Math.floor(remainingTime / 1000);
-    return (
-      hours.toString().padStart(2, '0') +
-      ':' +
-      minutes.toString().padStart(2, '0') +
-      ':' +
-      seconds.toString().padStart(2, '0')
-    );
-  }
+    let difference = this.exam.closingDate.getTime() - Date.now()
+    let message = difference < 0 ? 'Se ha cerrado hace' : 'Se cerrará en';
+    difference = Math.abs(difference);
+      //this.exam.closingDate.getTime() - this.exam.openingDate.getTime();
+    const millisecondsPerSecond = 1000;
+    const millisecondsPerMinute = 60 * millisecondsPerSecond;
+    const millisecondsPerHour = 60 * millisecondsPerMinute;
+    const millisecondsPerDay = 24 * millisecondsPerHour;
 
+    const days = Math.floor(difference / millisecondsPerDay);
+    const hours = Math.floor(
+      (difference % millisecondsPerDay) / millisecondsPerHour
+    );
+    const minutes = Math.floor(
+      (difference % millisecondsPerHour) / millisecondsPerMinute
+    );
+    const seconds = Math.floor(
+      (difference % millisecondsPerMinute) / millisecondsPerSecond
+    );
+
+    if (days > 0) {
+      return `${message} ${days} días y ${hours} horas.`;
+    } else if (hours > 0) {
+      return `${message} ${hours} horas y ${minutes} minutos.`;
+    } else if (minutes > 0) {
+      return `${message} ${minutes} minutos y ${seconds} segundos.`;
+    } else {
+      return `${message} ${seconds} segundos.`;
+    }
+  }
 
   getClosingDate(): string {
     return (
