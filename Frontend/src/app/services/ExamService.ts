@@ -24,12 +24,13 @@ export class ExamService {
     return this.http.get(BASE_URL + subjectId + "/exams/") as Observable<Exam[]>;
   }
 
-  getExams(subjectId: Number, examId: Number) : Observable<Exam> {
+  getExam(subjectId: Number, examId: Number) : Observable<Exam> {
     return this.http.get(BASE_URL + subjectId + "/exams/" + examId) as Observable<Exam>;
   }
 
   createExam(subjectId: Number, exam: ExamDTO) : Observable<Exam> {
     console.log(exam.closingDate)
+    console.log(exam.openingDate)
     return this.http.post(BASE_URL + subjectId + "/exams/", exam) as Observable<Exam>;
   }
 

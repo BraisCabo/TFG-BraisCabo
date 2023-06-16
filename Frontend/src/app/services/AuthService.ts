@@ -54,8 +54,12 @@ export class AuthService {
     });
   }
 
-  private getMe(): Observable<User> {
+  getMe(): Observable<User> {
     return this.http.get('/api/users/me') as Observable<User>;
+  }
+
+  public getMyUser() {
+    return this.http.get('/api/users/me');
   }
 
   isAdmin(): boolean {

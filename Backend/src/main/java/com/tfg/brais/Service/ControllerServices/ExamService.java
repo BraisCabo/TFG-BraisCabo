@@ -51,7 +51,12 @@ public class ExamService {
             return new ResponseEntity<Exam>(checkIfCanSeeContent.getStatusCode());
         }
         try {
-            return ResponseEntity.ok(examRepository.findByIdAndSubjectId(id, subjectId).get());
+            User user = userCheckService.loadUserNoCkeck(principal).getBody();
+            ResponseEntity<Exam> response = ResponseEntity.ok(examRepository.findByIdAndSubjectId(id, subjectId).get());
+            if (!response.getBody().isVisibleExam() && !subjectCheckService.isTeacherOfSubject(subjectId, user.getId())){
+                return new ResponseEntity<Exam>(HttpStatusCode.valueOf(403));
+            }
+            return response;
         } catch (Exception e) {
             return new ResponseEntity<Exam>(HttpStatusCode.valueOf(404));
         }

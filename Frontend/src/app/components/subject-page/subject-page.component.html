@@ -6,7 +6,7 @@
   </div>
   <div *ngIf="this.exams.length > 0; else noExams">
     <span  class="title">Examenes </span>
-    <mat-card *ngFor="let exam of this.exams" class="button-like-card" style="margin-top: 2vh">
+    <mat-card *ngFor="let exam of this.exams" class="button-like-card" style="margin-top: 2vh" (click)="goToExam(exam)">
       <mat-card-content>
         <span *ngIf="exam.type === 'QUESTIONS'; else upload">
             <mat-icon>question_answer</mat-icon>

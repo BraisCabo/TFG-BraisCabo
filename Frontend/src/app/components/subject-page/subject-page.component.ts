@@ -87,4 +87,8 @@ export class SubjectPageComponent {
   createExam(){
     this.router.navigate(['/subject/'+this.subjectId+'/newExam']);
   }
+
+  goToExam(exam: Exam){
+    this.router.navigate(['/subject/'+this.subjectId+'/exam/'+exam.id]);
+  }
 }

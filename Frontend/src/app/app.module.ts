@@ -42,6 +42,9 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import { ExamPageComponent } from './components/exam-page/exam-page.component';
+import { TeacherExamPageComponent } from './components/exam-page/teacher-exam-page/teacher-exam-page.component';
+import { StudentExamPageComponent } from './components/exam-page/student-exam-page/student-exam-page.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +62,10 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
     DrawerComponent,
     SubjectPageComponent,
     ErrorComponentComponent,
-    CreateExamComponent
+    CreateExamComponent,
+    ExamPageComponent,
+    TeacherExamPageComponent,
+    StudentExamPageComponent
   ],
   imports: [
     BrowserModule,

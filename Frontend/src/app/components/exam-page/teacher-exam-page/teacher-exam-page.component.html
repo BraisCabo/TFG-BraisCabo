@@ -1,0 +1,11 @@
+
+  <div *ngIf="!loadingExam; else isLoading">
+    <p class="title">{{exam.name}}</p>
+    <span class="text">Fecha de apertura: {{getOpeningDate()}}</span> <br>
+    <span class="text">Fecha de cierre: {{getClosingDate()}}</span>
+    <span class="text">Quedan: {{getRemainingTime()}}</span>
+  </div>
+  <ng-template #isLoading>
+    <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+  </ng-template>
+
