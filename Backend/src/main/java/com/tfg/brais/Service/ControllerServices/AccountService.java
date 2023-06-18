@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.tfg.brais.Model.User;
+import com.tfg.brais.Model.DTOS.UserBasicDTO;
+import com.tfg.brais.Model.DTOS.UserDetailedDTO;
+import com.tfg.brais.Model.DTOS.UserRegisterDTO;
 import com.tfg.brais.Repository.UserRepository;
 import com.tfg.brais.Service.ComplementaryServices.UserCheckService;
 import com.tfg.brais.security.jwt.Encoder;
@@ -38,41 +41,43 @@ public class AccountService {
         this.userCheckService = userCheckService;
     }
 
-    public ResponseEntity<User> register(User user, UriComponentsBuilder path) {
+    public ResponseEntity<UserDetailedDTO> register(UserRegisterDTO newUser, UriComponentsBuilder path) {
+        User user = newUser.createUser();
         if (!this.userCheckService.validateNewUser(user)) {
-            return new ResponseEntity<User>(HttpStatusCode.valueOf(403));
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
         }
         user.setEncodedPassword(passwordEncoder.encode(user.getEncodedPassword()));
         user.setRoles("USER");
         userRepository.save(user);
 
         return ResponseEntity.created(path.buildAndExpand(user.getId()).toUri())
-                .headers(userLoginService.generateFreshToken(user.getEmail())).body(user);
+                .headers(userLoginService.generateFreshToken(user.getEmail())).body(new UserDetailedDTO(user));
     }
 
-    public ResponseEntity<Page<User>> findAll(PageRequest pageRequest, String name) {
-        Page<User> page = userRepository.findAllByName((name == null ? "" : name ), pageRequest);
+    public ResponseEntity<Page<UserBasicDTO>> findAll(PageRequest pageRequest, String name) {
+        UserBasicDTO userBasic = new UserBasicDTO();
+        Page<UserBasicDTO> page = userBasic.convertPage(userRepository.findAllByName((name == null ? "" : name ), pageRequest));
         return ResponseEntity.ok(page);
     }
 
-    public ResponseEntity<User> getMe(Principal userPrincipal) {
+    public ResponseEntity<UserDetailedDTO> getMe(Principal userPrincipal) {
         try {
-            return ResponseEntity.ok(this.userCheckService.findByMail(userPrincipal.getName()).getBody());
+            return ResponseEntity.ok(new UserDetailedDTO(this.userCheckService.findByMail(userPrincipal.getName()).getBody()));
         } catch (Exception e) {
-            return new ResponseEntity<User>(HttpStatusCode.valueOf(404));
+            return new ResponseEntity<>(HttpStatusCode.valueOf(404));
         }
     }
 
-    public ResponseEntity<User> editUser(Principal userPrincipal, long id, User user) {
-
+    public ResponseEntity<UserDetailedDTO> editUser(Principal userPrincipal, long id, UserRegisterDTO newUser) {
+        User user = newUser.createUser();
         ResponseEntity<User> userCheckResponse = userCheckService.loadUserPrincipal(id, userPrincipal);
         if(userCheckResponse.getStatusCode().is4xxClientError()){
-            return userCheckResponse;
+            return new ResponseEntity<>(HttpStatusCode.valueOf(userCheckResponse.getStatusCode().value()));
         }
         User oldUser = userCheckResponse.getBody();
 
         if (userCheckService.validateEditUser(user, oldUser)){
-            return new ResponseEntity<User>(HttpStatusCode.valueOf(403));
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
         }
 
         if (user.getEncodedPassword() != null && !user.getEncodedPassword().isEmpty()) {
@@ -84,6 +89,6 @@ public class AccountService {
         oldUser.updateUser(user);
         userRepository.save(oldUser);
 
-        return ResponseEntity.ok().headers(userLoginService.generateFreshToken(user.getEmail())).body(oldUser);
+        return ResponseEntity.ok().headers(userLoginService.generateFreshToken(user.getEmail())).body(new UserDetailedDTO(oldUser));
     }
 }

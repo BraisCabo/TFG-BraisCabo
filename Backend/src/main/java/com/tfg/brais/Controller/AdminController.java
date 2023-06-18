@@ -13,8 +13,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
-import com.tfg.brais.Model.Subject;
-import com.tfg.brais.Model.SubjectDTO;
+import com.tfg.brais.Model.DTOS.SubjectChangesDTO;
+import com.tfg.brais.Model.DTOS.SubjectDetailedDTO;
 import com.tfg.brais.Service.ControllerServices.AdminService;
 
 @RequestMapping("/api")
@@ -25,18 +25,18 @@ public class AdminController {
     private AdminService adminService;
 
     @PostMapping("/subjects/")
-    public ResponseEntity<Subject> createSubject(@RequestBody SubjectDTO subjectDTO) {
+    public ResponseEntity<SubjectDetailedDTO> createSubject(@RequestBody SubjectChangesDTO subjectDTO) {
         UriComponentsBuilder path = fromCurrentRequest().path("/{id}");
         return adminService.createSubject(subjectDTO, path);
     }
 
     @PutMapping("/subjects/{id}")
-    public ResponseEntity<Subject> editSubject(@RequestBody SubjectDTO subjectDTO, @PathVariable long id){
+    public ResponseEntity<SubjectDetailedDTO> editSubject(@RequestBody SubjectChangesDTO subjectDTO, @PathVariable long id){
         return this.adminService.editSubject(id, subjectDTO);
     }
 
     @DeleteMapping("/subjects/{id}")
-    public ResponseEntity<Subject> deleteById(@PathVariable long id){
+    public ResponseEntity<SubjectDetailedDTO> deleteById(@PathVariable long id){
         return this.adminService.deleteById(id);
     }
 }

@@ -10,6 +10,7 @@ import { CreateExamComponent } from './components/create-exam/create-exam.compon
 import { ExamPageComponent } from './components/exam-page/exam-page.component';
 import { loggedGuard } from './services/LoggedGuard';
 import { adminGuard } from './services/AdminGuard';
+import { EditExamComponent } from './components/edit-exam/edit-exam.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [loggedGuard]},
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: 'subject/:id', component: SubjectPageComponent, canActivate: [loggedGuard]},
   { path: 'subject/:id/newExam', component: CreateExamComponent, canActivate: [loggedGuard]},
   { path: 'subject/:subjectId/exam/:examId', component: ExamPageComponent, canActivate: [loggedGuard]},
+  { path: 'subject/:subjectId/exam/:examId/editExam', component: EditExamComponent, canActivate: [loggedGuard]},
   { path: '**', redirectTo: 'error'}
 
 ];

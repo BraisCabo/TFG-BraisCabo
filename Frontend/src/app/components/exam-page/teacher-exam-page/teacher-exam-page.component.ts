@@ -40,7 +40,7 @@ export class TeacherExamPageComponent {
     return (
       this.exam.openingDate.getDate().toString().padStart(2, '0') +
       '/' +
-      this.exam.openingDate.getMonth().toString().padStart(2, '0') +
+      (this.exam.openingDate.getMonth() + 1).toString().padStart(2, '0') +
       '/' +
       this.exam.openingDate.getFullYear().toString() +
       ', ' +
@@ -87,7 +87,7 @@ export class TeacherExamPageComponent {
     return (
       this.exam.closingDate.getDate().toString().padStart(2, '0') +
       '/' +
-      this.exam.closingDate.getMonth().toString().padStart(2, '0') +
+      (this.exam.closingDate.getMonth() + 1).toString().padStart(2, '0') +
       '/' +
       this.exam.closingDate.getFullYear().toString() +
       ', ' +
@@ -96,5 +96,30 @@ export class TeacherExamPageComponent {
       this.exam.closingDate.getMinutes().toString().padStart(2, '0') +
       '.'
     );
+  }
+
+  getExamVisibility() : string{
+    if (this.exam.visibleExam){
+      return "El examen es visible por los alumnos.";
+    }else{
+      return "El examen no es visible por los alumnos."
+    }
+  }
+
+  getCalificationVisibility() : string {
+    if(this.exam.calificationVisible){
+      return "Los alumnos pueden ver la calificación del examen."
+    }else {
+      return "Los alumnos no pueden ver la calificación del examen."
+    }
+  }
+
+  goToSubject() {
+    this.router.navigate(['/subject/' + this.subjectId]);
+  }
+
+  editExam(){
+    console.log('/subjects/'+ this.subjectId + "/exams/"+ this.examId + "/editExam")
+    this.router.navigate(['/subject/'+ this.subjectId + "/exam/"+ this.examId + "/editExam"])
   }
 }

@@ -18,7 +18,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.tfg.brais.Model.Subject;
 import com.tfg.brais.Model.User;
-import com.tfg.brais.Model.UserSubjectDTO;
+import com.tfg.brais.Model.DTOS.SubjectUsersDTO;
 import com.tfg.brais.Repository.SubjectRepository;
 import com.tfg.brais.Service.ComplementaryServices.SubjectCheckService;
 import com.tfg.brais.Service.ComplementaryServices.UserCheckService;
@@ -61,7 +61,7 @@ public class UserSubjectServiceTest {
 
         @Test
         public void findAllUserSubjectsCorrectPrincipal() {
-            UserSubjectDTO subjectDTO = new UserSubjectDTO();
+            SubjectUsersDTO subjectDTO = new SubjectUsersDTO();
             subjectDTO.getStudiedSubject().add(new Subject());
             subjectDTO.getTeachedSubject().add(new Subject());
             User user = new User();

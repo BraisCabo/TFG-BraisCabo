@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.tfg.brais.Model.Subject;
 import com.tfg.brais.Model.User;
+import com.tfg.brais.Model.DTOS.SubjectDetailedDTO;
 
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
     Optional<Subject> findByName(String name);
@@ -24,12 +25,11 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
     @Query("SELECT u FROM Subject s JOIN s.teachers u WHERE s.id = ?1 AND LOWER(CONCAT(u.name, ' ', u.lastName)) LIKE %?2%")
     Page<User> findAllTeachersBySubjectIdAndName(Long subjectId, String name, Pageable pageable);
 
-    
     @Query("SELECT u FROM Subject s JOIN s.students u WHERE s.id = ?1 AND LOWER(CONCAT(u.name, ' ', u.lastName)) LIKE %?2%")
     Page<User> findAllStudentBySubjectIdAndName(Long subjectId, String name, Pageable pageable);
 
     @Query("SELECT s FROM Subject s WHERE LOWER(s.name) LIKE %?1%")
-    Page<Subject> findAllByName(String name, Pageable pageable);
+    Page<SubjectDetailedDTO> findAllByName(String name, Pageable pageable);
 
     @Query("SELECT s FROM Subject s JOIN s.teachers u WHERE u.id = ?1")
     List<Subject> findAllTeachedSubjects(Long teacherId);

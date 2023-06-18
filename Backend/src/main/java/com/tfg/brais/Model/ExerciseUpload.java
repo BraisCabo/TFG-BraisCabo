@@ -1,10 +1,14 @@
 package com.tfg.brais.Model;
 
+
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
@@ -17,17 +21,18 @@ public class ExerciseUpload {
     private Long id;
 
     @ManyToOne
+    @JsonIgnore
     private User student;
 
-    private String calification;
+    private String calification = "";
 
-    private String comment;
+    private String comment = "";
 
-    @Lob
-    private byte[] exercise;
-
-    private String fileName;
+    private String fileName = "";
 
     @ManyToOne
+    @JsonIgnore
     private Exam exam;
+
+    private Date uploadDate = new Date();
 }

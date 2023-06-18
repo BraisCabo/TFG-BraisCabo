@@ -10,8 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.tfg.brais.Model.Subject;
-import com.tfg.brais.Model.SubjectDTO;
 import com.tfg.brais.Model.User;
+import com.tfg.brais.Model.DTOS.SubjectChangesDTO;
 import com.tfg.brais.Repository.SubjectRepository;
 
 @FunctionalInterface
@@ -105,7 +105,7 @@ public class SubjectCheckService {
         return this.subjectRepository.findByName(name).isPresent();
     }
 
-    public boolean canCreateSubject(SubjectDTO subjectDTO) {
+    public boolean canCreateSubject(SubjectChangesDTO subjectDTO) {
         if (subjectDTO.getName() == null || subjectDTO.getName().isEmpty()){
             return false;
         }
@@ -116,7 +116,7 @@ public class SubjectCheckService {
         return true;
     }
 
-    public ResponseEntity<Subject> canEditSubject(long id, SubjectDTO subjectDto){
+    public ResponseEntity<Subject> canEditSubject(long id, SubjectChangesDTO subjectDto){
         ResponseEntity<Subject> response = this.findById(id);
         if (response.getStatusCode().is4xxClientError()){
             return response;

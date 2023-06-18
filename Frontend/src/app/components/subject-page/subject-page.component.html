@@ -17,7 +17,7 @@
         {{exam.name}}
       </mat-card-content>
       <mat-card-actions *ngIf="isTeacher" style="justify-content: flex-end;">
-        <button mat-icon-button color="primary" (click)="changeVisibility(exam)">
+        <button mat-icon-button color="primary" (click)="changeVisibility(exam); $event.stopPropagation()">
           <mat-icon>{{!exam.visibleExam ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
       </mat-card-actions>

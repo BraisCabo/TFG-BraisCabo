@@ -12,6 +12,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.tfg.brais.Model.Exam;
 import com.tfg.brais.Model.User;
+import com.tfg.brais.Model.DTOS.ExamBasicDTO;
+import com.tfg.brais.Model.DTOS.ExamStudentDTO;
+import com.tfg.brais.Model.DTOS.ExamTeacherDTO;
 import com.tfg.brais.Repository.ExamRepository;
 import com.tfg.brais.Service.ComplementaryServices.ExamCheckService;
 import com.tfg.brais.Service.ComplementaryServices.SubjectCheckService;
@@ -44,28 +47,32 @@ public class ExamService {
         this.userCheckService = userCheckService;
     }
 
-    public ResponseEntity<Exam> findBySubjectIdAndId(long subjectId, long id, Principal principal) {
+    public ResponseEntity<ExamBasicDTO> findBySubjectIdAndId(long subjectId, long id, Principal principal) {
         ResponseEntity<Page<User>> checkIfCanSeeContent = subjectCheckService.checkIfCanSeeContent(subjectId,
                 principal);
         if (checkIfCanSeeContent.getStatusCode().is4xxClientError()) {
-            return new ResponseEntity<Exam>(checkIfCanSeeContent.getStatusCode());
+            return new ResponseEntity<>(checkIfCanSeeContent.getStatusCode());
         }
         try {
             User user = userCheckService.loadUserNoCkeck(principal).getBody();
             ResponseEntity<Exam> response = ResponseEntity.ok(examRepository.findByIdAndSubjectId(id, subjectId).get());
             if (!response.getBody().isVisibleExam() && !subjectCheckService.isTeacherOfSubject(subjectId, user.getId())){
-                return new ResponseEntity<Exam>(HttpStatusCode.valueOf(403));
+                return new ResponseEntity<>(HttpStatusCode.valueOf(403));
             }
-            return response;
+            if (subjectCheckService.isTeacherOfSubject(subjectId, user.getId())) {
+                return ResponseEntity.ok(new ExamTeacherDTO(response.getBody()));
+            }else{
+                return ResponseEntity.ok(new ExamStudentDTO(response.getBody()));
+            }
         } catch (Exception e) {
-            return new ResponseEntity<Exam>(HttpStatusCode.valueOf(404));
+            return new ResponseEntity<>(HttpStatusCode.valueOf(404));
         }
     }
 
-    public ResponseEntity<List<Exam>> findAllExamsBySubjectId(long subjectId, Principal userPrincipal) {
+    public ResponseEntity<List<ExamBasicDTO>> findAllExamsBySubjectId(long subjectId, Principal userPrincipal) {
         ResponseEntity<User> userCheckResponse = userCheckService.loadUserNoCkeck(userPrincipal);
         if (userCheckResponse.getStatusCode().is4xxClientError()) {
-            return new ResponseEntity<List<Exam>>(userCheckResponse.getStatusCode());
+            return new ResponseEntity<>(userCheckResponse.getStatusCode());
         }
         User user = userCheckResponse.getBody();
 
@@ -76,15 +83,15 @@ public class ExamService {
         } else {
             exams = examRepository.findAllBySubjectId(subjectId);
         }
-
-        return ResponseEntity.ok(exams);
+        ExamBasicDTO examBasicDTO = new ExamBasicDTO();
+        return ResponseEntity.ok(examBasicDTO.convertToDTO(exams));
     }
 
-    public ResponseEntity<Exam> updateExam(long subjectId, long id, Exam exam, Principal userPrincipal) {
+    public ResponseEntity<ExamTeacherDTO> updateExam(long subjectId, long id, Exam exam, Principal userPrincipal) {
         ResponseEntity<Exam> checkIfCanCreateOrEdit = examCheckService.checkIfCanEdit(id, subjectId, exam,
                 userPrincipal);
         if (checkIfCanCreateOrEdit.getStatusCode().is4xxClientError()) {
-            return checkIfCanCreateOrEdit;
+            return new ResponseEntity<ExamTeacherDTO>(checkIfCanCreateOrEdit.getStatusCode());
         }
         if (exam.getType() == "UPLOAD") {
             exam.setQuestions(new ArrayList<>());
@@ -92,19 +99,19 @@ public class ExamService {
         Exam examToUpdate = checkIfCanCreateOrEdit.getBody();
         examToUpdate.update(exam);
         examRepository.save(examToUpdate);
-        return ResponseEntity.ok(examToUpdate);
+        return ResponseEntity.ok(new ExamTeacherDTO(examToUpdate));
     }
 
-    public ResponseEntity<Exam> createExam(long id, Exam exam, Principal userPrincipal, UriComponentsBuilder uBuilder) {
+    public ResponseEntity<ExamTeacherDTO> createExam(long id, Exam exam, Principal userPrincipal, UriComponentsBuilder uBuilder) {
         ResponseEntity<Exam> checkIfCanCreate = examCheckService.checkIfCanCreate(id, exam, userPrincipal);
         if (checkIfCanCreate.getStatusCode().is4xxClientError()) {
-            return checkIfCanCreate;
+            return new ResponseEntity<ExamTeacherDTO>(checkIfCanCreate.getStatusCode());
         }
         if (exam.getType() == "UPLOAD") {
             exam.setQuestions(new ArrayList<>());
         }
-        exam.setSubject(subjectService.findById(id).getBody());
+        exam.setSubject(subjectService.findSubjectById(id).getBody());
         examRepository.save(exam);
-        return ResponseEntity.created(uBuilder.buildAndExpand(exam.getId()).toUri()).body(exam);
+        return ResponseEntity.created(uBuilder.buildAndExpand(exam.getId()).toUri()).body(new ExamTeacherDTO(exam));
     }
 }

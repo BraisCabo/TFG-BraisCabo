@@ -9,8 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.tfg.brais.Model.Subject;
-import com.tfg.brais.Model.SubjectDTO;
 import com.tfg.brais.Model.User;
+import com.tfg.brais.Model.DTOS.SubjectChangesDTO;
+import com.tfg.brais.Model.DTOS.SubjectDetailedDTO;
 import com.tfg.brais.Repository.SubjectRepository;
 import com.tfg.brais.Repository.UserRepository;
 import com.tfg.brais.Service.ComplementaryServices.SubjectCheckService;
@@ -32,40 +33,40 @@ public class AdminService {
         this.subjectCheckService = subjectCheckService;
     }
 
-    public ResponseEntity<Subject> createSubject(SubjectDTO subjectDTO, UriComponentsBuilder path){
+    public ResponseEntity<SubjectDetailedDTO> createSubject(SubjectChangesDTO subjectDTO, UriComponentsBuilder path){
         if (!subjectCheckService.canCreateSubject(subjectDTO)){
-            return new ResponseEntity<Subject>(HttpStatusCode.valueOf(403));
+            return new ResponseEntity<>(HttpStatusCode.valueOf(403));
         }
         Subject subject = subjectDTO.generateSubject();
         subject.setStudents(loadUsers(subjectDTO.getStudents()));
         subject.setTeachers(loadUsers(subjectDTO.getTeachers()));
         subjectRepository.save(subject);
-        return ResponseEntity.created(path.buildAndExpand(subject.getId()).toUri()).body(subject);
+        return ResponseEntity.created(path.buildAndExpand(subject.getId()).toUri()).body(new SubjectDetailedDTO(subject));
     }
 
     private List<User> loadUsers(List<Long> userList){
         return userRepository.findAllById(userList);
     }
 
-    public ResponseEntity<Subject> deleteById(long id){
+    public ResponseEntity<SubjectDetailedDTO> deleteById(long id){
         ResponseEntity<Subject> response = subjectCheckService.findById(id);
         if (response.getStatusCode().is2xxSuccessful()){
             subjectRepository.deleteById(id);
-            return response;
+            return ResponseEntity.ok(new SubjectDetailedDTO(response.getBody()));
         }
-        return response;
+        return new ResponseEntity<>(response.getStatusCode());
     }
 
-    public ResponseEntity<Subject> editSubject(long id, SubjectDTO subjectDto){
+    public ResponseEntity<SubjectDetailedDTO> editSubject(long id, SubjectChangesDTO subjectDto){
         ResponseEntity<Subject> response = subjectCheckService.canEditSubject(id, subjectDto);
         if (response.getStatusCode().is4xxClientError()){
-            return response;
+            return new ResponseEntity<>(response.getStatusCode());
         }
         Subject subject = response.getBody();
         subject.setName(subjectDto.getName());
         subject.setStudents(loadUsers(subjectDto.getStudents()));
         subject.setTeachers(loadUsers(subjectDto.getTeachers()));
         subjectRepository.save(subject);
-        return ResponseEntity.ok(subject);
+        return ResponseEntity.ok(new SubjectDetailedDTO(subject));
     }
 }

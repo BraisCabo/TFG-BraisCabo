@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tfg.brais.Model.Subject;
-import com.tfg.brais.Model.User;
+import com.tfg.brais.Model.DTOS.SubjectDetailedDTO;
+import com.tfg.brais.Model.DTOS.UserBasicDTO;
 import com.tfg.brais.Service.ControllerServices.SubjectService;
 import com.tfg.brais.Service.ControllerServices.UserSubjectService;
 
@@ -26,22 +26,22 @@ public class SubjectController {
     private UserSubjectService userSubjectService;
 
     @GetMapping("/")
-    public ResponseEntity<Page<Subject>> findAll(String name, int page, int size){
+    public ResponseEntity<Page<SubjectDetailedDTO>> findAll(String name, int page, int size){
         return subjectService.findAll(name, PageRequest.of(page, size));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Subject> findById(@PathVariable long id){
+    public ResponseEntity<SubjectDetailedDTO> findById(@PathVariable long id){
         return this.subjectService.findById(id);
     }
 
     @GetMapping("/{id}/students/")
-    public ResponseEntity<Page<User>> findAllStudents(@PathVariable long id, HttpServletRequest request, String name, int page, int size){
+    public ResponseEntity<Page<UserBasicDTO>> findAllStudents(@PathVariable long id, HttpServletRequest request, String name, int page, int size){
         return this.userSubjectService.searchStudents(id, request.getUserPrincipal(), name, PageRequest.of(page, size));
     }
 
     @GetMapping("/{id}/teachers/")
-    public ResponseEntity<Page<User>> findAllTeachers(@PathVariable long id, HttpServletRequest request, String name, int page, int size){
+    public ResponseEntity<Page<UserBasicDTO>> findAllTeachers(@PathVariable long id, HttpServletRequest request, String name, int page, int size){
         return this.userSubjectService.searchTeachers(id, request.getUserPrincipal(), name, PageRequest.of(page, size));
     }
 

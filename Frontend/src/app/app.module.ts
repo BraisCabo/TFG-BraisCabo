@@ -45,6 +45,7 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 import { ExamPageComponent } from './components/exam-page/exam-page.component';
 import { TeacherExamPageComponent } from './components/exam-page/teacher-exam-page/teacher-exam-page.component';
 import { StudentExamPageComponent } from './components/exam-page/student-exam-page/student-exam-page.component';
+import { EditExamComponent } from './components/edit-exam/edit-exam.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { StudentExamPageComponent } from './components/exam-page/student-exam-pa
     CreateExamComponent,
     ExamPageComponent,
     TeacherExamPageComponent,
-    StudentExamPageComponent
+    StudentExamPageComponent,
+    EditExamComponent
   ],
   imports: [
     BrowserModule,

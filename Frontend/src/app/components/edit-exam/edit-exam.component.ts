@@ -15,31 +15,16 @@ import { AuthService } from 'src/app/services/AuthService';
 import { ExamService } from 'src/app/services/ExamService';
 import { SubjectService } from 'src/app/services/SubjectService';
 import { ConfirmDialog } from '../dialogs/ConfirmDialog';
+import { dateValidator } from '../create-exam/create-exam.component';
+import { Exam } from 'src/app/models/Exam';
 
-export function dateValidator(openingDate: any): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    let closingDate = control;
-    try {
-      if (
-        openingDate.value &&
-        closingDate.value &&
-        closingDate.value.getTime() <= openingDate.value.getTime()
-      ) {
-        return { incorrectDate: true };
-      }
-      return null;
-    } catch (error) {
-      return { incorrectDate: true };
-    }
-  };
-}
 
 @Component({
-  selector: 'app-create-exam',
-  templateUrl: './create-exam.component.html',
-  styleUrls: ['./create-exam.component.css'],
+  selector: 'app-edit-exam',
+  templateUrl: './edit-exam.component.html',
+  styleUrls: ['./edit-exam.component.css']
 })
-export class CreateExamComponent {
+export class EditExamComponent {
   name: FormControl = new FormControl('', Validators.required);
   calificationPercentaje: FormControl = new FormControl(0, [
     Validators.required,
@@ -48,8 +33,8 @@ export class CreateExamComponent {
   ]);
   visibleExam: string = 'false';
   calificationVisible: string = 'false';
-  openingDate: FormControl = new FormControl(new Date(), Validators.required);
-  closingDate: FormControl = new FormControl(new Date(), [
+  openingDate: FormControl = new FormControl(Date, Validators.required);
+  closingDate: FormControl = new FormControl(Date, [
     Validators.required,
     dateValidator(this.openingDate) as any,
   ]);
@@ -57,7 +42,9 @@ export class CreateExamComponent {
   questions: string[] = [];
   date: Date = new Date();
   subjectId!: number;
+  examId!: number;
   loading: boolean = false;
+  loadingExam : boolean = true;
 
   constructor(
     private _adapter: DateAdapter<any>,
@@ -70,33 +57,30 @@ export class CreateExamComponent {
     private dialog: MatDialog,
     private _snackBar: MatSnackBar,
   ) {
-    this.subjectId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-    subjectService.getSubjectById(this.subjectId).subscribe(
-      (_) => {},
+    this.subjectId = Number(this.activatedRoute.snapshot.paramMap.get('subjectId'));
+    this.examId = Number(this.activatedRoute.snapshot.paramMap.get('examId'))
+    this.examService.getExam(this.subjectId, this.examId).subscribe(
+      (exam) => {
+        this.name.setValue(exam.name)
+        this.calificationPercentaje.setValue(exam.calificationPercentaje)
+        this.visibleExam = exam.visibleExam ? 'true' : 'false'
+        this.calificationVisible = exam.calificationVisible ? 'true' : 'false'
+
+        this.openingDate.setValue(new Date(exam.openingDate))
+        this.closingDate.setValue(new Date(exam.closingDate))
+
+        this.type.setValue(exam.type)
+        this.questions = exam.questions
+        this.loadingExam = false;
+        console.log(this.loadingExam)
+      },
       (_) => {
-        this.router.navigate(['/error']);
-      }
-    );
-    this.authService.currentUserObserver().subscribe((user) => {
-      if (user) {
-        this.subjectService
-          .isSubjectTeacher(authService.getCurrentUser().id, this.subjectId)
-          .subscribe((isTeacher) => {
-            if (!isTeacher){
-              router.navigate(['/error']);
-            }
-          });
-      }else{
         router.navigate(['/error']);
       }
-    });
-    this.date.setHours(0);
-    this.date.setMinutes(0);
-    this.date.setSeconds(0);
+    );
     this._locale = 'es';
     this._adapter.setLocale(this._locale);
-    this.openingDate.setValue(this.date);
-    this.closingDate.setValue(this.date);
+
     this.closingDate.markAsTouched();
     this.openingDate.valueChanges.subscribe((_) => {
       this.closingDate.updateValueAndValidity();
@@ -107,15 +91,15 @@ export class CreateExamComponent {
     return 'El nombre es obligatorio';
   }
 
-  openCreateExamDialog(): void {
+  openEditExamDialog(): void {
     let dialogRef = this.dialog.open(ConfirmDialog, {
-      data: { message: `¿Deseas crear el examen ${this.name.value}?`},
+      data: { message: `¿Deseas editar el examen ${this.name.value}?`},
       width: '250px',
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.createExam();
+        this.editExam();
       }
     });
   }
@@ -134,7 +118,6 @@ export class CreateExamComponent {
     let date: Date = new Date(this.openingDate.value);
     date.setHours(event.split(':')[0]);
     date.setMinutes(event.split(':')[1]);
-    console.log(date)
     this.openingDate.setValue(date);
   }
 
@@ -165,9 +148,10 @@ export class CreateExamComponent {
     return index;
   }
 
-  createExam() {
+  editExam() {
     this.loading = true;
-    const examDTO: ExamDTO = {
+    const examDTO: Exam = {
+      id : this.examId,
       name: this.name.value,
       calificationPercentaje: this.calificationPercentaje.value,
       openingDate: this.openingDate.value,
@@ -177,13 +161,13 @@ export class CreateExamComponent {
       visibleExam: this.visibleExam === 'true',
       calificationVisible: this.calificationVisible === 'true',
     };
-    this.examService.createExam(this.subjectId, examDTO).subscribe(
+    this.examService.updateExam(this.subjectId, examDTO).subscribe(
       (_) => {
-        this.router.navigate(['/subject/' + this.subjectId]);
+        this.goToExam()
       },
       (_) => {
         this.openSnackBar(
-          "No se ha podido crear el examen por que ya existe otro con ese nombre"
+          "No se ha podido editar el examen por que ya existe otro con ese nombre"
         );
         this.loading = false;
       }
@@ -208,7 +192,13 @@ export class CreateExamComponent {
     );
   }
 
-  goToSubject() {
-    this.router.navigate(['/subject/' + this.subjectId]);
+  getTime(date: Date): string{
+    const minutes = date.getMinutes().toString().padStart(2, '0')
+    const hour = date.getHours().toString().padStart(2, '0')
+    return hour + ":" + minutes
+  }
+
+  goToExam() {
+    this.router.navigate(['/subject/'+this.subjectId+'/exam/'+this.examId]);
   }
 }

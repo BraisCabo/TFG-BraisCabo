@@ -18,8 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.tfg.brais.Model.Subject;
-import com.tfg.brais.Model.SubjectDTO;
 import com.tfg.brais.Model.User;
+import com.tfg.brais.Model.DTOS.SubjectChangesDTO;
 import com.tfg.brais.Repository.SubjectRepository;
 import com.tfg.brais.Repository.UserRepository;
 import com.tfg.brais.Service.ComplementaryServices.SubjectCheckService;
@@ -49,14 +49,14 @@ public class AdminServiceTest {
         @Test
         public void testCreateSubjectCantCreate() {
             when(subjectCheckService.canCreateSubject(any())).thenReturn(false);
-            assertTrue(adminService.createSubject(new SubjectDTO(), null).getStatusCode().is4xxClientError());
+            assertTrue(adminService.createSubject(new SubjectChangesDTO(), null).getStatusCode().is4xxClientError());
         }
 
         @Test
         public void testCreateSubjectCorrect() {
             when(subjectCheckService.canCreateSubject(any())).thenReturn(true);
             UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-            assertTrue(adminService.createSubject(new SubjectDTO(), uriComponentsBuilder).getStatusCode().is2xxSuccessful());
+            assertTrue(adminService.createSubject(new SubjectChangesDTO(), uriComponentsBuilder).getStatusCode().is2xxSuccessful());
         }
     }
 
@@ -82,12 +82,12 @@ public class AdminServiceTest {
         @Test
         public void testUpdateSubjectCantUpdate() {
             when(subjectCheckService.canEditSubject(anyLong(), any())).thenReturn(new ResponseEntity<>(HttpStatusCode.valueOf(404)));
-            assertTrue(adminService.editSubject(1L, new SubjectDTO()).getStatusCode().is4xxClientError());
+            assertTrue(adminService.editSubject(1L, new SubjectChangesDTO()).getStatusCode().is4xxClientError());
         }
 
         @Test
         public void testUpdateSubjectCorrect() {
-            SubjectDTO newSubject = new SubjectDTO();
+            SubjectChangesDTO newSubject = new SubjectChangesDTO();
             User u1 = new User();
             u1.setId(1L);
             User u2 = new User();

@@ -16,8 +16,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
-import com.tfg.brais.Model.User;
-import com.tfg.brais.Model.UserSubjectDTO;
+import com.tfg.brais.Model.DTOS.UserBasicDTO;
+import com.tfg.brais.Model.DTOS.UserDetailedDTO;
+import com.tfg.brais.Model.DTOS.UserRegisterDTO;
+import com.tfg.brais.Model.DTOS.SubjectUsersDTO;
 import com.tfg.brais.Service.ControllerServices.AccountService;
 import com.tfg.brais.Service.ControllerServices.UserSubjectService;
 
@@ -35,28 +37,28 @@ public class AccountController {
     private UserSubjectService userSubjectService;
 
     @PostMapping("/")
-    public ResponseEntity<User> register(@RequestBody User user) {
+    public ResponseEntity<UserDetailedDTO> register(@RequestBody UserRegisterDTO user) {
         UriComponentsBuilder path = fromCurrentRequest().path("/{id}");
         return accountService.register(user, path);
     }
 
     @GetMapping("/")
-    public ResponseEntity<Page<User>> findAll(String name, int page, int size) {
+    public ResponseEntity<Page<UserBasicDTO>> findAll(String name, int page, int size) {
         return this.accountService.findAll(PageRequest.of(page, size), name);
     }
 
     @GetMapping("/me")
-    public ResponseEntity<User> getMe(HttpServletRequest request){
+    public ResponseEntity<UserDetailedDTO> getMe(HttpServletRequest request){
         return this.accountService.getMe(request.getUserPrincipal());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> editUser(HttpServletRequest request, @PathVariable long id, @RequestBody User user){
+    public ResponseEntity<UserDetailedDTO> editUser(HttpServletRequest request, @PathVariable long id, @RequestBody UserRegisterDTO user){
         return this.accountService.editUser(request.getUserPrincipal(), id, user);
     }
 
     @GetMapping("/{id}/subjects/")
-    public ResponseEntity<UserSubjectDTO> findAllSubjects(@PathVariable long id, HttpServletRequest request){
+    public ResponseEntity<SubjectUsersDTO> findAllSubjects(@PathVariable long id, HttpServletRequest request){
         return this.userSubjectService.findAllUserSubjects(id, request.getUserPrincipal());
     }
 
