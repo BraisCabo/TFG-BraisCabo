@@ -1,7 +1,5 @@
-export class User{
+export class UserBasic{
   id: Number = new Number
-  email: String = new String
   name: String = new String
   lastName: String = new String
-  roles: String[] = []
 }

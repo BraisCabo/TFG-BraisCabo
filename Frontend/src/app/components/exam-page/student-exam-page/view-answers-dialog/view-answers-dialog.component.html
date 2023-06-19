@@ -1,0 +1,20 @@
+<mat-grid-list cols="1">
+  <div style="display: flex; justify-content: flex-end; margin-top: 2vh;">
+    <button mat-icon-button color="primary" (click)="this.dialogRef.close()" style="margin-bottom: 2vh;">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div *ngFor="let question of questions; let i = index">
+    <mat-card style="margin-bottom: 2vh;">
+      <mat-card-header>
+        <mat-card-title>
+          <p class="title">{{i + 1}}. {{question}}</p>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{answers[i]}}</p>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+</mat-grid-list>

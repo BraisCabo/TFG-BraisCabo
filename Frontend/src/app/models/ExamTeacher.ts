@@ -1,5 +1,5 @@
 
-export class Exam{
+export class ExamTeacher{
   id: Number = new Number
   name: string = ""
   type: string = ""
@@ -12,5 +12,7 @@ export class Exam{
   closingDate : Date = new Date()
 
   questions : string[] = []
+
+  exerciseUploads : number = 0
 
 }

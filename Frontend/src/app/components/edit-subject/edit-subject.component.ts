@@ -8,13 +8,13 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { User } from 'src/app/models/User';
 import { SubjectService } from 'src/app/services/SubjectService';
 import { UserService } from 'src/app/services/UserService';
 import { ConfirmDialog } from '../dialogs/ConfirmDialog';
-import { Subject } from 'src/app/models/Subject';
 import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
+import { UserBasic } from 'src/app/models/UserBasic';
+import { SubjectDetailed } from 'src/app/models/SubjectDetailed';
 
 @Component({
   selector: 'dialog-animations-example-dialog',
@@ -26,8 +26,8 @@ export class SubjectEditingDialog {
   id: number;
   teachers: Number[] = [];
   students: Number[] = [];
-  allUsersT: User[] = [];
-  allUsersS: User[] = [];
+  allUsersT: UserBasic[] = [];
+  allUsersS: UserBasic[] = [];
   name = new FormControl('', [Validators.required]);
   public teacherPageSize : number = 5
   public teacherCurrentPage : number = 0
@@ -51,7 +51,7 @@ export class SubjectEditingDialog {
     private router : Router
   ) {
     this.id = data.id;
-    this.subjectService.getSubjectById(this.id).subscribe((data: Subject) => {
+    this.subjectService.getSubjectById(this.id).subscribe((data: SubjectDetailed) => {
       this.name.setValue(data.name.toString());
       this.teachers = data.teachers.map((teacher) => teacher.id);
       this.students = data.students.map((student) => student.id);
@@ -91,15 +91,15 @@ export class SubjectEditingDialog {
     this.dialogRef.close(event);
   }
 
-  isTeacher(user: User): BooleanInput {
+  isTeacher(user: UserBasic): BooleanInput {
     return this.teachers.includes(user.id);
   }
 
-  isStudent(user: User): BooleanInput {
+  isStudent(user: UserBasic): BooleanInput {
     return this.students.includes(user.id);
   }
 
-  addStudent(student: User) {
+  addStudent(student: UserBasic) {
     if (this.students.includes(student.id)) {
       this.students.splice(this.students.indexOf(student.id), 1);
     } else {
@@ -107,7 +107,7 @@ export class SubjectEditingDialog {
     }
   }
 
-  addTeacher(teacher: User) {
+  addTeacher(teacher: UserBasic) {
     if (this.teachers.includes(teacher.id)) {
       this.teachers.splice(this.students.indexOf(teacher.id), 1);
     } else {

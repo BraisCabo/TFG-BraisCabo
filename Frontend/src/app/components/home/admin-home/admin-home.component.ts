@@ -1,4 +1,4 @@
-import { Subject } from './../../../models/Subject';
+
 import { Component } from '@angular/core';
 import { SubjectService } from 'src/app/services/SubjectService';
 import { ConfirmDialog } from '../../dialogs/ConfirmDialog';
@@ -8,6 +8,7 @@ import { SubjectEditingDialog } from '../../edit-subject/edit-subject.component'
 import { SubjectPageAdminComponent } from '../../subject-page-admin/subject-page-admin.component';
 import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
+import { SubjectDetailed } from 'src/app/models/SubjectDetailed';
 
 @Component({
   selector: 'app-admin-home',
@@ -15,7 +16,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./admin-home.component.css'],
 })
 export class AdminHomeComponent {
-  subjects: Subject[] = [];
+  subjects: SubjectDetailed[] = [];
   totalSize: number = 0;
   page: number = 0;
   pageSize: number = 5;
@@ -54,7 +55,7 @@ export class AdminHomeComponent {
     this.loadSubjects()
   }
 
-  getTeachers(subject: Subject): String {
+  getTeachers(subject: SubjectDetailed): String {
     if (subject.teachers.length == 0) {
       return 'No hay profesores asignados';
     }
@@ -80,7 +81,7 @@ export class AdminHomeComponent {
     return teachers;
   }
 
-  getStudents(subject: Subject): String {
+  getStudents(subject: SubjectDetailed): String {
     if (subject.students.length == 0) {
       return 'No hay estudiantes asignados';
     }
@@ -91,11 +92,11 @@ export class AdminHomeComponent {
     }
   }
 
-  deleteSubject(subject: Subject) {
+  deleteSubject(subject: SubjectDetailed) {
     this.openDialogDelete(subject);
   }
 
-  openDialogDelete(subject: Subject): void {
+  openDialogDelete(subject: SubjectDetailed): void {
     let dialogRef = this.dialog.open(ConfirmDialog, {
       data: { message: '¿Borrar la asignatura ' + subject.name + '?' },
       width: '250px',
@@ -118,7 +119,7 @@ export class AdminHomeComponent {
     });
   }
 
-  openDialogEdit(subject: Subject): void {
+  openDialogEdit(subject: SubjectDetailed): void {
     let dialogRef = this.dialog.open(SubjectEditingDialog, {
       data: { id: subject.id },
       width: '90%',
@@ -132,11 +133,11 @@ export class AdminHomeComponent {
     });
   }
 
-  viewSubject(subject: Subject) {
+  viewSubject(subject: SubjectDetailed) {
     this.openDialogView(subject);
   }
 
-  openDialogView(subject: Subject): void {
+  openDialogView(subject: SubjectDetailed): void {
     this.dialog.open(SubjectPageAdminComponent, {
       data: { id: subject.id },
       width: '90%',
@@ -144,7 +145,7 @@ export class AdminHomeComponent {
     });
   }
 
-  editSubject(subject: Subject) {
+  editSubject(subject: SubjectDetailed) {
     this.openDialogEdit(subject);
   }
 
@@ -157,6 +158,6 @@ export class AdminHomeComponent {
   }
 
   addSubject() {
-    this.subjects.push(new Subject());
+    this.subjects.push(new SubjectDetailed());
   }
 }

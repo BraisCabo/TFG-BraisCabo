@@ -38,12 +38,12 @@ public class RestSecurityConfig {
 				.csrf((csrf) -> csrf.disable())
 				.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-						.requestMatchers("/api/users/").permitAll()
-						.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-						.requestMatchers("/api/users/get").hasRole("USER")
-						.requestMatchers(HttpMethod.POST, "/api/subjects").hasRole("ADMIN")
-						.requestMatchers(HttpMethod.DELETE, "/api/subjects/**").hasRole("ADMIN")
-						.requestMatchers(HttpMethod.PUT, "/api/subjects").hasRole("ADMIN")
+						//.requestMatchers("/api/users/").permitAll()
+						//.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+						//.requestMatchers("/api/users/get").hasRole("USER")
+						//.requestMatchers(HttpMethod.POST, "/api/subjects").hasRole("ADMIN")
+						//.requestMatchers(HttpMethod.DELETE, "/api/subjects/**").hasRole("ADMIN")
+						//.requestMatchers(HttpMethod.PUT, "/api/subjects").hasRole("ADMIN")
 						.anyRequest().permitAll()
 						);
 		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

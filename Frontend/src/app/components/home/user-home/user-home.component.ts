@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject } from 'src/app/models/Subject';
+import { SubjectDetailed } from 'src/app/models/SubjectDetailed';
+
 import { AuthService } from 'src/app/services/AuthService';
 import { SubjectService } from 'src/app/services/SubjectService';
 
@@ -11,8 +12,8 @@ import { SubjectService } from 'src/app/services/SubjectService';
 })
 export class UserHomeComponent {
 
-  studiedSubjects : Subject[] = []
-  teachedSubjects : Subject[] = []
+  studiedSubjects : SubjectDetailed[] = []
+  teachedSubjects : SubjectDetailed[] = []
   loadingTeachers : boolean = true;
 
   constructor(private subjectService: SubjectService, private authService: AuthService, private router: Router) {
@@ -26,7 +27,7 @@ export class UserHomeComponent {
     });
    }
 
-   getTeachers(subject: Subject): String {
+   getTeachers(subject: SubjectDetailed): String {
     if (subject.teachers.length == 0) {
       return 'No hay profesores asignados';
     }
@@ -52,7 +53,7 @@ export class UserHomeComponent {
     return teachers;
   }
 
-  goToSubject(subject: Subject) {
+  goToSubject(subject: SubjectDetailed) {
     this.router.navigate(['/subject/' + subject.id]);
   }
 

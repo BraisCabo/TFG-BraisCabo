@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject } from 'src/app/models/Subject';
+import { SubjectDetailed } from 'src/app/models/SubjectDetailed';
 import { AuthService } from 'src/app/services/AuthService';
 
 import { SubjectService } from 'src/app/services/SubjectService';
@@ -12,8 +12,8 @@ import { SubjectService } from 'src/app/services/SubjectService';
 })
 export class DrawerComponent {
 
-  studiedSubjects : Subject[] = []
-  teachedSubjects : Subject[] = []
+  studiedSubjects : SubjectDetailed[] = []
+  teachedSubjects : SubjectDetailed[] = []
 
   constructor(private subjectService: SubjectService, private authService: AuthService, private router: Router) {
    }
@@ -21,7 +21,6 @@ export class DrawerComponent {
    ngOnInit(){
     this.authService.currentUserObserver().subscribe((user) => {
       this.subjectService.getUserSubject(user.id).subscribe((response) => {
-        console.log(response);
         this.studiedSubjects = response.studiedSubject;
         this.teachedSubjects = response.teachedSubject;
       });
@@ -29,7 +28,7 @@ export class DrawerComponent {
 
    }
 
-  goToSubject(subject: Subject) {
+  goToSubject(subject: SubjectDetailed) {
     this.router.navigate(['/subject/' + subject.id]);
   }
 

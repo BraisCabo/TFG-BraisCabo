@@ -34,4 +34,13 @@ public class ExamBasicDTO {
         }
         return examsDTO;
     }
+
+    public Exam creatExam() {
+        Exam exam = new Exam();
+        exam.setId(this.id);
+        exam.setName(this.name);
+        exam.setType(this.type);
+        exam.setVisibleExam(this.visibleExam);
+        return exam;
+    }
 }

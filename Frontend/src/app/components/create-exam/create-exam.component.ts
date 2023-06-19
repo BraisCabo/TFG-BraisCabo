@@ -1,4 +1,3 @@
-import { ExamDTO } from './../../services/ExamService';
 import { Component, Inject } from '@angular/core';
 import {
   AbstractControl,
@@ -15,6 +14,7 @@ import { AuthService } from 'src/app/services/AuthService';
 import { ExamService } from 'src/app/services/ExamService';
 import { SubjectService } from 'src/app/services/SubjectService';
 import { ConfirmDialog } from '../dialogs/ConfirmDialog';
+import { ExamTeacher } from 'src/app/models/ExamTeacher';
 
 export function dateValidator(openingDate: any): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -167,7 +167,8 @@ export class CreateExamComponent {
 
   createExam() {
     this.loading = true;
-    const examDTO: ExamDTO = {
+    const examDTO: ExamTeacher = {
+      id: 0,
       name: this.name.value,
       calificationPercentaje: this.calificationPercentaje.value,
       openingDate: this.openingDate.value,
@@ -176,6 +177,7 @@ export class CreateExamComponent {
       questions: this.questions,
       visibleExam: this.visibleExam === 'true',
       calificationVisible: this.calificationVisible === 'true',
+      exerciseUploads: 0
     };
     this.examService.createExam(this.subjectId, examDTO).subscribe(
       (_) => {

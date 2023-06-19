@@ -46,6 +46,9 @@ import { ExamPageComponent } from './components/exam-page/exam-page.component';
 import { TeacherExamPageComponent } from './components/exam-page/teacher-exam-page/teacher-exam-page.component';
 import { StudentExamPageComponent } from './components/exam-page/student-exam-page/student-exam-page.component';
 import { EditExamComponent } from './components/edit-exam/edit-exam.component';
+import { FileSaverModule } from 'ngx-filesaver';
+import { QuestionsExamPageComponent } from './components/questions-exam-page/questions-exam-page.component';
+import { ViewAnswersDialogComponent } from './components/exam-page/student-exam-page/view-answers-dialog/view-answers-dialog.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +70,9 @@ import { EditExamComponent } from './components/edit-exam/edit-exam.component';
     ExamPageComponent,
     TeacherExamPageComponent,
     StudentExamPageComponent,
-    EditExamComponent
+    EditExamComponent,
+    QuestionsExamPageComponent,
+    ViewAnswersDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -96,7 +101,8 @@ import { EditExamComponent } from './components/edit-exam/edit-exam.component';
     MatRadioModule,
     MatNativeDateModule,
     MatDatepickerModule,
-    NgxMaterialTimepickerModule.setOpts('es-ES', 'spanish')
+    NgxMaterialTimepickerModule.setOpts('es-ES', 'spanish'),
+    FileSaverModule
   ],
   providers: [],
   bootstrap: [AppComponent]

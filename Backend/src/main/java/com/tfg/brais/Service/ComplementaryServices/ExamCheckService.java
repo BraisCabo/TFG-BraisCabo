@@ -2,6 +2,7 @@ package com.tfg.brais.Service.ComplementaryServices;
 
 
 import java.security.Principal;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
@@ -99,5 +100,44 @@ public class ExamCheckService {
             }
         }
         return ResponseEntity.ok(examToUpdate);
+    }
+
+    public ResponseEntity<Exam> checkIfCanSee(long id, long subjectId, Principal userPrincipal){
+        ResponseEntity<Exam> basicCheck = basicCheck(id, subjectId, userPrincipal);
+        if (basicCheck.getStatusCode().is4xxClientError()) {
+            return new ResponseEntity<Exam>(basicCheck.getStatusCode());
+        }
+        Exam examToSee;
+        try {
+            examToSee = examRepository.findByIdAndSubjectId(id, subjectId).get();
+        } catch (Exception e) {
+            return new ResponseEntity<Exam>(HttpStatusCode.valueOf(404));
+        }
+
+        if (examToSee.getOpeningDate().after(new Date())) {
+            return new ResponseEntity<Exam>(HttpStatusCode.valueOf(403));
+        }
+
+        return ResponseEntity.ok(examToSee);
+    }
+
+    private ResponseEntity<Exam> basicCheck(long id, long subjectId, Principal userPrincipal){
+        ResponseEntity<User> userCheckResponse = userCheckService.loadUserNoCkeck(userPrincipal);
+        if (userCheckResponse.getStatusCode().is4xxClientError()) {
+            return new ResponseEntity<Exam>(userCheckResponse.getStatusCode());
+        }
+        User user = userCheckResponse.getBody();
+
+        ResponseEntity<Subject> subjectResponse = subjectCheckService.findById(id);
+
+        if (subjectResponse.getStatusCode().is4xxClientError()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (subjectCheckService.isTeacherOfSubject( user.getId(), subjectId) || subjectCheckService.isStudentOfSubject(user.getId(), subjectId)) {
+            return ResponseEntity.ok().build();
+        }
+        return new ResponseEntity<>(HttpStatusCode.valueOf(403));
+
     }
 }

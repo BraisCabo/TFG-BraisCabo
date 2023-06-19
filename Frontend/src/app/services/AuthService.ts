@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { User } from '../models/User';
 import { Observable, catchError, Observer, throwError } from 'rxjs';
+import { UserDetailed } from '../models/UserDetailed';
+import { UserRegister } from '../models/UserRegister';
 
 const BASE_URL = '/api/auth/';
 
@@ -10,17 +11,10 @@ interface UserCredentials {
   password: string;
 }
 
-interface UserRegister{
-  name: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
-
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  private currentUser!: User;
+  private currentUser!: UserDetailed;
   private logged: boolean = false;
 
   constructor(private http: HttpClient) {
@@ -43,7 +37,7 @@ export class AuthService {
     return this.logged;
   }
 
-  getCurrentUser(): User {
+  getCurrentUser(): UserDetailed {
     return this.currentUser;
   }
 
@@ -54,8 +48,8 @@ export class AuthService {
     });
   }
 
-  getMe(): Observable<User> {
-    return this.http.get('/api/users/me') as Observable<User>;
+  getMe(): Observable<UserDetailed> {
+    return this.http.get('/api/users/me') as Observable<UserDetailed>;
   }
 
   public getMyUser() {
@@ -72,20 +66,20 @@ export class AuthService {
     this.http.post(BASE_URL + 'logout', {}).subscribe();
   }
 
-  register(name: string, lastname: string, email: string, password: string) : Observable<User> {
+  register(name: string, lastname: string, email: string, password: string) : Observable<UserDetailed> {
     const userRegister : UserRegister = {
       name: name,
       lastName: lastname,
       email: email,
       password: password
     }
-    return this.http.post("/api/users/", userRegister) as Observable<User>;
+    return this.http.post("/api/users/", userRegister) as Observable<UserDetailed>;
   }
 
-  currentUserObserver(): Observable<User> {
+  currentUserObserver(): Observable<UserDetailed> {
     let userEmitted = false;
 
-    return new Observable((observer: Observer<User>) => {
+    return new Observable((observer: Observer<UserDetailed>) => {
       if (this.currentUser && !userEmitted) {
         observer.next(this.currentUser);
         userEmitted = true;

@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Exam } from 'src/app/models/Exam';
 import { AuthService } from 'src/app/services/AuthService';
-import { ExamService } from 'src/app/services/ExamService';
 import { SubjectService } from 'src/app/services/SubjectService';
 
 @Component({

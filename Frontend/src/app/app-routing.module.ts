@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes, CanActivate } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { CreateSubjectComponent } from './components/create-subject/create-subject.component';
@@ -11,6 +11,7 @@ import { ExamPageComponent } from './components/exam-page/exam-page.component';
 import { loggedGuard } from './services/LoggedGuard';
 import { adminGuard } from './services/AdminGuard';
 import { EditExamComponent } from './components/edit-exam/edit-exam.component';
+import { QuestionsExamPageComponent } from './components/questions-exam-page/questions-exam-page.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [loggedGuard]},
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'subject/:id/newExam', component: CreateExamComponent, canActivate: [loggedGuard]},
   { path: 'subject/:subjectId/exam/:examId', component: ExamPageComponent, canActivate: [loggedGuard]},
   { path: 'subject/:subjectId/exam/:examId/editExam', component: EditExamComponent, canActivate: [loggedGuard]},
+  { path: 'subject/:subjectId/exam/:examId/resolveExam', component: QuestionsExamPageComponent, canActivate: [loggedGuard]},
   { path: '**', redirectTo: 'error'}
 
 ];

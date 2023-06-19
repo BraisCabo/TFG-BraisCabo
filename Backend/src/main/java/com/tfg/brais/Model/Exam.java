@@ -33,6 +33,7 @@ public class Exam {
     private Subject subject;
 
     @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<ExerciseUpload> exerciseUploads = new ArrayList<>();
 
     private boolean visibleExam = true;
@@ -52,5 +53,8 @@ public class Exam {
         this.calificationVisible = exam.isCalificationVisible();
         this.openingDate = exam.getOpeningDate();
         this.closingDate = exam.getClosingDate();
+        this.questions = exam.getQuestions();
+        this.type = exam.getType();
+        
     }
 }

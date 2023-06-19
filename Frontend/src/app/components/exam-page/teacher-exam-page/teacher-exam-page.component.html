@@ -2,12 +2,13 @@
   <mat-list>
     <mat-list-item>
       <div class="container2">
-      <p class="title">{{exam.name}}</p>
-      <span>
-        <button mat-raised-button color="primary" style="margin-right: 2vw;" (click)="goToSubject()"><mat-icon>keyboard_backspace</mat-icon>Volver</button>
-        <button mat-raised-button color="primary" (click)="editExam()"><mat-icon>edit</mat-icon>Editar</button>
-      </span>
-    </div>
+        <p class="title">{{exam.name}}</p>
+        <span>
+          <button mat-raised-button color="primary" style="margin-right: 2vw;"
+            (click)="goToSubject()"><mat-icon>keyboard_backspace</mat-icon>Volver</button>
+          <button mat-raised-button color="primary" (click)="editExam()"><mat-icon>edit</mat-icon>Editar</button>
+        </span>
+      </div>
     </mat-list-item>
     <mat-list-item>
       <span class="text">Fecha de apertura: {{getOpeningDate()}}</span> <br>
@@ -27,6 +28,9 @@
     <mat-list-item>
       <span class="text">{{getCalificationVisibility()}}</span> <br>
     </mat-list-item>
+    <mat-list-item>
+      <span class="text">{{getNumberOfUploadsMessage()}}</span> <br>
+    </mat-list-item>
     <mat-list-item *ngIf="exam.type === 'UPLOAD'; else isQuestions">
       <span class="text">En este examen los alumnos tienen que subir un fichero.</span>
     </mat-list-item>
@@ -42,6 +46,13 @@
         <mat-divider></mat-divider>
       </span>
     </ng-template>
+    <mat-list-item *ngIf="exam.exerciseUploads > 0">
+      <button mat-raised-button color="primary" *ngIf="!loadingDownload; else isLoadingDownload"
+        (click)="downloadAllUploads()"><mat-icon>arrow_downward</mat-icon>Descargar todas las entregas</button>
+      <ng-template #isLoadingDownload>
+        <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+      </ng-template>
+    </mat-list-item>
   </mat-list>
 </div>
 <ng-template #isLoading>

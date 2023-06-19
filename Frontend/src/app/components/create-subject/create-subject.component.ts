@@ -1,7 +1,6 @@
 import { BooleanInput } from '@angular/cdk/coercion';
 import { Component } from '@angular/core';
 
-import { User } from 'src/app/models/User';
 import { UserService } from 'src/app/services/UserService';
 import {PageEvent} from '@angular/material/paginator';
 import {
@@ -13,6 +12,7 @@ import { ConfirmDialog } from '../dialogs/ConfirmDialog';
 import { SubjectService } from 'src/app/services/SubjectService';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { UserBasic } from 'src/app/models/UserBasic';
 
 @Component({
   selector: 'app-create-subject',
@@ -22,8 +22,8 @@ import { Router } from '@angular/router';
 export class CreateSubjectComponent {
   teachers: Number[] = [];
   students: Number[] = [];
-  allUsersT: User[] = [];
-  allUsersS: User[] = [];
+  allUsersT: UserBasic[] = [];
+  allUsersS: UserBasic[] = [];
   name = new FormControl('', [Validators.required]);
   public teacherPageSize : number = 5
   public teacherCurrentPage : number = 0
@@ -41,8 +41,8 @@ export class CreateSubjectComponent {
   constructor(
     private userService: UserService,
     private dialog: MatDialog,
-    private subjectService: SubjectService,
     private _snackBar: MatSnackBar,
+    private subjectService: SubjectService,
     private router: Router
 
   ) {
@@ -77,15 +77,15 @@ export class CreateSubjectComponent {
     });
   }
 
-  isTeacher(user: User): BooleanInput {
+  isTeacher(user: UserBasic): BooleanInput {
     return this.teachers.includes(user.id);
   }
 
-  isStudent(user: User): BooleanInput {
+  isStudent(user: UserBasic): BooleanInput {
     return this.students.includes(user.id);
   }
 
-  addStudent(student: User) {
+  addStudent(student: UserBasic) {
     if (this.students.includes(student.id)) {
       this.students.splice(this.students.indexOf(student.id), 1);
     } else {
@@ -93,7 +93,7 @@ export class CreateSubjectComponent {
     }
   }
 
-  addTeacher(teacher: User) {
+  addTeacher(teacher: UserBasic) {
     if (this.teachers.includes(teacher.id)) {
       this.teachers.splice(this.students.indexOf(teacher.id), 1);
     } else {

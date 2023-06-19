@@ -5,11 +5,12 @@ import java.util.Date;
 import java.util.List;
 
 import com.tfg.brais.Model.Exam;
-import com.tfg.brais.Model.ExerciseUpload;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class ExamTeacherDTO extends ExamBasicDTO{
 
     private String calificationPercentaje = "0";
@@ -24,6 +25,8 @@ public class ExamTeacherDTO extends ExamBasicDTO{
 
     private List<String> questions = new ArrayList<>();
 
+    public ExamTeacherDTO(){}
+
     public ExamTeacherDTO(Exam exam){
         super(exam);
         this.calificationPercentaje = exam.getCalificationPercentaje();
@@ -32,5 +35,15 @@ public class ExamTeacherDTO extends ExamBasicDTO{
         this.openingDate = exam.getOpeningDate();
         this.closingDate = exam.getClosingDate();
         this.questions = exam.getQuestions();
+    }
+
+    public Exam createExam(){
+        Exam exam = super.creatExam();
+        exam.setCalificationPercentaje(this.getCalificationPercentaje());
+        exam.setCalificationVisible(this.isCalificationVisible());
+        exam.setOpeningDate(this.getOpeningDate());
+        exam.setClosingDate(this.getClosingDate());
+        exam.setQuestions(this.getQuestions());
+        return exam;
     }
 }

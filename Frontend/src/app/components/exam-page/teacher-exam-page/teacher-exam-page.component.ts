@@ -1,7 +1,10 @@
+import { MatDialog } from '@angular/material/dialog';
+import { UploadService } from './../../../services/UploadService';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Exam } from 'src/app/models/Exam';
+import { ExamTeacher } from 'src/app/models/ExamTeacher';
 import { ExamService } from 'src/app/services/ExamService';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-teacher-exam-page',
@@ -12,12 +15,15 @@ export class TeacherExamPageComponent {
   loadingExam: boolean = true;
   examId: number = 0;
   subjectId: number = 0;
-  exam!: Exam;
+  exam!: ExamTeacher;
+  loadingDownload = false;
 
   constructor(
     private examService: ExamService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private uploadService: UploadService,
+    private _snackBar: MatSnackBar,
   ) {
     this.examId = Number(this.activatedRoute.snapshot.paramMap.get('examId'));
     this.subjectId = Number(
@@ -51,11 +57,19 @@ export class TeacherExamPageComponent {
     );
   }
 
+  openSnackBar(message: string) {
+    this._snackBar.open(message, "Aceptar", {
+      horizontalPosition: "center",
+      verticalPosition: "top",
+      duration: 5000
+    });
+  }
+
   getRemainingTime(): string {
-    let difference = this.exam.closingDate.getTime() - Date.now()
+    let difference = this.exam.closingDate.getTime() - Date.now();
     let message = difference < 0 ? 'Se ha cerrado hace' : 'Se cerrará en';
     difference = Math.abs(difference);
-      //this.exam.closingDate.getTime() - this.exam.openingDate.getTime();
+    //this.exam.closingDate.getTime() - this.exam.openingDate.getTime();
     const millisecondsPerSecond = 1000;
     const millisecondsPerMinute = 60 * millisecondsPerSecond;
     const millisecondsPerHour = 60 * millisecondsPerMinute;
@@ -98,19 +112,19 @@ export class TeacherExamPageComponent {
     );
   }
 
-  getExamVisibility() : string{
-    if (this.exam.visibleExam){
-      return "El examen es visible por los alumnos.";
-    }else{
-      return "El examen no es visible por los alumnos."
+  getExamVisibility(): string {
+    if (this.exam.visibleExam) {
+      return 'El examen es visible por los alumnos.';
+    } else {
+      return 'El examen no es visible por los alumnos.';
     }
   }
 
-  getCalificationVisibility() : string {
-    if(this.exam.calificationVisible){
-      return "Los alumnos pueden ver la calificación del examen."
-    }else {
-      return "Los alumnos no pueden ver la calificación del examen."
+  getCalificationVisibility(): string {
+    if (this.exam.calificationVisible) {
+      return 'Los alumnos pueden ver la calificación del examen.';
+    } else {
+      return 'Los alumnos no pueden ver la calificación del examen.';
     }
   }
 
@@ -118,8 +132,41 @@ export class TeacherExamPageComponent {
     this.router.navigate(['/subject/' + this.subjectId]);
   }
 
-  editExam(){
-    console.log('/subjects/'+ this.subjectId + "/exams/"+ this.examId + "/editExam")
-    this.router.navigate(['/subject/'+ this.subjectId + "/exam/"+ this.examId + "/editExam"])
+  editExam() {
+    console.log(
+      '/subjects/' + this.subjectId + '/exams/' + this.examId + '/editExam'
+    );
+    this.router.navigate([
+      '/subject/' + this.subjectId + '/exam/' + this.examId + '/editExam',
+    ]);
+  }
+
+  getNumberOfUploadsMessage(): string {
+    if (this.exam.exerciseUploads == 0) {
+      return 'Todavía no hay ninguna entrega.';
+    }
+    let message = this.exam.exerciseUploads == 1 ? '' : 's';
+    return (
+      'La tarea ha sido entregada por ' +
+      this.exam.exerciseUploads +
+      ' alumno' +
+      message +
+      '.'
+    );
+  }
+
+  downloadAllUploads(){
+    this.loadingDownload = true;
+    this.uploadService.downloadAll(this.subjectId, this.examId).subscribe(
+      (response) => {
+        this.uploadService.donwloadFile(response)
+        this.loadingDownload = false;
+      },
+      (_) => {
+        this.openSnackBar('Error al descargar el fichero intentalo de nuevo más tarde.');
+        this.loadingDownload = false;
+      }
+    );
+
   }
 }

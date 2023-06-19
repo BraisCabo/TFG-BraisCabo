@@ -1,25 +1,21 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { Subject } from "../models/Subject";
-import { User } from "../models/User";
+import { SubjectChanges } from "../models/SubjectChanges";
+import { SubjectDetailed } from "../models/SubjectDetailed";
+import { UserBasic } from "../models/UserBasic";
 
 const BASE_URL = '/api/subjects/';
 
-interface SubjectDTO {
-  name: string;
-  students: Number[];
-  teachers: Number[];
-}
 @Injectable({ providedIn: 'root' })
 export class SubjectService {
-  editSubject(name: string, students: Number[], teachers: Number[], id: number) : Observable<Subject> {
-    const subjectDTO: SubjectDTO = {
+  editSubject(name: string, students: Number[], teachers: Number[], id: number) : Observable<SubjectDetailed> {
+    const subjectDTO: SubjectChanges = {
       name: name,
       students: students,
       teachers: teachers
     };
-    return this.http.put(BASE_URL + id, subjectDTO) as Observable<Subject>;
+    return this.http.put(BASE_URL + id, subjectDTO) as Observable<SubjectDetailed>;
   }
 
   constructor(private http: HttpClient) { }
@@ -28,29 +24,29 @@ export class SubjectService {
     return this.http.get(BASE_URL + '?name=' + name + '&page=' + page + '&size=' + pageSize) as Observable<any>;
   }
 
-  getSubjectById(id: number) : Observable<Subject> {
-    return this.http.get(BASE_URL + id) as Observable<Subject>;
+  getSubjectById(id: number) : Observable<SubjectDetailed> {
+    return this.http.get(BASE_URL + id) as Observable<SubjectDetailed>;
   }
 
-  deleteSubjectById(id : Number) : Observable<Subject> {
-    return this.http.delete(BASE_URL + id) as Observable<Subject>;
+  deleteSubjectById(id : Number) : Observable<SubjectDetailed> {
+    return this.http.delete(BASE_URL + id) as Observable<SubjectDetailed>;
   }
 
   getSubjectTeachers(id: number, name: string, pageSize: number, page: number) : Observable<any> {
-    return this.http.get(BASE_URL + id + '/teachers/?name=' + name + '&page=' + page + '&size=' + pageSize) as Observable<User[]>;
+    return this.http.get(BASE_URL + id + '/teachers/?name=' + name + '&page=' + page + '&size=' + pageSize) as Observable<UserBasic[]>;
   }
 
   getSubjectStudents(id: number, name: string, pageSize: number, page: number) : Observable<any> {
-    return this.http.get(BASE_URL + id + '/students/?name=' + name + '&page=' + page + '&size=' + pageSize) as Observable<User[]>;
+    return this.http.get(BASE_URL + id + '/students/?name=' + name + '&page=' + page + '&size=' + pageSize) as Observable<UserBasic[]>;
   }
 
-  createSubject(name: string, students: Number[], teachers: Number[]) : Observable<Subject> {
-    const subjectDTO: SubjectDTO = {
+  createSubject(name: string, students: Number[], teachers: Number[]) : Observable<SubjectDetailed> {
+    const subjectDTO: SubjectChanges = {
       name: name,
       students: students,
       teachers: teachers
     };
-    return this.http.post(BASE_URL, subjectDTO) as Observable<Subject>;
+    return this.http.post(BASE_URL, subjectDTO) as Observable<SubjectDetailed>;
   }
 
   getUserSubject(id: Number) : Observable<any> {

@@ -33,4 +33,5 @@ build/
 .vscode/
 
 ### MYSQL ###
-.mysql
+.mysql/
+/.serverFiles/

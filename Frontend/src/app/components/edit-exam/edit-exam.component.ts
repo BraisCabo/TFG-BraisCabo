@@ -1,10 +1,6 @@
-import { ExamDTO } from './../../services/ExamService';
 import { Component, Inject } from '@angular/core';
 import {
-  AbstractControl,
   FormControl,
-  ValidationErrors,
-  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -16,7 +12,7 @@ import { ExamService } from 'src/app/services/ExamService';
 import { SubjectService } from 'src/app/services/SubjectService';
 import { ConfirmDialog } from '../dialogs/ConfirmDialog';
 import { dateValidator } from '../create-exam/create-exam.component';
-import { Exam } from 'src/app/models/Exam';
+import { ExamTeacher } from 'src/app/models/ExamTeacher';
 
 
 @Component({
@@ -150,7 +146,7 @@ export class EditExamComponent {
 
   editExam() {
     this.loading = true;
-    const examDTO: Exam = {
+    const examDTO: ExamTeacher = {
       id : this.examId,
       name: this.name.value,
       calificationPercentaje: this.calificationPercentaje.value,
@@ -160,6 +156,7 @@ export class EditExamComponent {
       questions: this.questions,
       visibleExam: this.visibleExam === 'true',
       calificationVisible: this.calificationVisible === 'true',
+      exerciseUploads: 0
     };
     this.examService.updateExam(this.subjectId, examDTO).subscribe(
       (_) => {

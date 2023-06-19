@@ -2,8 +2,8 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
-import { Subject } from 'src/app/models/Subject';
-import { User } from 'src/app/models/User';
+import { SubjectDetailed } from 'src/app/models/SubjectDetailed';
+import { UserBasic } from 'src/app/models/UserBasic';
 import { SubjectService } from 'src/app/services/SubjectService';
 
 @Component({
@@ -15,8 +15,8 @@ export class SubjectPageAdminComponent {
 
   public id!: number;
   name : String = "";
-  teachers: User[] = [];
-  students: User[] = [];
+  teachers: UserBasic[] = [];
+  students: UserBasic[] = [];
   public teacherPageSize : number = 5
   public teacherCurrentPage : number = 0
   public totalSizeT : number = 0
@@ -33,7 +33,7 @@ export class SubjectPageAdminComponent {
     private router: Router
   ) {
     this.id = data.id;
-    this.subjectService.getSubjectById(this.id).subscribe((data: Subject) => {
+    this.subjectService.getSubjectById(this.id).subscribe((data: SubjectDetailed) => {
       this.name = data.name;
       this.loadTeachers()
       this.loadStudents()

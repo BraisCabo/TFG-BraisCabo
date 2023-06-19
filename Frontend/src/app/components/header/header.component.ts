@@ -1,5 +1,5 @@
-import { Router, RouterModule } from '@angular/router';
-import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { Component } from '@angular/core';
 import { AuthService } from 'src/app/services/AuthService';
 import { DrawerService } from 'src/app/services/DrawerService';
 

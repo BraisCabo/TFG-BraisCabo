@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tfg.brais.Model.ExerciseUpload;
+import com.tfg.brais.Model.DTOS.AnswersDTO;
 import com.tfg.brais.Service.ControllerServices.UploadService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,12 +29,17 @@ public class UploadController {
 
     @GetMapping("/")
     public ResponseEntity<List<ExerciseUpload>> findAllUploads(@PathVariable long id, @PathVariable long examId, HttpServletRequest request){
-        return null;
+        return uploadService.findAllUploads(id, examId, request.getUserPrincipal());
     }
 
-    @PostMapping("/")
-    public ResponseEntity<ExerciseUpload> uploadExercise(@PathVariable long id, @PathVariable long examId, ExerciseUpload upload, HttpServletRequest request, MultipartFile newFile){
-        return uploadService.uploadExercise(id, examId, upload, newFile, request.getUserPrincipal());
+    @PostMapping("/files")
+    public ResponseEntity<ExerciseUpload> uploadExercise(@PathVariable long id, @PathVariable long examId, HttpServletRequest request, MultipartFile newFile){
+        return uploadService.uploadExercise(id, examId, newFile, request.getUserPrincipal());
+    }
+
+    @PostMapping("/questions")
+    public ResponseEntity<ExerciseUpload> uploadExercise(@PathVariable long id, @PathVariable long examId, HttpServletRequest request, @RequestBody List<String> answers){
+        return uploadService.uploadExercise(id, examId, answers, request.getUserPrincipal());
     }
 
     @GetMapping("/{uploadId}")
@@ -40,9 +47,14 @@ public class UploadController {
         return uploadService.findUploadById(id, examId, uploadId, request.getUserPrincipal());
     }
 
+    @GetMapping("/{uploadId}/questions")
+    public ResponseEntity<AnswersDTO> findUploadQuestionsAndAnswersById(@PathVariable long id, @PathVariable long examId, @PathVariable  long uploadId, HttpServletRequest request){
+        return uploadService.findUploadQuestionsAndAnswersById(id, examId, uploadId, request.getUserPrincipal());
+    }
+
     @DeleteMapping("/{uploadId}")
     public ResponseEntity<ExerciseUpload> deleteUploadById(@PathVariable long id, @PathVariable long examId, @PathVariable  long uploadId, HttpServletRequest request){
-        return null;
+        return uploadService.deleteUploadById(id, examId, uploadId, request.getUserPrincipal());
     }
 
     @GetMapping("/{uploadId}/files")

@@ -1,12 +1,12 @@
 import { AuthService } from './../../services/AuthService';
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { Exam } from 'src/app/models/Exam';
 import { ExamService } from 'src/app/services/ExamService';
 import { SubjectService } from 'src/app/services/SubjectService';
 import { UserService } from 'src/app/services/UserService';
 import { ConfirmDialog } from '../dialogs/ConfirmDialog';
 import { MatDialog } from '@angular/material/dialog';
+import { ExamBasic } from 'src/app/models/ExamBasic';
 
 @Component({
   selector: 'app-subject-page',
@@ -15,7 +15,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class SubjectPageComponent {
   isTeacher: boolean = false;
-  exams: Exam[] = [];
+  exams: ExamBasic[] = [];
   subjectId!: number;
   loadingExams = true;
   loadingIsTeacher = true
@@ -56,7 +56,7 @@ export class SubjectPageComponent {
     return this.loadingExams || this.loadingIsTeacher;
   }
 
-  changeVisibility(exam: Exam) {
+  changeVisibility(exam: ExamBasic) {
     if (exam.visibleExam){
       this.openDialog("¿Quieres ocultar el examen?", exam)
     }
@@ -65,7 +65,7 @@ export class SubjectPageComponent {
     }
   }
 
-  openDialog(message: String, exam: Exam): void {
+  openDialog(message: String, exam: ExamBasic): void {
     let dialogRef = this.dialog.open(ConfirmDialog, {
       data: { message: message },
       width: '250px',
@@ -74,7 +74,7 @@ export class SubjectPageComponent {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         exam.visibleExam = !exam.visibleExam;
-        this.examService.updateExam(this.subjectId, exam).subscribe(
+        this.examService.changeVisibility(this.subjectId, exam.id, exam.visibleExam).subscribe(
           (_) => {
           },
           (_) => {
@@ -88,7 +88,7 @@ export class SubjectPageComponent {
     this.router.navigate(['/subject/'+this.subjectId+'/newExam']);
   }
 
-  goToExam(exam: Exam){
+  goToExam(exam: ExamBasic){
     this.router.navigate(['/subject/'+this.subjectId+'/exam/'+exam.id]);
   }
 }

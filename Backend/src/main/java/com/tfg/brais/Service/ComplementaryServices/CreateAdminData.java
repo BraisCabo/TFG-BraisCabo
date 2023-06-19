@@ -21,6 +21,9 @@ public class CreateAdminData {
 
     @PostConstruct
     public void init(){
+        if (userRepository.findByEmail("admin").isPresent()) {
+            return;
+        }
         User user = new User();
         user.setEmail("admin");
         user.setName("admin");

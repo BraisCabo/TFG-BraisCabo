@@ -2,6 +2,7 @@ package com.tfg.brais.Model;
 
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -24,15 +25,17 @@ public class ExerciseUpload {
     @JsonIgnore
     private User student;
 
-    private String calification = "";
+    private String calification;
 
-    private String comment = "";
+    private String comment;
 
-    private String fileName = "";
+    private String fileName;
 
     @ManyToOne
     @JsonIgnore
     private Exam exam;
 
     private Date uploadDate = new Date();
+
+    private List<String> answers;
 }
