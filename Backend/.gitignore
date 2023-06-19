@@ -34,4 +34,4 @@ build/
 
 ### MYSQL ###
 .mysql/
-/.serverFiles/
+.serverFiles/
