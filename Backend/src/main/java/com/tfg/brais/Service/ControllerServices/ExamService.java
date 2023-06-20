@@ -68,12 +68,14 @@ public class ExamService {
                 return new ResponseEntity<>(HttpStatusCode.valueOf(403));
             }
             if (subjectCheckService.isTeacherOfSubject(subjectId, user.getId())) {
-                return ResponseEntity.ok(new ExamTeacherDTO(response.getBody()));
+                ExamTeacherDTO examTeacherDTO = new ExamTeacherDTO(response.getBody());
+                examTeacherDTO.setExerciseUploads(exerciseUploadRepository.findAllUploadedByExamId(id, subjectId).size());
+                return ResponseEntity.ok(examTeacherDTO);
             } else {
                 ExamStudentDTO examStudentDTO = new ExamStudentDTO(response.getBody());
                 Optional<ExerciseUpload> responseExercise = exerciseUploadRepository
-                        .findByStudentIdAndExamIdAndExamSubjectId(user.getId(), subjectId, id);
-                if (responseExercise.isPresent()) {
+                        .findByStudentIdAndExamIdAndExamSubjectId(user.getId(), id, subjectId);
+                if (responseExercise.isPresent() && responseExercise.get().isUploaded()) {
                     examStudentDTO.setExerciseUpload(responseExercise.get());
                 }
                 return ResponseEntity.ok(examStudentDTO);
@@ -125,11 +127,17 @@ public class ExamService {
         if (checkIfCanCreate.getStatusCode().is4xxClientError()) {
             return new ResponseEntity<ExamTeacherDTO>(checkIfCanCreate.getStatusCode());
         }
-        if (exam.getType() == "UPLOAD") {
+        if (exam.getType().equals("UPLOAD")) {
             exam.setQuestions(new ArrayList<>());
         }
         exam.setSubject(subjectService.findSubjectById(id).getBody());
-        examRepository.save(exam);
+        Exam save = examRepository.save(exam);
+        for(User user: exam.getSubject().getStudents()){
+            ExerciseUpload exerciseUpload = new ExerciseUpload();
+            exerciseUpload.setExam(save);
+            exerciseUpload.setStudent(user);
+            exerciseUploadRepository.save(exerciseUpload);
+        }
         return ResponseEntity.created(uBuilder.buildAndExpand(exam.getId()).toUri()).body(new ExamTeacherDTO(exam));
     }
 
@@ -139,7 +147,8 @@ public class ExamService {
         if (findBySubjectIdAndId.getStatusCode().is4xxClientError()) {
             return new ResponseEntity<ExamTeacherDTO>(findBySubjectIdAndId.getStatusCode());
         }
-        ResponseEntity<Exam> checkIfCanCreateOrEdit = examCheckService.checkIfCanEdit(examId, id, findBySubjectIdAndId.getBody().creatExam(),
+        ExamTeacherDTO examTeacher = ((ExamTeacherDTO) findBySubjectIdAndId.getBody());
+        ResponseEntity<Exam> checkIfCanCreateOrEdit = examCheckService.checkIfCanEdit(examId, id, examTeacher.createExam(),
                 userPrincipal);
         if (checkIfCanCreateOrEdit.getStatusCode().is4xxClientError()) {
             return new ResponseEntity<ExamTeacherDTO>(checkIfCanCreateOrEdit.getStatusCode());

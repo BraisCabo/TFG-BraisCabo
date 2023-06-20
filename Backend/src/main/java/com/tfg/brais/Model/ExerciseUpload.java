@@ -3,9 +3,6 @@ package com.tfg.brais.Model;
 
 import java.util.Date;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,17 +19,17 @@ public class ExerciseUpload {
     private Long id;
 
     @ManyToOne
-    @JsonIgnore
     private User student;
 
-    private String calification;
+    private String calification = "";
 
-    private String comment;
+    private String comment = "";
 
     private String fileName;
 
+    private boolean isUploaded;
+
     @ManyToOne
-    @JsonIgnore
     private Exam exam;
 
     private Date uploadDate = new Date();

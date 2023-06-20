@@ -40,7 +40,7 @@
           <span class="text">Este examen es de preguntas cortas.</span>
         </mat-list-item>
         <mat-list-item>
-          <button mat-raised-button color="primary" style="margin-right: 2vw;" (click)="toQuestionsExam()">Resolver
+          <button [disabled]="!canUpload()" mat-raised-button color="primary" style="margin-right: 2vw;" (click)="toQuestionsExam()">Resolver
             examen</button>
         </mat-list-item>
       </ng-template>

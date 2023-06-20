@@ -91,4 +91,8 @@ export class SubjectPageComponent {
   goToExam(exam: ExamBasic){
     this.router.navigate(['/subject/'+this.subjectId+'/exam/'+exam.id]);
   }
+
+  goToCalifications(){
+    this.router.navigate(['/subject/'+this.subjectId+'/user/'+ this.authService.getCurrentUser().id + '/califications']);
+  }
 }

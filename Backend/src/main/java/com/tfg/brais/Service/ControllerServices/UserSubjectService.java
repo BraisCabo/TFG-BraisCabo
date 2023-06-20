@@ -9,8 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.tfg.brais.Model.User;
+import com.tfg.brais.Model.DTOS.StudentCalificationDTO;
 import com.tfg.brais.Model.DTOS.SubjectUsersDTO;
 import com.tfg.brais.Model.DTOS.UserBasicDTO;
+import com.tfg.brais.Repository.ExerciseUploadRepository;
 import com.tfg.brais.Repository.SubjectRepository;
 import com.tfg.brais.Service.ComplementaryServices.SubjectCheckService;
 import com.tfg.brais.Service.ComplementaryServices.UserCheckService;
@@ -26,6 +28,9 @@ public class UserSubjectService {
 
     @Autowired
     private SubjectCheckService subjectCheckService;
+
+    @Autowired
+    private ExerciseUploadRepository exerciseUploadRepository;
 
     public UserSubjectService(UserCheckService userCheckService, SubjectRepository subjectRepository,
             SubjectCheckService subjectCheckService) {
@@ -80,5 +85,24 @@ public class UserSubjectService {
 
     public ResponseEntity<Boolean> isTeacherOfSubject(long id, long userId) {
         return ResponseEntity.ok(subjectCheckService.isTeacherOfSubject(id, userId));
+    }
+
+    public ResponseEntity<StudentCalificationDTO> searchCalifications(long id, long studentId,
+            Principal userPrincipal) {
+        ResponseEntity<User> userCheckResponse = userCheckService.loadUserPrincipal(studentId, userPrincipal);
+
+        if (userCheckResponse.getStatusCode().is4xxClientError()) {
+            return new ResponseEntity<>(userCheckResponse.getStatusCode());
+        }
+
+        if (!subjectCheckService.isStudentOfSubject(studentId, id)) {
+            return ResponseEntity.status(403).build();
+        }
+
+        StudentCalificationDTO studentCalificationDTO = new StudentCalificationDTO(
+                exerciseUploadRepository.findBySubjectIdStudentIdAndVisibleCalification(id, studentId));
+
+        return ResponseEntity.ok(studentCalificationDTO);
+
     }
 }

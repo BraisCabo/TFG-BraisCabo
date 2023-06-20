@@ -256,4 +256,8 @@ export class StudentExamPageComponent {
       height: '90%',
     });
   }
+
+  canUpload() : boolean{
+    return this.exam.openingDate.getTime() < Date.now();
+  }
 }

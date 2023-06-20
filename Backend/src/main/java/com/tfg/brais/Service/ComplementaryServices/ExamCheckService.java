@@ -128,7 +128,7 @@ public class ExamCheckService {
         }
         User user = userCheckResponse.getBody();
 
-        ResponseEntity<Subject> subjectResponse = subjectCheckService.findById(id);
+        ResponseEntity<Subject> subjectResponse = subjectCheckService.findById(subjectId);
 
         if (subjectResponse.getStatusCode().is4xxClientError()) {
             return ResponseEntity.notFound().build();

@@ -1,9 +1,12 @@
 <mat-grid-list cols="1">
   <div *ngIf="!isLoading(); else loading">
-  <div *ngIf="isTeacher">
+  <div *ngIf="isTeacher;else isStudent">
     <button mat-raised-button color="primary" (click)="createExam()" style="margin-bottom: 2vh;"> <mat-icon>add</mat-icon> Nuevo
       examen</button>
   </div>
+  <ng-template #isStudent>
+    <button mat-raised-button color="primary" (click)="goToCalifications()" style="margin-bottom: 2vh;">Mis calificaciones</button>
+  </ng-template>
   <div *ngIf="this.exams.length > 0; else noExams">
     <span  class="title">Examenes </span>
     <mat-card *ngFor="let exam of this.exams" class="button-like-card" style="margin-top: 2vh" (click)="goToExam(exam)">

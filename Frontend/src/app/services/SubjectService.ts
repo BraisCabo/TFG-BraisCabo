@@ -9,6 +9,7 @@ const BASE_URL = '/api/subjects/';
 
 @Injectable({ providedIn: 'root' })
 export class SubjectService {
+
   editSubject(name: string, students: Number[], teachers: Number[], id: number) : Observable<SubjectDetailed> {
     const subjectDTO: SubjectChanges = {
       name: name,
@@ -59,6 +60,10 @@ export class SubjectService {
 
   isSubjectTeacher(userId: Number, subjectId: Number) : Observable<any> {
     return this.http.get(BASE_URL + subjectId + "/users/" + userId + "/") as Observable<any>;
+  }
+
+  getStudentCalifications(userId: number, subjectId: number): Observable<any> {
+    return this.http.get(BASE_URL + subjectId + "/users/" + userId + "/califications") as Observable<any>;
   }
 
 

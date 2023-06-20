@@ -49,6 +49,11 @@ import { EditExamComponent } from './components/edit-exam/edit-exam.component';
 import { FileSaverModule } from 'ngx-filesaver';
 import { QuestionsExamPageComponent } from './components/questions-exam-page/questions-exam-page.component';
 import { ViewAnswersDialogComponent } from './components/exam-page/student-exam-page/view-answers-dialog/view-answers-dialog.component';
+import { CalificateComponent } from './components/calificate/calificate.component';
+import { SetCalificationDialogComponent } from './components/calificate/set-calification-dialog/set-calification-dialog.component';
+import { EditCalificationDialogComponent } from './components/calificate/edit-calification-dialog/edit-calification-dialog.component';
+import { StudentCalificationsComponent } from './components/student-califications/student-califications.component';
+import {MatTableModule} from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -72,7 +77,11 @@ import { ViewAnswersDialogComponent } from './components/exam-page/student-exam-
     StudentExamPageComponent,
     EditExamComponent,
     QuestionsExamPageComponent,
-    ViewAnswersDialogComponent
+    ViewAnswersDialogComponent,
+    CalificateComponent,
+    SetCalificationDialogComponent,
+    EditCalificationDialogComponent,
+    StudentCalificationsComponent
   ],
   imports: [
     BrowserModule,
@@ -102,7 +111,8 @@ import { ViewAnswersDialogComponent } from './components/exam-page/student-exam-
     MatNativeDateModule,
     MatDatepickerModule,
     NgxMaterialTimepickerModule.setOpts('es-ES', 'spanish'),
-    FileSaverModule
+    FileSaverModule,
+    MatTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]

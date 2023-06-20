@@ -12,6 +12,9 @@ import { loggedGuard } from './services/LoggedGuard';
 import { adminGuard } from './services/AdminGuard';
 import { EditExamComponent } from './components/edit-exam/edit-exam.component';
 import { QuestionsExamPageComponent } from './components/questions-exam-page/questions-exam-page.component';
+import { CalificateComponent } from './components/calificate/calificate.component';
+import { StudentCalification } from './models/StudentCalification';
+import { StudentCalificationsComponent } from './components/student-califications/student-califications.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [loggedGuard]},
@@ -22,7 +25,9 @@ const routes: Routes = [
   { path: 'subject/:id', component: SubjectPageComponent, canActivate: [loggedGuard]},
   { path: 'subject/:id/newExam', component: CreateExamComponent, canActivate: [loggedGuard]},
   { path: 'subject/:subjectId/exam/:examId', component: ExamPageComponent, canActivate: [loggedGuard]},
+  { path: 'subject/:subjectId/user/:userId/califications', component: StudentCalificationsComponent, canActivate: [loggedGuard]},
   { path: 'subject/:subjectId/exam/:examId/editExam', component: EditExamComponent, canActivate: [loggedGuard]},
+  { path: 'subject/:subjectId/exam/:examId/calificate', component: CalificateComponent, canActivate: [loggedGuard]},
   { path: 'subject/:subjectId/exam/:examId/resolveExam', component: QuestionsExamPageComponent, canActivate: [loggedGuard]},
   { path: '**', redirectTo: 'error'}
 

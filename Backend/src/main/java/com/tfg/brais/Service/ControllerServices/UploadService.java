@@ -15,6 +15,7 @@ import com.tfg.brais.Model.Exam;
 import com.tfg.brais.Model.ExerciseUpload;
 import com.tfg.brais.Model.User;
 import com.tfg.brais.Model.DTOS.AnswersDTO;
+import com.tfg.brais.Model.DTOS.CalificationDTO;
 import com.tfg.brais.Repository.ExamRepository;
 import com.tfg.brais.Repository.ExerciseUploadRepository;
 import com.tfg.brais.Service.ComplementaryServices.ExerciseUploadCheckService;
@@ -57,7 +58,7 @@ public class UploadService {
         ExerciseUpload upload = checkIfCanUpload.getBody();
         User user = upload.getStudent();
         Exam exam = upload.getExam();
-        if (exam.getType() != "UPLOADS") {
+        if (!exam.getType().equals("UPLOAD")) {
             return ResponseEntity.status(403).build();
         }
         try {
@@ -65,6 +66,7 @@ public class UploadService {
                     user.getName() + user.getLastName());
             fileService.saveFile(file, path);
             upload.setFileName(file.getOriginalFilename());
+            upload.setUploaded(true);
             exerciseUploadRepository.save(upload);
             return ResponseEntity.ok(upload);
         } catch (Exception e) {
@@ -102,14 +104,14 @@ public class UploadService {
         }
     }
 
-    public ResponseEntity<List<ExerciseUpload>> findAllUploads(long id, long examId, Principal principal) {
+    public ResponseEntity<List<ExerciseUpload>> findAllUploads(long id, long examId, Principal principal, String name) {
         ResponseEntity<ExerciseUpload> checkIfCanSeeUploads = exerciseUploadCheckService.checkIfCanSeeUploads(id,
                 principal);
         if (checkIfCanSeeUploads.getStatusCode().is4xxClientError()) {
             return ResponseEntity.status(checkIfCanSeeUploads.getStatusCode()).build();
         }
         try {
-            return ResponseEntity.ok(exerciseUploadRepository.findAllByExamIdAndExamSubjectId(examId, id));
+            return ResponseEntity.ok(exerciseUploadRepository.findAllByExamIdAndExamSubjectId(examId, id, name));
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
@@ -123,7 +125,15 @@ public class UploadService {
             return ResponseEntity.status(checkIfCanSeeUploads.getStatusCode()).build();
         }
         try {
-            exerciseUploadRepository.deleteById(uploaId);
+            ExerciseUpload upload = response.getBody();
+            if (!upload.isUploaded()) {
+                return ResponseEntity.status(403).build();
+            }
+            upload.setCalification(null);
+            upload.setAnswers(null);
+            upload.setFileName(null);
+            upload.setUploaded(false);
+            exerciseUploadRepository.save(upload);
             return response;
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
@@ -149,6 +159,7 @@ public class UploadService {
             Path path = Paths.get(exam.getSubject().getId().toString(), exam.getId().toString(),
                     user.getName() + user.getLastName());
             fileService.createTextFile(path.toString(), upload.getFileName(), exam.getQuestions(), upload.getAnswers());
+            upload.setUploaded(true);
             exerciseUploadRepository.save(upload);
             return ResponseEntity.ok(upload);
         } catch (Exception e) {
@@ -168,5 +179,67 @@ public class UploadService {
         answersDTO.setAnswers(upload.getAnswers());
         answersDTO.setQuestions(upload.getExam().getQuestions());
         return ResponseEntity.ok(answersDTO);
+    }
+
+    public ResponseEntity<ExerciseUpload> uploadCalification(long id, long examId, long uploadId,
+            CalificationDTO calification, Principal principal) {
+        ResponseEntity<ExerciseUpload> checkIfCanSeeUploads = exerciseUploadCheckService.checkIfCanSeeUploads(id,
+                principal);
+        ResponseEntity<ExerciseUpload> response = findUploadById(id, examId, uploadId, principal);
+        if (checkIfCanSeeUploads.getStatusCode().is4xxClientError()) {
+            return ResponseEntity.status(checkIfCanSeeUploads.getStatusCode()).build();
+        }
+        try {
+            ExerciseUpload upload = response.getBody();
+            if (upload.getCalification() != null) {
+                return ResponseEntity.status(403).build();
+            }
+            if (calification.getCalification() == null || Long.parseLong(calification.getCalification()) < 0
+                    || Long.parseLong(calification.getCalification()) > 10
+                    || calification.getCalification().isEmpty()) {
+                return ResponseEntity.status(403).build();
+            }
+
+            if (calification.getComment() == null) {
+                calification.setComment("");
+            }
+            upload.setCalification(calification.getCalification());
+            upload.setComment(calification.getComment());
+            exerciseUploadRepository.save(upload);
+            return response;
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    public ResponseEntity<ExerciseUpload> editCalification(long id, long examId, long uploadId,
+            CalificationDTO calification, Principal principal) {
+        ResponseEntity<ExerciseUpload> checkIfCanSeeUploads = exerciseUploadCheckService.checkIfCanSeeUploads(id,
+                principal);
+        ResponseEntity<ExerciseUpload> response = findUploadById(id, examId, uploadId, principal);
+        if (checkIfCanSeeUploads.getStatusCode().is4xxClientError()) {
+            return ResponseEntity.status(checkIfCanSeeUploads.getStatusCode()).build();
+        }
+        try {
+            ExerciseUpload upload = response.getBody();
+            if (upload.getCalification() == null) {
+                return ResponseEntity.status(403).build();
+            }
+            if (calification.getCalification() == null || Long.parseLong(calification.getCalification()) < 0
+                    || Long.parseLong(calification.getCalification()) > 10
+                    || calification.getCalification().isEmpty()) {
+                return ResponseEntity.status(403).build();
+            }
+
+            if (calification.getComment() == null) {
+                calification.setComment("");
+            }
+            upload.setCalification(calification.getCalification());
+            upload.setComment(calification.getComment());
+            exerciseUploadRepository.save(upload);
+            return response;
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

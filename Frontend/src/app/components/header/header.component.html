@@ -10,7 +10,7 @@
         <mat-icon>account_circle</mat-icon>
       </button>
       <mat-menu #beforeMenu="matMenu" xPosition="before">
-        <button *ngIf="!this.isAdmin()" mat-menu-item>Mi cuenta</button>
+
         <button  mat-menu-item (click)="logout()"><mat-icon>exit_to_app</mat-icon>
           Logout</button>
       </mat-menu>

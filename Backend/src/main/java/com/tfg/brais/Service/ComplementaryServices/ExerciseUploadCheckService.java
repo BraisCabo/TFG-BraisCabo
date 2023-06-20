@@ -44,10 +44,13 @@ public class ExerciseUploadCheckService {
         }
 
         try {
-            exerciseUploadRepository.findByStudentIdAndExamIdAndExamSubjectId(userId, examId, id).get();
-            return ResponseEntity.status(403).build();
-        } catch (Exception e) {
+            ExerciseUpload exerciseUpload = exerciseUploadRepository.findByStudentIdAndExamIdAndExamSubjectId(userId, examId, id).get();
+            if(exerciseUpload.isUploaded()){
+                return ResponseEntity.status(403).build();
+            }
             return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
         }
     }
 
@@ -64,7 +67,7 @@ public class ExerciseUploadCheckService {
             return ResponseEntity.notFound().build();
         }
         ExerciseUpload upload = findById.get();
-        if (upload.getStudent().getId() != user.getId() || subjectCheckService.isStudentOfSubject(id, user.getId())) {
+        if (upload.getStudent().getId() != user.getId() && !subjectCheckService.isTeacherOfSubject(id, user.getId())) {
             return ResponseEntity.status(403).build();
         }
 
@@ -107,13 +110,18 @@ public class ExerciseUploadCheckService {
         }
     }
 
-    public ResponseEntity<ExerciseUpload> checkIfCanUpload(long id, long examId, Principal principal){
-        ExerciseUpload upload = new ExerciseUpload();
+    public ResponseEntity<ExerciseUpload> checkIfCanUpload(long id, long examId, Principal principal){;
         ResponseEntity<User> responseUser = userCheckService.loadUserNoCkeck(principal);
         if (responseUser.getStatusCode().is4xxClientError()) {
             return ResponseEntity.status(responseUser.getStatusCode()).build();
         }
         User user = responseUser.getBody();
+        ExerciseUpload upload;
+        try {
+            upload = exerciseUploadRepository.findByStudentIdAndExamIdAndExamSubjectId(user.getId(), examId, id).get();
+        } catch (Exception e) {
+            return ResponseEntity.status(403).build();
+        }
         ResponseEntity<ExerciseUpload> checkIfCanUpload = this.checkIfCanUploadUser(id, examId,
                 user.getId());
         if (checkIfCanUpload.getStatusCode().is4xxClientError()) {

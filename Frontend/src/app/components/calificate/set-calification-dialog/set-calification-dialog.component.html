@@ -1,0 +1,18 @@
+<mat-grid-list cols="1">
+  <div style="display: flex; justify-content: flex-end; margin-top: 2vh;">
+    <button mat-icon-button color="primary" (click)="closeDialog()" style="margin-bottom: 2vh;">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <mat-form-field>
+    <mat-label>Nota de la tarea</mat-label>
+    <input matInput [formControl]="calification" required>
+    <mat-error *ngIf="calification.invalid">{{getErrorMessage()}}</mat-error>
+  </mat-form-field>
+  <mat-form-field style="width: 90%;">
+    <mat-label>Comentario sobre la tarea</mat-label>
+    <textarea matInput [(ngModel)]="comment"></textarea>
+  </mat-form-field>
+  <br>
+  <button [disabled]="calification.invalid" mat-raised-button color="primary" (click)="openDialog()">Subir calificación</button>
+</mat-grid-list>

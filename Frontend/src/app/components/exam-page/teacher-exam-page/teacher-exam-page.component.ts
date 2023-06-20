@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ExamTeacher } from 'src/app/models/ExamTeacher';
 import { ExamService } from 'src/app/services/ExamService';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ExerciseUpload } from 'src/app/models/ExerciseUpload';
 
 @Component({
   selector: 'app-teacher-exam-page',
@@ -17,13 +18,15 @@ export class TeacherExamPageComponent {
   subjectId: number = 0;
   exam!: ExamTeacher;
   loadingDownload = false;
+  name = '';
+  exerciseUploads: ExerciseUpload[] = [];
 
   constructor(
     private examService: ExamService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private uploadService: UploadService,
-    private _snackBar: MatSnackBar,
+    private _snackBar: MatSnackBar
   ) {
     this.examId = Number(this.activatedRoute.snapshot.paramMap.get('examId'));
     this.subjectId = Number(
@@ -58,10 +61,10 @@ export class TeacherExamPageComponent {
   }
 
   openSnackBar(message: string) {
-    this._snackBar.open(message, "Aceptar", {
-      horizontalPosition: "center",
-      verticalPosition: "top",
-      duration: 5000
+    this._snackBar.open(message, 'Aceptar', {
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      duration: 5000,
     });
   }
 
@@ -133,9 +136,6 @@ export class TeacherExamPageComponent {
   }
 
   editExam() {
-    console.log(
-      '/subjects/' + this.subjectId + '/exams/' + this.examId + '/editExam'
-    );
     this.router.navigate([
       '/subject/' + this.subjectId + '/exam/' + this.examId + '/editExam',
     ]);
@@ -155,18 +155,23 @@ export class TeacherExamPageComponent {
     );
   }
 
-  downloadAllUploads(){
+  downloadAllUploads() {
     this.loadingDownload = true;
     this.uploadService.downloadAll(this.subjectId, this.examId).subscribe(
       (response) => {
-        this.uploadService.donwloadFile(response)
+        this.uploadService.donwloadFile(response);
         this.loadingDownload = false;
       },
       (_) => {
-        this.openSnackBar('Error al descargar el fichero intentalo de nuevo más tarde.');
+        this.openSnackBar(
+          'Error al descargar el fichero intentalo de nuevo más tarde.'
+        );
         this.loadingDownload = false;
       }
     );
+  }
 
+  goToCalificate(){
+    this.router.navigate(['/subject/' + this.subjectId + '/exam/' + this.examId + '/calificate']);
   }
 }
