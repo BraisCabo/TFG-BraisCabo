@@ -25,6 +25,7 @@ export class EditCalificationDialogComponent {
     Validators.max(10),
   ]);
   comment: String = '';
+  loading : boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<EditCalificationDialogComponent>,
@@ -69,6 +70,7 @@ export class EditCalificationDialogComponent {
   }
 
   setCalification() {
+    this.loading = true;
     let studentCalification: Calification = new Calification();
     studentCalification.calification = this.calification.value;
     studentCalification.comment = this.comment;
@@ -88,6 +90,7 @@ export class EditCalificationDialogComponent {
           this.openSnackBar(
             'Error al establecer la calificación inténtalo de nuevo'
           );
+          this.loading = false;
         }
       );
   }

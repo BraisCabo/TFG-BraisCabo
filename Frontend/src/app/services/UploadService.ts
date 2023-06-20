@@ -1,4 +1,3 @@
-import { FileSaverService } from 'ngx-filesaver';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
@@ -9,7 +8,7 @@ const BASE_URL = '/api/subjects/';
 @Injectable({ providedIn: 'root' })
 export class UploadService {
 
-  constructor(private http: HttpClient, private fileSaverService: FileSaverService) { }
+  constructor(private http: HttpClient) { }
 
   downloadAll(subectId: Number, examId : Number) : Observable<any>{
     return this.http.get(BASE_URL + subectId + '/exams/' + examId + '/uploads/files', { responseType: 'blob', observe: 'response' })
@@ -46,9 +45,13 @@ export class UploadService {
   }
 
   public donwloadFile(response : any){
-      const blob = response.body;
+      const blob = new Blob([response.body]);
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
       const filename = this.getFileNameFromResponse(response);
-      this.fileSaverService.save(blob, filename);
+      link.download = filename
+      link.click();
+      link.remove();
   }
 
   public getAnswersAndQuestions(subjectId: Number, examId : Number, uploadId : Number ) : Observable<any>{

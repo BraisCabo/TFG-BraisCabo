@@ -46,7 +46,6 @@ import { ExamPageComponent } from './components/exam-page/exam-page.component';
 import { TeacherExamPageComponent } from './components/exam-page/teacher-exam-page/teacher-exam-page.component';
 import { StudentExamPageComponent } from './components/exam-page/student-exam-page/student-exam-page.component';
 import { EditExamComponent } from './components/edit-exam/edit-exam.component';
-import { FileSaverModule } from 'ngx-filesaver';
 import { QuestionsExamPageComponent } from './components/questions-exam-page/questions-exam-page.component';
 import { ViewAnswersDialogComponent } from './components/exam-page/student-exam-page/view-answers-dialog/view-answers-dialog.component';
 import { CalificateComponent } from './components/calificate/calificate.component';
@@ -111,7 +110,6 @@ import {MatTableModule} from '@angular/material/table';
     MatNativeDateModule,
     MatDatepickerModule,
     NgxMaterialTimepickerModule.setOpts('es-ES', 'spanish'),
-    FileSaverModule,
     MatTableModule
   ],
   providers: [],

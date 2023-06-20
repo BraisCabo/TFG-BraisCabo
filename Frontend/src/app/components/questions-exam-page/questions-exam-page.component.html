@@ -1,4 +1,5 @@
 <mat-grid-list cols="1">
+  <div *ngIf="!loadingQuestions; else isLoading">
   <div *ngFor="let question of questions; let i = index">
     <mat-card style="margin-bottom: 2vh;">
       <mat-card-header>
@@ -18,6 +19,7 @@
   <ng-template #isLoadingSend>
     <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
   </ng-template>
+</div>
   <ng-template #isLoading>
     <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
   </ng-template>

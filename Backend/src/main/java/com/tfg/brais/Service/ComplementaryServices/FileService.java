@@ -41,7 +41,6 @@ public class FileService {
     public void saveFile(MultipartFile fileToSavFile, Path finalPath)
             throws IOException {
         if (fileToSavFile != null && !fileToSavFile.isEmpty()) {
-
             Files.createDirectories(Paths.get(fileDir, finalPath.toString()));
             Files.copy(fileToSavFile.getInputStream(),
                     Paths.get(fileDir, finalPath.toString(), fileToSavFile.getOriginalFilename()),
@@ -75,5 +74,20 @@ public class FileService {
                 Paths.get(fileDir, filePath.toString(), fileName),
                 sb.toString().getBytes(),
                 StandardOpenOption.CREATE);
+    }
+
+    public void deleteDirectory(String filePath) throws IOException {
+        Path deletePath = Paths.get(fileDir, filePath);
+        Files.walk(deletePath)
+                    .sorted((a, b) -> b.compareTo(a)) // Ordena de forma descendente para borrar primero los archivos/directorios internos
+                    .forEach(path -> {
+                        try {
+                            Files.delete(path);
+                        } catch (IOException e) {
+                            // Manejo de errores
+                            e.printStackTrace();
+                        }
+                    });
+            Files.deleteIfExists(deletePath);
     }
 }

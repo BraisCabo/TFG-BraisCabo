@@ -25,6 +25,7 @@ export class StudentCalificationsComponent {
   califications: StudentCalification = new StudentCalification();
   displayedColumns: string[] = ['examen', 'porcentaje', 'calificacion', 'comentario'];
   source : ExamCalification[] = [];
+  loading = true;
 
   constructor(private activatedRoute: ActivatedRoute, private subjectService: SubjectService, private router: Router) {
     this.userId = Number(this.activatedRoute.snapshot.paramMap.get('userId'));
@@ -34,9 +35,11 @@ export class StudentCalificationsComponent {
       for (let index = 0; index < this.califications.califications.length; index++) {
         this.source.push({examen: this.califications.examNames[index], porcentaje: this.califications.percentajes[index] + "%", calificacion: this.califications.califications[index], comentario: this.califications.comments[index]});
       }
+      this.loading = false;
       this.table.renderRows()
+    }, (error) => {
+      this.router.navigate(['/error']);
     }
-
     );
    }
 

@@ -17,20 +17,20 @@ public class StudentCalificationDTO {
     private String finalCalification;
 
     public StudentCalificationDTO(List<ExerciseUpload> uploads) {
-        long finalCalification = 0l;
+        Double finalCalification = 0D;
         for (ExerciseUpload upload : uploads) {
             this.califications.add(upload.getCalification() == null ? "" : upload.getCalification());
             this.comments.add(upload.getComment() == null ? "" : upload.getComment());
             this.percentajes.add(upload.getExam().getCalificationPercentaje());
             this.examNames.add(upload.getExam().getName());
-            long thisCalification;
+            Double thisCalification;
             if (upload.getCalification() == null || upload.getCalification().equals("")){
-               thisCalification = 0L;
+               thisCalification = 0D;
             }else {
-                thisCalification = Long.parseLong(upload.getCalification());
+                thisCalification = Double.parseDouble(upload.getCalification());
             }
             finalCalification += thisCalification
-                    * Long.parseLong(upload.getExam().getCalificationPercentaje()) / 100;
+                    * Double.parseDouble(upload.getExam().getCalificationPercentaje()) / 100;
         }
         this.finalCalification = String.valueOf(finalCalification);
     }

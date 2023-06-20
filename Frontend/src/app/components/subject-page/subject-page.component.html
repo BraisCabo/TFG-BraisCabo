@@ -7,6 +7,7 @@
   <ng-template #isStudent>
     <button mat-raised-button color="primary" (click)="goToCalifications()" style="margin-bottom: 2vh;">Mis calificaciones</button>
   </ng-template>
+  <br>
   <div *ngIf="this.exams.length > 0; else noExams">
     <span  class="title">Examenes </span>
     <mat-card *ngFor="let exam of this.exams" class="button-like-card" style="margin-top: 2vh" (click)="goToExam(exam)">

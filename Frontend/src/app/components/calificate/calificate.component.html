@@ -1,4 +1,5 @@
 <mat-grid-list cols="1">
+
   <div class="container2">
     <mat-form-field appearance="fill">
       <mat-label>Buscar</mat-label>
@@ -12,12 +13,13 @@
         (click)="goToExam()"><mat-icon>keyboard_backspace</mat-icon>Volver</button>
     </span>
   </div>
-  <mat-card *ngFor="let upload of exerciseUploads; let i = index">
+  <div *ngIf="!loadingCalifications; else isLoading">
+  <mat-card *ngFor="let upload of exerciseUploads; let i = index" style="margin-bottom: 2vh;">
     <mat-card-header>
       <mat-card-title><span style="font-size: large;">{{upload.student.name}}
           {{upload.student.lastName}}</span></mat-card-title>
       <mat-card-subtitle>{{getTimeMessage(upload)}}<br>
-        <span *ngIf="upload.calification != null; else noCalificated">
+        <span *ngIf="upload.calification!=''; else noCalificated">
           Calificación: {{upload.calification}} <br>
           Comentario: {{upload.comment}}
         </span>
@@ -46,4 +48,8 @@
       </ng-template>
     </mat-card-actions>
   </mat-card>
+  </div>
+  <ng-template #isLoading>
+    <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+  </ng-template>
 </mat-grid-list>

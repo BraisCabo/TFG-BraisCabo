@@ -1,5 +1,4 @@
 package com.tfg.brais.Service.ControllerServices;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import com.tfg.brais.Model.DTOS.SubjectChangesDTO;
 import com.tfg.brais.Model.DTOS.SubjectDetailedDTO;
 import com.tfg.brais.Repository.SubjectRepository;
 import com.tfg.brais.Repository.UserRepository;
+import com.tfg.brais.Service.ComplementaryServices.FileService;
 import com.tfg.brais.Service.ComplementaryServices.SubjectCheckService;
 @Service
 public class AdminService {
@@ -26,6 +26,9 @@ public class AdminService {
 
     @Autowired
     private SubjectCheckService subjectCheckService;
+
+    @Autowired
+    private FileService fileService;
 
     public AdminService(SubjectRepository subjectRepository, UserRepository userRepository, SubjectCheckService subjectCheckService) {
         this.subjectRepository = subjectRepository;
@@ -51,6 +54,11 @@ public class AdminService {
     public ResponseEntity<SubjectDetailedDTO> deleteById(long id){
         ResponseEntity<Subject> response = subjectCheckService.findById(id);
         if (response.getStatusCode().is2xxSuccessful()){
+            try {
+                fileService.deleteDirectory(Long.toString(id));
+            } catch (Exception e) {
+                System.out.println(e);
+            }
             subjectRepository.deleteById(id);
             return ResponseEntity.ok(new SubjectDetailedDTO(response.getBody()));
         }

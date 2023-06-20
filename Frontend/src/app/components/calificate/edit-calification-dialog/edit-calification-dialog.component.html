@@ -14,5 +14,8 @@
     <textarea matInput [(ngModel)]="comment"></textarea>
   </mat-form-field>
   <br>
-  <button [disabled]="calification.invalid" mat-raised-button color="primary" (click)="openDialog()">Subir calificación</button>
+  <button [disabled]="calification.invalid" mat-raised-button color="primary" (click)="openDialog()" *ngIf="!loading; else isLoading">Editar esta calificación</button>
+  <ng-template #isLoading>
+    <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+  </ng-template>
 </mat-grid-list>

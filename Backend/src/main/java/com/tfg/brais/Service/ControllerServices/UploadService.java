@@ -126,10 +126,14 @@ public class UploadService {
         }
         try {
             ExerciseUpload upload = response.getBody();
+            Path path = Paths.get(Long.toString(id), Long.toString(examId), upload.getStudent().getName() + upload.getStudent().getLastName());
+            fileService.deleteDirectory(path.toString());
             if (!upload.isUploaded()) {
                 return ResponseEntity.status(403).build();
             }
-            upload.setCalification(null);
+            upload.setCalification("");
+            upload.setComment("");
+            upload.setUploadDate(null);
             upload.setAnswers(null);
             upload.setFileName(null);
             upload.setUploaded(false);
@@ -191,11 +195,11 @@ public class UploadService {
         }
         try {
             ExerciseUpload upload = response.getBody();
-            if (upload.getCalification() != null) {
+            if (!upload.getCalification().equals("")) {
                 return ResponseEntity.status(403).build();
             }
-            if (calification.getCalification() == null || Long.parseLong(calification.getCalification()) < 0
-                    || Long.parseLong(calification.getCalification()) > 10
+            if (calification.getCalification() == null || Double.parseDouble(calification.getCalification()) < 0
+                    || Double.parseDouble(calification.getCalification()) > 10
                     || calification.getCalification().isEmpty()) {
                 return ResponseEntity.status(403).build();
             }
@@ -225,8 +229,8 @@ public class UploadService {
             if (upload.getCalification() == null) {
                 return ResponseEntity.status(403).build();
             }
-            if (calification.getCalification() == null || Long.parseLong(calification.getCalification()) < 0
-                    || Long.parseLong(calification.getCalification()) > 10
+            if (calification.getCalification() == null || Double.parseDouble(calification.getCalification()) < 0
+                    || Double.parseDouble(calification.getCalification()) > 10
                     || calification.getCalification().isEmpty()) {
                 return ResponseEntity.status(403).build();
             }

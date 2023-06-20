@@ -20,7 +20,6 @@
     "@angular/platform-browser": "^16.0.0",
     "@angular/platform-browser-dynamic": "^16.0.0",
     "@angular/router": "^16.0.0",
-    "ngx-filesaver": "^16.0.0",
     "ngx-material-timepicker": "^13.0.3",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
