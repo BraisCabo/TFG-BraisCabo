@@ -28,7 +28,7 @@ jobs:
             - name: Push the docker image
               run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/tfg
             - name: Install Okteto CLI
-              run: curl https:</get.okteto.com -sSfL | sh
+              run: curl https://get.okteto.com -sSfL | sh
             - name: Login into Okteto
               run: okteto context use https://cloud.okteto.com --token ${{ secrets.OKTETO_TOKEN }}
             - name: Deploy to Okteto
