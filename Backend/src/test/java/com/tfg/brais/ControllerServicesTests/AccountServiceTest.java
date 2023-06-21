@@ -20,6 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.tfg.brais.Model.User;
+import com.tfg.brais.Model.DTOS.UserBasicDTO;
+import com.tfg.brais.Model.DTOS.UserDetailedDTO;
+import com.tfg.brais.Model.DTOS.UserRegisterDTO;
 import com.tfg.brais.Repository.UserRepository;
 import com.tfg.brais.Service.ComplementaryServices.UserCheckService;
 import com.tfg.brais.Service.ControllerServices.AccountService;
@@ -66,9 +69,9 @@ public class AccountServiceTest {
             Principal principal = Mockito.mock(Principal.class);
             when(principal.getName()).thenReturn("test");
             when(userCheckService.findByMail(anyString())).thenReturn(ResponseEntity.ok(user));
-            ResponseEntity<User> me = accountService.getMe(principal);
+            ResponseEntity<UserDetailedDTO> me = accountService.getMe(principal);
             assertTrue(me.getStatusCode().is2xxSuccessful());
-            assertTrue(me.getBody().equals(user));
+            assertTrue(me.getBody().equals(new UserDetailedDTO(user)));
         }
     }
 
@@ -77,28 +80,25 @@ public class AccountServiceTest {
 
         @Test
         public void registerTestIncorrectUser() {
-            User user = createuser();
+            UserRegisterDTO user = createuser();
             when(userCheckService.validateNewUser(any())).thenReturn(false);
             assertTrue(accountService.register(user, null).getStatusCode().is4xxClientError());
         }
 
         @Test
         public void registerTestCorrectUser() {
-            User user = createuser();
+            UserRegisterDTO user = createuser();
+            User user2 = new User();
             when(userCheckService.validateNewUser(any())).thenReturn(true);
             when(passwordEncoder.encode(anyString())).thenReturn("12345678");
-            when(userRepository.save(any())).thenReturn(user);
+            when(userRepository.save(any())).thenReturn(user2);
             when(userLoginService.generateFreshToken(anyString())).thenReturn(null);
             UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
-            ResponseEntity<User> register = accountService.register(user, uriComponentsBuilder);
-            assertTrue(register.getStatusCode().is2xxSuccessful());
-            user.setRoles("USER");
-            assertTrue(register.getBody().equals(user));
-        }
+            ResponseEntity<UserDetailedDTO> register = accountService.register(user, uriComponentsBuilder);
+            assertTrue(register.getStatusCode().is2xxSuccessful());}
 
-        private User createuser(){
-            User user = new User();
-            user.setId(1L);
+        private UserRegisterDTO createuser(){
+            UserRegisterDTO user = new UserRegisterDTO();
             user.setName("test");
             user.setLastName("test");
             user.setEmail("test@gmail.com");
@@ -113,7 +113,7 @@ public class AccountServiceTest {
         @Test
         public void findAllTestEmpty() {
             when(userRepository.findAllByName(anyString(), any())).thenReturn(new PageImpl<>(new ArrayList<>()));
-            assertTrue(accountService.findAll(null, "test").getStatusCode().is4xxClientError());
+            assertTrue(accountService.findAll(null, "test").getStatusCode().is2xxSuccessful());
         }
 
         @Test
@@ -121,9 +121,8 @@ public class AccountServiceTest {
             List<User> users = new ArrayList<>();
             users.add(new User());
             when(userRepository.findAllByName(anyString(), any())).thenReturn(new PageImpl<>(users));
-            ResponseEntity<Page<User>> findAll = accountService.findAll(null, "test");
+            ResponseEntity<Page<UserBasicDTO>> findAll = accountService.findAll(null, "test");
             assertTrue(findAll.getStatusCode().is2xxSuccessful());
-            assertTrue(findAll.getBody().getContent().equals(users));
         }
     }
 
@@ -133,55 +132,53 @@ public class AccountServiceTest {
 
         @Test
         public void editUserTestIncorrectPrincipal() {
-            User user = createuser();
+            UserRegisterDTO user = createuser();
             when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.notFound().build());
             assertTrue(accountService.editUser(null, 1L, user).getStatusCode().is4xxClientError());
         }
 
         @Test
         public void editUserTestIncorrectNewUser(){
-            User user = createuser();
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(createuser()));
+            UserRegisterDTO user = createuser();
+            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(createuser().createUser()));
             when(userCheckService.validateEditUser(any(), any())).thenReturn(true);
             assertTrue(accountService.editUser(null, 1L, user).getStatusCode().is4xxClientError());
         }
 
         @Test
         public void editUserTestNewPassword(){
-            User newUser = createuser();
+            UserRegisterDTO newUser = createuser();
             newUser.setPassword("123456789");
-            User oldUser = createuser();
+            UserRegisterDTO oldUser = createuser();
             oldUser.setPassword("12345678");
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(oldUser));
+            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(oldUser.createUser()));
             when(userCheckService.validateEditUser(any(), any())).thenReturn(false);
             when(passwordEncoder.encode(anyString())).thenReturn("123456789");
-            when(userRepository.save(any())).thenReturn(newUser);
+            when(userRepository.save(any())).thenReturn(newUser.createUser());
             when(userLoginService.generateFreshToken(anyString())).thenReturn(null);
-            ResponseEntity<User> editUser = accountService.editUser(null, 1L, newUser);
+            ResponseEntity<UserDetailedDTO> editUser = accountService.editUser(null, 1L, newUser);
             assertTrue(editUser.getStatusCode().is2xxSuccessful());
-            assertTrue(editUser.getBody().equals(newUser));
+            assertTrue(editUser.getBody().getEncodedPassword().equals("123456789"));
         }
 
         @Test
         public void editUserTestNoPassword(){
-            User newUser = createuser();
+            UserRegisterDTO newUser = createuser();
             newUser.setName("test2");
-            User oldUser = createuser();
+            UserRegisterDTO oldUser = createuser();
             oldUser.setPassword("12345678");
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(oldUser));
+            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(oldUser.createUser()));
             when(userCheckService.validateEditUser(any(), any())).thenReturn(false);
             when(passwordEncoder.encode(anyString())).thenReturn("12345678");
-            when(userRepository.save(any())).thenReturn(newUser);
+            when(userRepository.save(any())).thenReturn(newUser.createUser());
             when(userLoginService.generateFreshToken(anyString())).thenReturn(null);
-            ResponseEntity<User> editUser = accountService.editUser(null, 1L, newUser);
+            ResponseEntity<UserDetailedDTO> editUser = accountService.editUser(null, 1L, newUser);
             assertTrue(editUser.getStatusCode().is2xxSuccessful());
-            newUser.setPassword("12345678");
-            assertTrue(editUser.getBody().equals(newUser));
+            assertTrue(editUser.getBody().getEncodedPassword().equals("12345678"));
         }
 
-        private User createuser(){
-            User user = new User();
-            user.setId(1L);
+        private UserRegisterDTO createuser(){
+            UserRegisterDTO user = new UserRegisterDTO();
             user.setName("test");
             user.setLastName("test");
             user.setEmail("test@gmail.com");

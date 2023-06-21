@@ -54,14 +54,14 @@ public class ExamCheckServiceTest {
 
         @Test
         public void checkIfCanCreateIncorrectPrincipalTest() {
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(new ResponseEntity<User>(HttpStatus.valueOf(404)));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(new ResponseEntity<User>(HttpStatus.valueOf(404)));
             ResponseEntity<Exam> response = examCheckService.checkIfCanCreate(1, new Exam(), null);
             assertTrue(response.getStatusCode().is4xxClientError());
         }
 
         @Test
         public void checkIfCanCreateIncorrectSubjectId(){
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(new User()));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(new User()));
             when(subjectCheckService.findById(anyLong())).thenReturn(new ResponseEntity<Subject>(HttpStatusCode.valueOf(404)));
             ResponseEntity<Exam> response = examCheckService.checkIfCanCreate(1, new Exam(), null);
             assertTrue(response.getStatusCode().is4xxClientError());
@@ -71,7 +71,7 @@ public class ExamCheckServiceTest {
         public void checkIfCanCreateNoTeacher(){
             User user = new User();
             user.setId(1L);
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectCheckService.findById(anyLong())).thenReturn(ResponseEntity.ok(new Subject()));
             when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(false);
             ResponseEntity<Exam> response = examCheckService.checkIfCanCreate(1L, new Exam(), null);
@@ -84,7 +84,7 @@ public class ExamCheckServiceTest {
             exam.setName(null);
             User user = new User();
             user.setId(1L);
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectCheckService.findById(anyLong())).thenReturn(ResponseEntity.ok(new Subject()));
             when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(true);
             ResponseEntity<Exam> response = examCheckService.checkIfCanCreate(1L, exam, null);
@@ -97,7 +97,7 @@ public class ExamCheckServiceTest {
             exam.setName("");
             User user = new User();
             user.setId(1L);
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectCheckService.findById(anyLong())).thenReturn(ResponseEntity.ok(new Subject()));
             when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(true);
             ResponseEntity<Exam> response = examCheckService.checkIfCanCreate(1L, exam, null);
@@ -111,7 +111,7 @@ public class ExamCheckServiceTest {
             exam.setType("test");
             User user = new User();
             user.setId(1L);
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectCheckService.findById(anyLong())).thenReturn(ResponseEntity.ok(new Subject()));
             when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(true);
             ResponseEntity<Exam> response = examCheckService.checkIfCanCreate(1L, exam, null);
@@ -125,7 +125,7 @@ public class ExamCheckServiceTest {
             exam.setType("QUESTIONS");
             User user = new User();
             user.setId(1L);
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectCheckService.findById(anyLong())).thenReturn(ResponseEntity.ok(new Subject()));
             when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(true);
             ResponseEntity<Exam> response = examCheckService.checkIfCanCreate(1L, exam, null);
@@ -141,7 +141,7 @@ public class ExamCheckServiceTest {
             exam.setOpeningDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
             User user = new User();
             user.setId(1L);
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectCheckService.findById(anyLong())).thenReturn(ResponseEntity.ok(new Subject()));
             when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(true);
             ResponseEntity<Exam> response = examCheckService.checkIfCanCreate(1L, exam, null);
@@ -158,7 +158,7 @@ public class ExamCheckServiceTest {
             exam.setClosingDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
             User user = new User();
             user.setId(1L);
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectCheckService.findById(anyLong())).thenReturn(ResponseEntity.ok(new Subject()));
             when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(true);
             when(examRepository.findByNameAndSubjectId(anyString(), anyLong())).thenReturn(Optional.of(new Exam()));
@@ -175,7 +175,7 @@ public class ExamCheckServiceTest {
             exam.setClosingDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
             User user = new User();
             user.setId(1L);
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectCheckService.findById(anyLong())).thenReturn(ResponseEntity.ok(new Subject()));
             when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(true);
             when(examRepository.findByNameAndSubjectId(anyString(), anyLong())).thenReturn(Optional.empty());
@@ -193,7 +193,7 @@ public class ExamCheckServiceTest {
             exam.setClosingDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
             User user = new User();
             user.setId(1L);
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectCheckService.findById(anyLong())).thenReturn(ResponseEntity.ok(new Subject()));
             when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(true);
             when(examRepository.findByNameAndSubjectId(anyString(), anyLong())).thenReturn(Optional.empty());
@@ -209,14 +209,14 @@ public class ExamCheckServiceTest {
 
         @Test
         public void checkIfCanEditIncorrectPrincipalTest() {
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(new ResponseEntity<User>(HttpStatus.valueOf(404)));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(new ResponseEntity<User>(HttpStatus.valueOf(404)));
             ResponseEntity<Exam> response = examCheckService.checkIfCanEdit(1, 1, new Exam(), null);
             assertTrue(response.getStatusCode().is4xxClientError());
         }
 
         @Test
         public void checkIfCanEditIncorrectSubjectId(){
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(new User()));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(new User()));
             when(subjectCheckService.findById(anyLong())).thenReturn(new ResponseEntity<Subject>(HttpStatusCode.valueOf(404)));
             ResponseEntity<Exam> response = examCheckService.checkIfCanEdit(1, 1, new Exam(), null);
             assertTrue(response.getStatusCode().is4xxClientError());
@@ -226,7 +226,7 @@ public class ExamCheckServiceTest {
         public void checkIfCanEditNoTeacher(){
             User user = new User();
             user.setId(1L);
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectCheckService.findById(anyLong())).thenReturn(ResponseEntity.ok(new Subject()));
             when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(false);
             ResponseEntity<Exam> response = examCheckService.checkIfCanEdit(1L, 1L, new Exam(), null);
@@ -239,7 +239,7 @@ public class ExamCheckServiceTest {
             exam.setName(null);
             User user = new User();
             user.setId(1L);
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectCheckService.findById(anyLong())).thenReturn(ResponseEntity.ok(new Subject()));
             when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(true);
             ResponseEntity<Exam> response = examCheckService.checkIfCanEdit(1L , 1L, exam, null);
@@ -252,7 +252,7 @@ public class ExamCheckServiceTest {
             exam.setName("");
             User user = new User();
             user.setId(1L);
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectCheckService.findById(anyLong())).thenReturn(ResponseEntity.ok(new Subject()));
             when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(true);
             ResponseEntity<Exam> response = examCheckService.checkIfCanEdit(1L, 1L, exam, null);
@@ -266,7 +266,7 @@ public class ExamCheckServiceTest {
             exam.setType("test");
             User user = new User();
             user.setId(1L);
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectCheckService.findById(anyLong())).thenReturn(ResponseEntity.ok(new Subject()));
             when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(true);
             ResponseEntity<Exam> response = examCheckService.checkIfCanEdit(1L, 1L, exam, null);
@@ -280,7 +280,7 @@ public class ExamCheckServiceTest {
             exam.setType("QUESTIONS");
             User user = new User();
             user.setId(1L);
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectCheckService.findById(anyLong())).thenReturn(ResponseEntity.ok(new Subject()));
             when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(true);
             ResponseEntity<Exam> response = examCheckService.checkIfCanEdit(1L, 1L, exam, null);
@@ -296,7 +296,7 @@ public class ExamCheckServiceTest {
             exam.setOpeningDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
             User user = new User();
             user.setId(1L);
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectCheckService.findById(anyLong())).thenReturn(ResponseEntity.ok(new Subject()));
             when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(true);
             ResponseEntity<Exam> response = examCheckService.checkIfCanEdit(1L, 1L, exam, null);
@@ -313,7 +313,7 @@ public class ExamCheckServiceTest {
             exam.setClosingDate(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)));
             User user = new User();
             user.setId(1L);
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectCheckService.findById(anyLong())).thenReturn(ResponseEntity.ok(new Subject()));
             when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(true);
             when(examRepository.findByIdAndSubjectId(anyLong(), anyLong())).thenReturn(Optional.empty());
@@ -339,7 +339,7 @@ public class ExamCheckServiceTest {
             User user = new User();
             user.setId(1L);
 
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectCheckService.findById(anyLong())).thenReturn(ResponseEntity.ok(new Subject()));
             when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(true);
             when(examRepository.findByIdAndSubjectId(anyLong(), anyLong())).thenReturn(Optional.of(exam2));
@@ -360,7 +360,7 @@ public class ExamCheckServiceTest {
             User user = new User();
             user.setId(1L);
 
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectCheckService.findById(anyLong())).thenReturn(ResponseEntity.ok(new Subject()));
             when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(true);
             when(examRepository.findByIdAndSubjectId(anyLong(), anyLong())).thenReturn(Optional.of(exam));

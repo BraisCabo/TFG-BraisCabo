@@ -20,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.tfg.brais.Model.Subject;
 import com.tfg.brais.Model.User;
 import com.tfg.brais.Model.DTOS.SubjectChangesDTO;
+import com.tfg.brais.Model.DTOS.SubjectDetailedDTO;
 import com.tfg.brais.Repository.SubjectRepository;
 import com.tfg.brais.Repository.UserRepository;
 import com.tfg.brais.Service.ComplementaryServices.SubjectCheckService;
@@ -106,7 +107,7 @@ public class AdminServiceTest {
             when(userRepository.findAllById(newSubject.getStudents())).thenReturn(new ArrayList<>());
             when(subjectCheckService.canEditSubject(anyLong(), any())).thenReturn(ResponseEntity.ok(oldSubject));
 
-            ResponseEntity<Subject> editSubject = adminService.editSubject(1L, newSubject);
+            ResponseEntity<SubjectDetailedDTO> editSubject = adminService.editSubject(1L, newSubject);
             assertTrue(editSubject.getStatusCode().is2xxSuccessful());
             assertTrue(editSubject.getBody().getName().equals("test1"));
             assertTrue(editSubject.getBody().getTeachers().size() == 2);

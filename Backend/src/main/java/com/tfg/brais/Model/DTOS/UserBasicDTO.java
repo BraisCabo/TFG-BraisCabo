@@ -25,6 +25,9 @@ public class UserBasicDTO {
     }
 
     public Page<UserBasicDTO> convertPage (Page<User> userPage){
+        if (userPage == null){
+            return null;
+        }
         Page<UserBasicDTO> newPage = new PageImpl<UserBasicDTO>(convertList(userPage.getContent()), userPage.getPageable(), userPage.getTotalElements());
         return newPage;
     }

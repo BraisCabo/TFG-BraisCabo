@@ -97,7 +97,7 @@ public class SubjectCheckServiceTest {
 
     @Test
     public void testCheckIfCanSeeMembersIncorrectUser() throws Exception {
-        when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(new ResponseEntity<User>(HttpStatusCode.valueOf(404)));
+        when(userCheckService.loadUserNoCkeck(any())).thenReturn(new ResponseEntity<User>(HttpStatusCode.valueOf(404)));
                 when(subjectRepository.countBySubjectIdAndTeacherId(anyLong(), anyLong()))
                 .thenReturn(1);
         
@@ -106,7 +106,7 @@ public class SubjectCheckServiceTest {
 
     @Test
     public void testCheckIfCanSeeMembersInexistentSubject() throws Exception {
-        when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(new User()));
+        when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(new User()));
                 when(subjectRepository.countBySubjectIdAndTeacherId(anyLong(), anyLong()))
                 .thenReturn(0);
             when(subjectRepository.findById(anyLong()))
@@ -119,7 +119,7 @@ public class SubjectCheckServiceTest {
             User user = new User();
             user.setId(1L);
             user.setRoles("USER");
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectRepository.countBySubjectIdAndTeacherId(anyLong(), anyLong()))
                     .thenReturn(0);
             when(subjectRepository.countBySubjectIdAndStudentId(anyLong(), anyLong()))
@@ -134,7 +134,7 @@ public class SubjectCheckServiceTest {
             User user = new User();
             user.setId(1L);
             user.setRoles("USER");
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectRepository.countBySubjectIdAndTeacherId(anyLong(), anyLong()))
                     .thenReturn(0);
             when(subjectRepository.countBySubjectIdAndStudentId(any(), any()))
@@ -149,7 +149,7 @@ public class SubjectCheckServiceTest {
             User user = new User();
             user.setId(1L);
             user.setRoles("USER");
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectRepository.countBySubjectIdAndTeacherId(any(), any()))
                     .thenReturn(1);
             when(subjectRepository.countBySubjectIdAndStudentId(any(), any()))
@@ -164,7 +164,7 @@ public class SubjectCheckServiceTest {
             User user = new User();
             user.setId(1L);
             user.setRoles("USER", "ADMIN");
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
             when(subjectRepository.countBySubjectIdAndTeacherId(any(), any()))
                     .thenReturn(0);
             when(subjectRepository.countBySubjectIdAndStudentId(any(), any()))
@@ -180,7 +180,7 @@ public class SubjectCheckServiceTest {
     class CheckIfCanSeeContentTests {
         @Test
         public void testCheckIfCanSeeMembersIncorrectUser() throws Exception {
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(new ResponseEntity<User>(HttpStatusCode.valueOf(404)));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(new ResponseEntity<User>(HttpStatusCode.valueOf(404)));
                     when(subjectRepository.countBySubjectIdAndTeacherId(anyLong(), anyLong()))
                     .thenReturn(1);
             
@@ -189,7 +189,7 @@ public class SubjectCheckServiceTest {
     
         @Test
         public void testCheckIfCanSeeMembersInexistentSubject() throws Exception {
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(new User()));
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(new User()));
                     when(subjectRepository.countBySubjectIdAndTeacherId(anyLong(), anyLong()))
                     .thenReturn(0);
                 when(subjectRepository.findById(anyLong()))
@@ -202,7 +202,7 @@ public class SubjectCheckServiceTest {
                 User user = new User();
                 user.setId(1L);
                 user.setRoles("USER");
-                when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+                when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
                 when(subjectRepository.countBySubjectIdAndTeacherId(anyLong(), anyLong()))
                         .thenReturn(0);
                 when(subjectRepository.countBySubjectIdAndStudentId(anyLong(), anyLong()))
@@ -217,7 +217,7 @@ public class SubjectCheckServiceTest {
                 User user = new User();
                 user.setId(1L);
                 user.setRoles("USER");
-                when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+                when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
                 when(subjectRepository.countBySubjectIdAndTeacherId(anyLong(), anyLong()))
                         .thenReturn(0);
                 when(subjectRepository.countBySubjectIdAndStudentId(any(), any()))
@@ -232,7 +232,7 @@ public class SubjectCheckServiceTest {
                 User user = new User();
                 user.setId(1L);
                 user.setRoles("USER");
-                when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+                when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
                 when(subjectRepository.countBySubjectIdAndTeacherId(any(), any()))
                         .thenReturn(1);
                 when(subjectRepository.countBySubjectIdAndStudentId(any(), any()))
@@ -247,7 +247,7 @@ public class SubjectCheckServiceTest {
                 User user = new User();
                 user.setId(1L);
                 user.setRoles("USER", "ADMIN");
-                when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(user));
+                when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
                 when(subjectRepository.countBySubjectIdAndTeacherId(any(), any()))
                         .thenReturn(0);
                 when(subjectRepository.countBySubjectIdAndStudentId(any(), any()))

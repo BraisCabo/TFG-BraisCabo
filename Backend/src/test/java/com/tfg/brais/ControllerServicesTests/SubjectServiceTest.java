@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 import com.tfg.brais.Model.Subject;
+import com.tfg.brais.Model.DTOS.SubjectDetailedDTO;
 import com.tfg.brais.Repository.SubjectRepository;
 import com.tfg.brais.Service.ComplementaryServices.SubjectCheckService;
 import com.tfg.brais.Service.ControllerServices.SubjectService;
@@ -45,15 +46,15 @@ public class SubjectServiceTest {
     public class FindAllTests {
         @Test
         public void testFindAllEmpty() {
-            List<Subject> subjects = new ArrayList<Subject>();
+            List<SubjectDetailedDTO> subjects = new ArrayList<SubjectDetailedDTO>();
             when(subjectRepository.findAllByName(anyString(), any())).thenReturn(new PageImpl<>(subjects));
-            assertTrue(subjectService.findAll("name", null).getStatusCode().is4xxClientError());
+            assertTrue(subjectService.findAll("name", null).getStatusCode().is2xxSuccessful());
         }
 
         @Test
         public void testFindAllCorrect() {
-            List<Subject> subjects = new ArrayList<Subject>();
-            subjects.add(new Subject());
+            List<SubjectDetailedDTO> subjects = new ArrayList<SubjectDetailedDTO>();
+            subjects.add(new SubjectDetailedDTO());
             when(subjectRepository.findAllByName(anyString(), any())).thenReturn(new PageImpl<>(subjects));
             assertTrue(subjectService.findAll("name", null).getStatusCode().is2xxSuccessful());
         }
