@@ -1,0 +1,14 @@
+.title{
+  font-size: x-large;
+  color: #cb0017;
+}
+
+.text{
+  font-size: large
+}
+
+.container2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

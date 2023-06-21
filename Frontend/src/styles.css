@@ -1,0 +1,29 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+header {
+  margin: 0;
+  padding: 0;
+}
+
+
+body {
+  height: auto;
+}
+
+mat-drawer-container{
+  margin: 0;
+  padding: 0;
+}
+
+mat-grid-list{
+  padding: 0;
+  border: 0;
+  margin-top: 3vh;
+  margin-bottom: 2vh;
+  margin-left: 2vw;
+  margin-right: 2vw;
+}
+
+

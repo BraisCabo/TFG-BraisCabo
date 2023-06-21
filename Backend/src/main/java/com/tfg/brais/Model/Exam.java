@@ -1,12 +1,18 @@
 package com.tfg.brais.Model;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Entity
@@ -18,23 +24,37 @@ public class Exam {
 
     private String name;
 
-    private String type;
+    private String type = "UPLOAD";
 
-    private String calification;
-
-    private String lastCalificationPercentaje;
+    private String calificationPercentaje = "0";
 
     @ManyToOne
+    @JsonIgnore
     private Subject subject;
 
-    @ManyToOne
-    private User user;
+    @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<ExerciseUpload> exerciseUploads = new ArrayList<>();
 
-    private boolean isVisible;
+    private boolean visibleExam = true;
 
-    private boolean calificationVisible;
+    private boolean calificationVisible = true;
 
-    private LocalDateTime openingDate;
+    private Date openingDate = new Date();
 
-    private LocalDateTime closingDate;
+    private Date closingDate = new Date();
+
+    private List<String> questions = new ArrayList<>();
+
+    public void update(Exam exam) {
+        this.name = exam.getName();
+        this.calificationPercentaje = exam.getCalificationPercentaje();
+        this.visibleExam = exam.isVisibleExam();
+        this.calificationVisible = exam.isCalificationVisible();
+        this.openingDate = exam.getOpeningDate();
+        this.closingDate = exam.getClosingDate();
+        this.questions = exam.getQuestions();
+        this.type = exam.getType();
+        
+    }
 }

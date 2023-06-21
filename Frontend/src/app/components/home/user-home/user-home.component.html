@@ -1,0 +1,50 @@
+<mat-grid-list cols="1" >
+  <div *ngIf="!isLoading(); else loading">
+  <div *ngIf="isSubjects(); else noSubjects">
+  <div  *ngIf="this.teachedSubjects.length > 0">
+  <p class="title">Asignaturas que impartes</p>
+  <div>
+    <div  *ngFor="let subject of this.teachedSubjects">
+      <mat-card class="button-like-card"  (click)="goToSubject(subject)">
+        <mat-card-content>
+          <span style="font-size: x-large;">
+            {{subject.name}}
+          </span>
+          <br>
+          <span style="color: grey;">
+            {{this.getTeachers(subject)}}
+          </span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<div *ngIf="this.studiedSubjects.length > 0">
+  <p class="title">Asignaturas en las que estás matriculado</p>
+  <div>
+    <div  *ngFor="let subject of this.studiedSubjects">
+    <mat-card class="button-like-card"  (click)="goToSubject(subject)">
+      <mat-card-content>
+        <span style="font-size: x-large;">
+          {{subject.name}}
+        </span>
+        <br>
+        <span style="color: grey;">
+          {{this.getTeachers(subject)}}
+        </span>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  </div>
+</div>
+</div>
+<ng-template #noSubjects>
+  <div class="title">
+    No se han encontrado asignaturas
+  </div>
+</ng-template>
+</div>
+<ng-template #loading>
+  <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+</ng-template>
+</mat-grid-list>

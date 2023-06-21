@@ -6,7 +6,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -27,11 +26,9 @@ public class Subject {
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @ElementCollection(fetch = FetchType.EAGER)
     private List<User> teachers = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @ElementCollection(fetch = FetchType.EAGER)
     private List<User> students = new ArrayList<>();
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)

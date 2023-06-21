@@ -1,0 +1,46 @@
+<mat-grid-list cols="2" rowHeight="6vh" class="first-row">
+  <mat-grid-tile style="justify-content: flex-start;">
+    <button
+      style=" width: auto; margin-left: 2vw; margin-right: auto;" [routerLink]="['/']" mat-icon-button color="basic" class="hover-effect-red"><mat-icon>home</mat-icon></button>
+  </mat-grid-tile>
+  <mat-grid-tile style="justify-content: flex-end;">
+    <div style="margin-left: auto; margin-right: 2vw;"  *ngIf="isLogged()">
+      <button mat-button color="basic" class="hover-effect-red" [matMenuTriggerFor]="beforeMenu" >
+        {{ userName() }}
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <mat-menu #beforeMenu="matMenu" xPosition="before">
+
+        <button  mat-menu-item (click)="logout()"><mat-icon>exit_to_app</mat-icon>
+          Logout</button>
+      </mat-menu>
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>
+
+<mat-grid-list cols="2" rowHeight="8vh" class="second-row">
+  <mat-grid-tile style="justify-content: flex-start;">
+    <img src="assets/images/logo.png" alt="logo"
+      style="height: 6vh; width: auto; margin-left: 2vw; margin-right: auto;" [routerLink]="['/']">
+  </mat-grid-tile>
+
+  <mat-grid-tile style="justify-content: flex-end;">
+    <div style="margin-left: auto; margin-right: 2vw;">
+      <div  *ngIf="this.isLogged(); else noLogged">
+    <button *ngIf="!isAdmin()" style=" flex-direction: row-reverse" mat-button color="basic" (click)="this.toggle()" class="hover-effect" >
+      Mis asignaturas
+      <mat-icon class="details-icon">arrow_drop_down</mat-icon>
+    </button>
+  </div>
+    <ng-template #noLogged>
+      <button mat-button color="basic" [routerLink]="['/register']" class="hover-effect" >
+        Registro
+      </button>
+      <button mat-button color="basic" (click)="this.navigateToLogin()" class="hover-effect">
+        Login
+      </button>
+    </ng-template>
+  </div>
+  </mat-grid-tile>
+</mat-grid-list>
+

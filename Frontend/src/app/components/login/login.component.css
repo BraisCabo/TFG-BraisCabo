@@ -1,0 +1,51 @@
+.container{
+  background-image: url('../../../assets/images/portada.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+mat-grid-list{
+  padding: unset;
+  border: unset;
+  margin : unset;
+}
+
+mat-grid-tile{
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+mat-form-field{
+  width: 100%;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-wrapper {
+  width: 60%;
+  height: 60%;
+}
+
+.logo-image {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+}
+
+.card-container {
+  position: relative;
+}
+
+.custom-snackbar {
+  position: relative;
+  margin-top: 100vh;
+  top: -100%; /* Desplazamiento igual a la altura del Snackbar */
+}
+
+
