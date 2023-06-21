@@ -1,0 +1,37 @@
+<mat-grid-list cols="1">
+  <div *ngIf="!isLoading(); else loading">
+  <div *ngIf="isTeacher;else isStudent">
+    <button mat-raised-button color="primary" (click)="createExam()" style="margin-bottom: 2vh;"> <mat-icon>add</mat-icon> Nuevo
+      examen</button>
+  </div>
+  <ng-template #isStudent>
+    <button mat-raised-button color="primary" (click)="goToCalifications()" style="margin-bottom: 2vh;">Mis calificaciones</button>
+  </ng-template>
+  <br>
+  <div *ngIf="this.exams.length > 0; else noExams">
+    <span  class="title">Examenes </span>
+    <mat-card *ngFor="let exam of this.exams" class="button-like-card" style="margin-top: 2vh" (click)="goToExam(exam)">
+      <mat-card-content>
+        <span *ngIf="exam.type === 'QUESTIONS'; else upload">
+            <mat-icon>question_answer</mat-icon>
+        </span>
+        <ng-template #upload>
+          <mat-icon> insert_drive_file</mat-icon>
+        </ng-template>
+        {{exam.name}}
+      </mat-card-content>
+      <mat-card-actions *ngIf="isTeacher" style="justify-content: flex-end;">
+        <button mat-icon-button color="primary" (click)="changeVisibility(exam); $event.stopPropagation()">
+          <mat-icon>{{!exam.visibleExam ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  <ng-template #noExams>
+        <span  class="title">No se encontraron examenes</span>
+  </ng-template>
+</div>
+<ng-template #loading>
+  <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+</ng-template>
+</mat-grid-list>

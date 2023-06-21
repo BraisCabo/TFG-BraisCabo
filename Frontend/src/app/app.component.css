@@ -1,0 +1,32 @@
+
+app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000; /* Ajusta este valor si necesitas que el app-header esté por encima de otros elementos */
+}
+
+app-footer {
+  bottom: 0;
+  margin-top: 0;
+  left: 0;
+  right: 0;
+  z-index: -1000; /* Ajusta este valor si necesitas que el app-header esté por encima de otros elementos */
+}
+
+mat-drawer-container{
+  margin-top: 14vh;
+  min-height: 76vh;
+  background-color: white;
+  margin-bottom: 0vh;
+  padding-bottom: 0vh;
+}
+
+mat-drawer{
+  background-color: #cb0017;
+  color: white;
+  width: 240px;
+  max-width: 100%;
+}
+

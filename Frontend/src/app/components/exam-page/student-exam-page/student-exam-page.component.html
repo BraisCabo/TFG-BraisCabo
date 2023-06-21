@@ -1,0 +1,67 @@
+<div *ngIf="!loadingExam; else isLoading">
+  <mat-list>
+    <mat-list-item>
+      <div class="container2">
+        <p class="title">{{exam.name}}</p>
+        <span>
+          <button mat-raised-button color="primary" style="margin-right: 2vw;"
+            (click)="goToSubject()"><mat-icon>keyboard_backspace</mat-icon>Volver</button>
+        </span>
+      </div>
+    </mat-list-item>
+    <mat-list-item>
+      <span class="text">Fecha de apertura: {{getOpeningDate()}}</span> <br>
+    </mat-list-item>
+    <mat-list-item>
+      <span class="text">Fecha de cierre: {{getClosingDate()}}</span> <br>
+    </mat-list-item>
+    <mat-list-item>
+      <span class="text">{{getUploadingDate()}}</span> <br>
+    </mat-list-item>
+    <mat-list-item>
+      <span class="text">{{getRemainingTime()}}</span> <br>
+    </mat-list-item>
+    <mat-list-item>
+      <span class="text">El examen cuenta un {{exam.calificationPercentaje}}% de la nota final.</span> <br>
+    </mat-list-item>
+    <div *ngIf="!uploadedExam(); else isUploaded">
+      <div *ngIf="exam.type === 'UPLOAD'; else isQuestions">
+        <mat-list-item>
+          <span class="text">En esta tarea tienes que subir un fichero.</span>
+        </mat-list-item>
+        <mat-list-item>
+          <input type="file" (change)="onFileSelected($event)" style="display:none" #fileUpload>
+          <button mat-raised-button color="primary" style="margin-right: 2vw;"
+            (click)="fileUpload.click()"><mat-icon>arrow_upward</mat-icon>Entregar tarea</button>
+        </mat-list-item>
+      </div>
+      <ng-template #isQuestions>
+        <mat-list-item>
+          <span class="text">Este examen es de preguntas cortas.</span>
+        </mat-list-item>
+        <mat-list-item>
+          <button [disabled]="!canUpload()" mat-raised-button color="primary" style="margin-right: 2vw;" (click)="toQuestionsExam()">Resolver
+            examen</button>
+        </mat-list-item>
+      </ng-template>
+    </div>
+    <ng-template #isUploaded>
+      <div *ngIf="exam.type === 'UPLOAD'; else isQuestionsUpload">
+        <mat-list-item>
+        <button mat-raised-button color="primary" (click)="downloadExam()"><mat-icon>arrow_downward</mat-icon>Descargar
+          mi entrega</button>
+      </mat-list-item>
+      </div>
+      <ng-template #isQuestionsUpload>
+        <mat-list-item>
+        <button mat-raised-button color="primary" (click)="openDialogView()">
+          <mat-icon>visibility</mat-icon>Ver mis respuestas
+        </button>
+      </mat-list-item>
+      </ng-template>
+    </ng-template>
+  </mat-list>
+</div>
+<ng-template #isLoading>
+  <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+</ng-template>

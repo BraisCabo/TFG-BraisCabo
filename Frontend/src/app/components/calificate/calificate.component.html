@@ -1,0 +1,55 @@
+<mat-grid-list cols="1">
+
+  <div class="container2">
+    <mat-form-field appearance="fill">
+      <mat-label>Buscar</mat-label>
+      <input matInput [(ngModel)]="this.name">
+      <button mat-icon-button color="primary" (click)="this.searchUploads()" matSuffix>
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
+    <span>
+      <button mat-raised-button color="primary" style="margin-right: 2vw;"
+        (click)="goToExam()"><mat-icon>keyboard_backspace</mat-icon>Volver</button>
+    </span>
+  </div>
+  <div *ngIf="!loadingCalifications; else isLoading">
+  <mat-card *ngFor="let upload of exerciseUploads; let i = index" style="margin-bottom: 2vh;">
+    <mat-card-header>
+      <mat-card-title><span style="font-size: large;">{{upload.student.name}}
+          {{upload.student.lastName}}</span></mat-card-title>
+      <mat-card-subtitle>{{getTimeMessage(upload)}}<br>
+        <span *ngIf="upload.calification!=''; else noCalificated">
+          Calificación: {{upload.calification}} <br>
+          Comentario: {{upload.comment}}
+        </span>
+        <ng-template #noCalificated>
+          <span>Todavía no se ha calificado</span>
+        </ng-template>
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-actions>
+      <button *ngIf="upload.uploaded" mat-icon-button color="primary" (click)="getUpload(upload)">
+        <mat-icon>arrow_downward</mat-icon>
+      </button>
+      <button *ngIf="upload.uploaded && upload.exam.type === 'QUESTIONS'" mat-icon-button color="primary" (click)="viewAnswers(upload)">
+        <mat-icon>visibility</mat-icon>
+      </button>
+      <button *ngIf="upload.uploaded" mat-icon-button color="primary" (click)="openDialog(upload)">
+        <mat-icon>delete</mat-icon>
+       </button>
+      <button *ngIf="!upload.calification; else editCalification" mat-raised-button color="primary" (click)="calificate(upload, i)">
+        Calificar
+      </button>
+      <ng-template #editCalification>
+        <button color="primary" mat-raised-button (click)="editCalificate(upload, i)">
+          <mat-icon>edit</mat-icon> Editar Calificación
+        </button>
+      </ng-template>
+    </mat-card-actions>
+  </mat-card>
+  </div>
+  <ng-template #isLoading>
+    <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+  </ng-template>
+</mat-grid-list>

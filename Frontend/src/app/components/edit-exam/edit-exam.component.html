@@ -1,0 +1,121 @@
+<mat-grid-list cols="1">
+  <div *ngIf="!loadingExam; else isLoadingExam">
+    <div class="container2">
+      <span class="title">Editar Examen</span>
+      <button mat-raised-button color="primary" (click)="goToExam()">Cancelar</button>
+    </div>
+    <mat-form-field>
+      <mat-label>Nombre</mat-label>
+      <input matInput [formControl]="name">
+      <mat-error *ngIf="name.invalid">
+        {{getNameError()}}
+      </mat-error>
+    </mat-form-field>
+
+
+    <mat-form-field>
+      <mat-label>Porcentaje de la nota final</mat-label>
+      <input matInput [formControl]="calificationPercentaje">
+      <mat-error *ngIf="calificationPercentaje.invalid">
+        {{getCalificationPercentajeError()}}
+      </mat-error>
+    </mat-form-field>
+
+    <br>
+    <mat-form-field>
+
+      <mat-label>Tipo de examen</mat-label>
+      <mat-select [formControl]="type">
+        <mat-option value="UPLOAD">Fichero</mat-option>
+        <mat-option value="QUESTIONS">Preguntas Cortas</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br>
+    <div>
+      <span class="title">Selecciona la visibilidad del examen</span>
+      <br>
+
+
+
+      <mat-radio-group [(ngModel)]="visibleExam" color="primary">
+        <mat-radio-button value="true">Visible</mat-radio-button>
+        <mat-radio-button value="false">Oculto</mat-radio-button>
+      </mat-radio-group>
+      <br>
+    </div>
+
+    <div style="margin-top: 3vh;">
+      <span class="title">Selecciona la visibilidad de la nota</span>
+      <br>
+
+
+      <mat-radio-group [(ngModel)]="calificationVisible" color="primary">
+        <mat-radio-button value="true">Visible</mat-radio-button>
+        <mat-radio-button value="false">Oculta</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div style="margin-top: 3vh;">
+      <span class="title">Selecciona la fecha y la hora de apertura</span>
+      <div class="container">
+        <mat-form-field color="primary">
+          <mat-label>Fecha</mat-label>
+          <input matInput [matDatepicker]="picker" [formControl]="openingDate">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <ngx-timepicker-field [format]="24" [defaultTime]="getTime(openingDate.value)"
+          (timeChanged)="changedOpeningTime($event)"></ngx-timepicker-field>
+      </div>
+    </div>
+
+    <div style="margin-top: 3vh;">
+      <span class="title">Selecciona la fecha y la hora de cierre</span>
+      <div class="container">
+        <mat-form-field color="primary">
+          <mat-label>Fecha</mat-label>
+          <input matInput placeholder="DD/MM/AAAA" [matDatepicker]="pickerClosing" [formControl]="closingDate"
+            [min]="date">
+          <mat-datepicker-toggle matIconSuffix [for]="pickerClosing"></mat-datepicker-toggle>
+          <mat-datepicker #pickerClosing></mat-datepicker>
+          <mat-error *ngIf="closingDate.invalid">
+            {{getOpeningDateError()}}
+          </mat-error>
+        </mat-form-field>
+
+        <ngx-timepicker-field [format]="24" [defaultTime]="getTime(closingDate.value)"
+          (timeChanged)="changedClosingTime($event)"></ngx-timepicker-field>
+      </div>
+    </div>
+
+    <div style="margin-top: 3vh;" *ngIf="type.value === 'QUESTIONS'">
+      <span class="title">Introduce las preguntas del examen</span>
+      <div *ngIf="invalidQuestions(); else allQuestions">
+        Debes introducir por lo menos una pregunta
+      </div>
+      <ng-template #allQuestions>
+        <div *ngFor="let question of questions; let i = index; trackBy: trackByFn">
+          <mat-form-field style="width: 90%;">
+            <mat-label>Pregunta {{i+1}}</mat-label>
+            <textarea matInput [(ngModel)]="questions[i]"></textarea>
+            <button (click)="deleteQuestion(i)" mat-icon-button color="primary"> <mat-icon>delete</mat-icon></button>
+          </mat-form-field>
+
+        </div>
+      </ng-template>
+
+      <button (click)="newQuestion()" mat-raised-button color="primary" style="margin-top: 2vh;">
+        <mat-icon>add</mat-icon>Añadir Pregunta</button>
+    </div>
+
+    <button *ngIf="!loading; else isLoading" [disabled]="!isValidExam()" mat-raised-button color="primary"
+      (click)="openEditExamDialog()" style="margin-top: 3vh;">Editar Examen</button>
+    <ng-template #isLoading>
+      <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+    </ng-template>
+  </div>
+  <ng-template #isLoadingExam>
+    <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+  </ng-template>
+</mat-grid-list>

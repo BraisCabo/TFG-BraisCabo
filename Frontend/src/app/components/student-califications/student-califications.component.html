@@ -1,0 +1,51 @@
+<mat-grid-list cols="1">
+  <div *ngIf="!loading; else notLoading">
+    <mat-list>
+      <mat-list-item>
+        <button mat-raised-button color="primary" (click)="goToSubject()">Volver</button>
+      </mat-list-item>
+    </mat-list>
+    <table mat-table [dataSource]="getCalifications()" *ngIf="this.califications.califications.length > 0">
+
+      <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="examen">
+        <th mat-header-cell *matHeaderCellDef> Examen </th>
+        <td mat-cell *matCellDef="let element"> {{element.examen}} </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="porcentaje">
+        <th mat-header-cell *matHeaderCellDef> Porcentaje </th>
+        <td mat-cell *matCellDef="let element"> {{element.porcentaje}} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="calificacion">
+        <th mat-header-cell *matHeaderCellDef> Calificación </th>
+        <td mat-cell *matCellDef="let element"> {{element.calificacion}} </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="comentario">
+        <th mat-header-cell *matHeaderCellDef> Comentario </th>
+        <td mat-cell *matCellDef="let element"> {{element.comentario}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-divider></mat-divider>
+
+    <mat-list-item>
+      <div style="margin-top: 2vh;">
+        Calificación final: {{califications.finalCalification}}
+      </div>
+    </mat-list-item>
+  </div>
+  <ng-template #notLoading>
+    <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+  </ng-template>
+</mat-grid-list>
