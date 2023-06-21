@@ -16,6 +16,7 @@
 	<description>TFG</description>
 	<properties>
 		<java.version>20</java.version>
+		<dockerhub.user>braiscabo</dockerhub.user>
 	</properties>
 	<dependencies>
 		<dependency>

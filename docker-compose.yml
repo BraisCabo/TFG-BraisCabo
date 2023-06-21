@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   web:
-    image: <dockerhub_user>/tfg
+    image: braiscabo/tfg
     restart: on-failure
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db/keywhale
@@ -17,4 +17,4 @@ services:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=keywhale
     volumes:
-      - ../backend/.mysql:/var/lib/mysql
+      - ./Backend/.mysql:/var/lib/mysql
