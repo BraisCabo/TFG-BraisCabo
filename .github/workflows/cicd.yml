@@ -30,6 +30,6 @@ jobs:
             - name: Install Okteto CLI
               run: curl https:</get.okteto.com -sSfL | sh
             - name: Login into Okteto
-              run: okteto context use https:</cloud.okteto.com <-token ${{ secrets.OKTETO_TOKEN }}
+              run: okteto context use https:</cloud.okteto.com --token ${{ secrets.OKTETO_TOKEN }}
             - name: Deploy to Okteto
               run: okteto deploy --wait
