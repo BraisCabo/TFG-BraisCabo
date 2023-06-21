@@ -20,4 +20,4 @@ jobs:
                 distribution: 'temurin'
                 java-version: '17'
             - name: Run tests
-              run: mvn -f backend/pom.xml test
+              run: mvn -f Backend/pom.xml test
