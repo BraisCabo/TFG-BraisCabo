@@ -19,12 +19,11 @@ jobs:
               with:
                 distribution: 'temurin'
                 java-version: '20'
-            - name: Update .env
-              run: |
-                  echo "ImageTag=${{ github.sha }}" >> .env
+                
+            
             - name: Install Okteto CLI
               run: curl https://get.okteto.com -sSfL | sh
             - name: Login into Okteto
               run: okteto context use https://cloud.okteto.com --token ${{ secrets.OKTETO_TOKEN }}
             - name: Deploy to Okteto
-              run: okteto deploy --wait
+              run: okteto deploy --var ImageName=${{ secrets.DOCKERHUB_IMAGE }} --var ImageTag=${{ github.sha }}
