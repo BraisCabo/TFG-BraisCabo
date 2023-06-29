@@ -21,7 +21,6 @@ jobs:
                 java-version: '20'
             - name: Update .env
               run: |
-                  echo "ImageName=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
                   echo "ImageTag=${{ github.sha }}" >> .env
             - name: Install Okteto CLI
               run: curl https://get.okteto.com -sSfL | sh
