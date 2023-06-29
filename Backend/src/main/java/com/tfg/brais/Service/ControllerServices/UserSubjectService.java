@@ -9,10 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.tfg.brais.Model.User;
-import com.tfg.brais.Model.DTOS.StudentCalificationDTO;
 import com.tfg.brais.Model.DTOS.SubjectUsersDTO;
 import com.tfg.brais.Model.DTOS.UserBasicDTO;
-import com.tfg.brais.Repository.ExerciseUploadRepository;
 import com.tfg.brais.Repository.SubjectRepository;
 import com.tfg.brais.Service.ComplementaryServices.SubjectCheckService;
 import com.tfg.brais.Service.ComplementaryServices.UserCheckService;
@@ -29,9 +27,6 @@ public class UserSubjectService {
     @Autowired
     private SubjectCheckService subjectCheckService;
 
-    @Autowired
-    private ExerciseUploadRepository exerciseUploadRepository;
-
     public UserSubjectService(UserCheckService userCheckService, SubjectRepository subjectRepository,
             SubjectCheckService subjectCheckService) {
         this.userCheckService = userCheckService;
@@ -39,8 +34,8 @@ public class UserSubjectService {
         this.subjectCheckService = subjectCheckService;
     }
 
-    public ResponseEntity<SubjectUsersDTO> findAllUserSubjects(long id, Principal userPrincipal) {
-        ResponseEntity<User> userCheckResponse = userCheckService.loadUserPrincipal(id, userPrincipal);
+    public ResponseEntity<SubjectUsersDTO> findAllUserSubjects(long userId, Principal userPrincipal) {
+        ResponseEntity<User> userCheckResponse = userCheckService.loadUserPrincipal(userId, userPrincipal);
 
         if (userCheckResponse.getStatusCode().is4xxClientError()) {
             return new ResponseEntity<SubjectUsersDTO>(userCheckResponse.getStatusCode());
@@ -53,56 +48,37 @@ public class UserSubjectService {
         return ResponseEntity.ok(userSubjectDTO);
     }
 
-    public ResponseEntity<Page<UserBasicDTO>> searchStudents(long id, Principal userPrincipal, String name,
+    public ResponseEntity<Page<UserBasicDTO>> searchStudents(long subjectId, Principal userPrincipal, String name,
             PageRequest pageRequest) {
         UserBasicDTO userConverter = new UserBasicDTO();
-        return this.searchUsers(id, userPrincipal, this.fixName(name),
+        return this.searchUsers(subjectId, userPrincipal, this.fixName(name),
                 userConverter.convertPage(
-                        subjectRepository.findAllStudentBySubjectIdAndName(id, this.fixName(name), pageRequest)));
+                        subjectRepository.findAllStudentBySubjectIdAndName(subjectId, this.fixName(name), pageRequest)));
 
     }
 
-    public ResponseEntity<Page<UserBasicDTO>> searchTeachers(long id, Principal userPrincipal, String name,
+    public ResponseEntity<Page<UserBasicDTO>> searchTeachers(long subjectId, Principal userPrincipal, String name,
             PageRequest pageRequest) {
         UserBasicDTO userConverter = new UserBasicDTO();
-        return this.searchUsers(id, userPrincipal, this.fixName(name),
+        return this.searchUsers(subjectId, userPrincipal, this.fixName(name),
                 userConverter.convertPage(
-                        subjectRepository.findAllTeachersBySubjectIdAndName(id, this.fixName(name), pageRequest)));
+                        subjectRepository.findAllTeachersBySubjectIdAndName(subjectId, this.fixName(name), pageRequest)));
     }
 
     private String fixName(String name) {
         return name == null ? "" : name;
     }
 
-    private ResponseEntity<Page<UserBasicDTO>> searchUsers(long id, Principal userPrincipal, String name,
+    private ResponseEntity<Page<UserBasicDTO>> searchUsers(long subjectId, Principal userPrincipal, String name,
             Page<UserBasicDTO> users) {
-        ResponseEntity<Page<User>> response = subjectCheckService.checkIfCanSeeMembers(id, userPrincipal);
+        ResponseEntity<Page<User>> response = subjectCheckService.checkIfCanSeeMembers(subjectId, userPrincipal);
         if (response.getStatusCode().is4xxClientError()) {
             return new ResponseEntity<Page<UserBasicDTO>>(response.getStatusCode());
         }
         return ResponseEntity.ok(users);
     }
 
-    public ResponseEntity<Boolean> isTeacherOfSubject(long id, long userId) {
-        return ResponseEntity.ok(subjectCheckService.isTeacherOfSubject(id, userId));
-    }
-
-    public ResponseEntity<StudentCalificationDTO> searchCalifications(long id, long studentId,
-            Principal userPrincipal) {
-        ResponseEntity<User> userCheckResponse = userCheckService.loadUserPrincipal(studentId, userPrincipal);
-
-        if (userCheckResponse.getStatusCode().is4xxClientError()) {
-            return new ResponseEntity<>(userCheckResponse.getStatusCode());
-        }
-
-        if (!subjectCheckService.isStudentOfSubject(studentId, id)) {
-            return ResponseEntity.status(403).build();
-        }
-
-        StudentCalificationDTO studentCalificationDTO = new StudentCalificationDTO(
-                exerciseUploadRepository.findBySubjectIdStudentIdAndVisibleCalification(id, studentId));
-
-        return ResponseEntity.ok(studentCalificationDTO);
-
+    public ResponseEntity<Boolean> isTeacherOfSubject(long subjectId, long userId) {
+        return ResponseEntity.ok(subjectCheckService.isTeacherOfSubject(userId, subjectId));
     }
 }

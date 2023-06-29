@@ -143,7 +143,7 @@ public class UserSubjectServiceTest {
     public class isTeacherOfSubjectTest {
 
         @Test
-                public void isTeacherOfSubjectIsntTeacher(){
+        public void isTeacherOfSubjectIsntTeacher(){
                     when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(false);
                     ResponseEntity<Boolean> teacherOfSubject = userSubjectService.isTeacherOfSubject(1L, 1L);
                     assertFalse(teacherOfSubject.getBody());
@@ -151,7 +151,7 @@ public class UserSubjectServiceTest {
                 }
 
         @Test
-                public void isTeacherOfSubjectIsTeacher(){
+        public void isTeacherOfSubjectIsTeacher(){
                     when(subjectCheckService.isTeacherOfSubject(anyLong(), anyLong())).thenReturn(true);
                     ResponseEntity<Boolean> teacherOfSubject = userSubjectService.isTeacherOfSubject(1L, 1L);
                     assertTrue(teacherOfSubject.getBody());

@@ -13,6 +13,7 @@ import { SubjectService } from 'src/app/services/SubjectService';
 import { ConfirmDialog } from '../dialogs/ConfirmDialog';
 import { dateValidator } from '../create-exam/create-exam.component';
 import { ExamTeacher } from 'src/app/models/ExamTeacher';
+import { ExamChanges } from 'src/app/models/ExamChanges';
 
 
 @Component({
@@ -41,6 +42,11 @@ export class EditExamComponent {
   examId!: number;
   loading: boolean = false;
   loadingExam : boolean = true;
+  examFile!: File;
+  deletedFile : boolean = false;
+  examFileName : string = "";
+  canRepeat : string = 'false';
+  canUploadLate : string = 'false';
 
   constructor(
     private _adapter: DateAdapter<any>,
@@ -64,9 +70,12 @@ export class EditExamComponent {
 
         this.openingDate.setValue(new Date(exam.openingDate))
         this.closingDate.setValue(new Date(exam.closingDate))
+        this.examFileName = exam.examFile
 
         this.type.setValue(exam.type)
         this.questions = exam.questions
+        this.canRepeat = exam.canRepeat ? 'true' : 'false'
+        this.canUploadLate = exam.canUploadLate ? 'true' : 'false'
         this.loadingExam = false;
         console.log(this.loadingExam)
       },
@@ -146,7 +155,7 @@ export class EditExamComponent {
 
   editExam() {
     this.loading = true;
-    const examDTO: ExamTeacher = {
+    const examDTO: ExamChanges = {
       id : this.examId,
       name: this.name.value,
       calificationPercentaje: this.calificationPercentaje.value,
@@ -156,7 +165,10 @@ export class EditExamComponent {
       questions: this.questions,
       visibleExam: this.visibleExam === 'true',
       calificationVisible: this.calificationVisible === 'true',
-      exerciseUploads: 0
+      examFile: this.examFile,
+      deletedFile: this.deletedFile,
+      canRepeat: this.canRepeat === 'true',
+      canUploadLate: this.canUploadLate === 'true'
     };
     this.examService.updateExam(this.subjectId, examDTO).subscribe(
       (_) => {
@@ -197,5 +209,18 @@ export class EditExamComponent {
 
   goToExam() {
     this.router.navigate(['/subject/'+this.subjectId+'/exam/'+this.examId]);
+  }
+
+  deleteFile(){
+    this.deletedFile = true;
+    this.examFileName = "";
+    this.examFile = undefined as any;
+  }
+
+  onFileSelected(event: any) {
+    if (event.target.files.length > 0) {
+      this.examFile = event.target.files[0];
+      this.examFileName = this.examFile.name;
+    }
   }
 }

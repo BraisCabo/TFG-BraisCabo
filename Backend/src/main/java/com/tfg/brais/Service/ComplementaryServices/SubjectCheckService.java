@@ -34,7 +34,7 @@ public class SubjectCheckService {
     }
     
 
-    public Boolean isTeacherOfSubject(long subjectId, long userId) {
+    public Boolean isTeacherOfSubject(long userId, long subjectId){
         if (subjectRepository.countBySubjectIdAndTeacherId(subjectId, userId) > 0) {
             return true;
         }
@@ -48,34 +48,34 @@ public class SubjectCheckService {
         return false;
     }
 
-    public ResponseEntity<Subject> findById(long id) {
+    public ResponseEntity<Subject> findById(long subjectId) {
         try {
-            return ResponseEntity.ok(subjectRepository.findById(id).get());
+            return ResponseEntity.ok(subjectRepository.findById(subjectId).get());
         } catch (Exception e) {
             return new ResponseEntity<Subject>(HttpStatusCode.valueOf(404));
         }
     }
 
-    public ResponseEntity<Page<User>> checkIfCanSeeMembers(long id, Principal userPrincipal) {
-        return checkIfCanSee(id, userPrincipal, (b1, b2, b3) -> {
+    public ResponseEntity<Page<User>> checkIfCanSeeMembers(long subjectId, Principal userPrincipal) {
+        return checkIfCanSee(subjectId, userPrincipal, (b1, b2, b3) -> {
             return !(b1 || b2 || b3);
         });
     }
 
-    public ResponseEntity<Page<User>> checkIfCanSeeContent(long id, Principal userPrincipal) {
-        return checkIfCanSee(id, userPrincipal, (b1, b2, b3) -> {
+    public ResponseEntity<Page<User>> checkIfCanSeeContent(long subjectId, Principal userPrincipal) {
+        return checkIfCanSee(subjectId, userPrincipal, (b1, b2, b3) -> {
             return !(b1 || b2);
         });
     }
 
-    private ResponseEntity<Page<User>> checkIfCanSee(long id, Principal userPrincipal, BooleanFunction predicate) {
+    private ResponseEntity<Page<User>> checkIfCanSee(long subjectId, Principal userPrincipal, BooleanFunction predicate) {
         ResponseEntity<User> userCheckResponse = userCheckService.loadUserNoCkeck(userPrincipal);
         if (userCheckResponse.getStatusCode().is4xxClientError()) {
             return new ResponseEntity<>(userCheckResponse.getStatusCode());
         }
         User user = userCheckResponse.getBody();
 
-        ResponseEntity<Subject> subjectResponse = findById(id);
+        ResponseEntity<Subject> subjectResponse = findById(subjectId);
         if (subjectResponse.getStatusCode().is4xxClientError()) {
             return new ResponseEntity<>(HttpStatusCode.valueOf(404));
         }
@@ -116,8 +116,8 @@ public class SubjectCheckService {
         return true;
     }
 
-    public ResponseEntity<Subject> canEditSubject(long id, SubjectChangesDTO subjectDto){
-        ResponseEntity<Subject> response = this.findById(id);
+    public ResponseEntity<Subject> canEditSubject(long subjectId, SubjectChangesDTO subjectDto){
+        ResponseEntity<Subject> response = this.findById(subjectId);
         if (response.getStatusCode().is4xxClientError()){
             return response;
         }

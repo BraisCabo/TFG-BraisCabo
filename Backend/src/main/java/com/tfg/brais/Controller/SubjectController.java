@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.tfg.brais.Model.DTOS.StudentCalificationDTO;
 import com.tfg.brais.Model.DTOS.SubjectDetailedDTO;
 import com.tfg.brais.Model.DTOS.UserBasicDTO;
 import com.tfg.brais.Service.ControllerServices.SubjectService;
@@ -50,12 +48,4 @@ public class SubjectController {
     public ResponseEntity<Boolean> isTeacherOfSubject(@PathVariable long id, @PathVariable long teacherId){
         return this.userSubjectService.isTeacherOfSubject(id, teacherId);
     }
-
-    @GetMapping("/{id}/users/{studentId}/califications")
-    public ResponseEntity<StudentCalificationDTO> findAllCalifications(@PathVariable long id, @PathVariable long studentId, HttpServletRequest request){
-        return this.userSubjectService.searchCalifications(id, studentId, request.getUserPrincipal());
-    }
-
-
-
 }

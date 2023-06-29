@@ -20,6 +20,7 @@ export class TeacherExamPageComponent {
   loadingDownload = false;
   name = '';
   exerciseUploads: ExerciseUpload[] = [];
+  loadingExamFile = false;
 
   constructor(
     private examService: ExamService,
@@ -171,7 +172,41 @@ export class TeacherExamPageComponent {
     );
   }
 
-  goToCalificate(){
-    this.router.navigate(['/subject/' + this.subjectId + '/exam/' + this.examId + '/calificate']);
+  goToCalificate() {
+    this.router.navigate([
+      '/subject/' + this.subjectId + '/exam/' + this.examId + '/calificate',
+    ]);
+  }
+
+  downloadExam() {
+    this.loadingExamFile = true;
+    this.examService.getFiles(this.subjectId, this.examId).subscribe(
+      (response) => {
+        this.uploadService.donwloadFile(response);
+        this.loadingExamFile = false;
+      },
+      (_) => {
+        this.openSnackBar(
+          'Error al descargar el fichero intentalo de nuevo más tarde.'
+        );
+        this.loadingExamFile = false;
+      }
+    );
+  }
+
+  getRepeatExamMessage(): string {
+    if (this.exam.canRepeat) {
+      return 'Los alumnos pueden repetir el examen.';
+    } else {
+      return 'Los alumnos no pueden repetir el examen.';
+    }
+  }
+
+  getLateUploadMessage(): string {
+    if (this.exam.canUploadLate) {
+      return 'Los alumnos pueden entregar el examen fuera de plazo.';
+    } else {
+      return 'Los alumnos no pueden entregar el examen fuera de plazo.';
+    }
   }
 }

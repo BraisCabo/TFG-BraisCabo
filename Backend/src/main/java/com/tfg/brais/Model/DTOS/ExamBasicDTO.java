@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 public class ExamBasicDTO {
-    private Long id;
+    private Long id = null;
 
     private String name;
 

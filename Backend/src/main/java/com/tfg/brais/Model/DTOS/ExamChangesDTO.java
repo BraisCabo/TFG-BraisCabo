@@ -1,21 +1,19 @@
 package com.tfg.brais.Model.DTOS;
 
+import lombok.Data;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.tfg.brais.Model.Exam;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class ExamTeacherDTO extends ExamBasicDTO{
+public class ExamChangesDTO extends ExamBasicDTO{
 
     private String calificationPercentaje = "0";
-
-    private int exerciseUploads = 0;
 
     private boolean calificationVisible = true;
 
@@ -25,23 +23,21 @@ public class ExamTeacherDTO extends ExamBasicDTO{
 
     private List<String> questions = new ArrayList<>();
 
-    private String examFile;
+    private boolean deletedFile = false;
 
     private boolean canRepeat = true;
 
     private boolean canUploadLate = true;
 
-    public ExamTeacherDTO(){}
+    public ExamChangesDTO(){}
 
-    public ExamTeacherDTO(Exam exam){
+    public ExamChangesDTO(Exam exam){
         super(exam);
         this.calificationPercentaje = exam.getCalificationPercentaje();
-        this.exerciseUploads = exam.getExerciseUploads().size();
         this.calificationVisible = exam.isCalificationVisible();
         this.openingDate = exam.getOpeningDate();
         this.closingDate = exam.getClosingDate();
         this.questions = exam.getQuestions();
-        this.examFile = exam.getExamFile();
         this.canRepeat = exam.isCanRepeat();
         this.canUploadLate = exam.isCanUploadLate();
     }
@@ -53,7 +49,6 @@ public class ExamTeacherDTO extends ExamBasicDTO{
         exam.setOpeningDate(this.getOpeningDate());
         exam.setClosingDate(this.getClosingDate());
         exam.setQuestions(this.getQuestions());
-        exam.setExamFile(this.getExamFile());
         exam.setCanRepeat(this.isCanRepeat());
         exam.setCanUploadLate(this.isCanUploadLate());
         return exam;

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.tfg.brais.Model.ExerciseUpload;
 import com.tfg.brais.Model.DTOS.AnswersDTO;
-import com.tfg.brais.Model.DTOS.CalificationDTO;
 import com.tfg.brais.Service.ControllerServices.UploadService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -68,15 +67,4 @@ public class UploadController {
     public ResponseEntity<Resource> downloadAll(@PathVariable long id, @PathVariable long examId, HttpServletRequest request){
         return uploadService.findAllUploadsCompressed(id, examId, request.getUserPrincipal());
     }
-
-    @PostMapping("{uploadId}/califications")
-    public ResponseEntity<ExerciseUpload> uploadCalification(@PathVariable long id, @PathVariable long examId, @PathVariable long uploadId, HttpServletRequest request, @RequestBody CalificationDTO calification){
-        return uploadService.uploadCalification(id, examId, uploadId, calification, request.getUserPrincipal());
-    }
-
-    @PutMapping("{uploadId}/califications")
-    public ResponseEntity<ExerciseUpload> editCalification(@PathVariable long id, @PathVariable long examId, @PathVariable long uploadId, HttpServletRequest request, @RequestBody CalificationDTO calification){
-        return uploadService.editCalification(id, examId, uploadId, calification, request.getUserPrincipal());
-    }
-
 }

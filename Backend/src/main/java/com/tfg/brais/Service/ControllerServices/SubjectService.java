@@ -30,16 +30,15 @@ public class SubjectService {
         return ResponseEntity.ok(page);
     }
 
-    public ResponseEntity<SubjectDetailedDTO> findById(long id) {
-        ResponseEntity<Subject> response = subjectCheckService.findById(id);
+    public ResponseEntity<SubjectDetailedDTO> findById(long subjectId) {
+        ResponseEntity<Subject> response = subjectCheckService.findById(subjectId);
         if (response.getStatusCode().is2xxSuccessful()){
             return ResponseEntity.ok(new SubjectDetailedDTO(response.getBody()));
         }
         return new ResponseEntity<>(response.getStatusCode());
     }
 
-    public ResponseEntity<Subject> findSubjectById(long id){
-        return subjectCheckService.findById(id);
-
+    public ResponseEntity<Subject> findSubjectById(long subjectId){
+        return subjectCheckService.findById(subjectId);
     }
 }

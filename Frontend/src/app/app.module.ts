@@ -51,8 +51,10 @@ import { ViewAnswersDialogComponent } from './components/exam-page/student-exam-
 import { CalificateComponent } from './components/calificate/calificate.component';
 import { SetCalificationDialogComponent } from './components/calificate/set-calification-dialog/set-calification-dialog.component';
 import { EditCalificationDialogComponent } from './components/calificate/edit-calification-dialog/edit-calification-dialog.component';
-import { StudentCalificationsComponent } from './components/student-califications/student-califications.component';
+import { StudentCalificationsComponent } from './components/califications-page/student-califications/student-califications.component';
 import {MatTableModule} from '@angular/material/table';
+import { CalificationsPageComponent } from './components/califications-page/califications-page.component';
+import { TeacherCalificationsComponent } from './components/califications-page/teacher-califications/teacher-califications.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +82,9 @@ import {MatTableModule} from '@angular/material/table';
     CalificateComponent,
     SetCalificationDialogComponent,
     EditCalificationDialogComponent,
-    StudentCalificationsComponent
+    StudentCalificationsComponent,
+    CalificationsPageComponent,
+    TeacherCalificationsComponent
   ],
   imports: [
     BrowserModule,

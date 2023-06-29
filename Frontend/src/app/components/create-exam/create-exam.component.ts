@@ -15,6 +15,7 @@ import { ExamService } from 'src/app/services/ExamService';
 import { SubjectService } from 'src/app/services/SubjectService';
 import { ConfirmDialog } from '../dialogs/ConfirmDialog';
 import { ExamTeacher } from 'src/app/models/ExamTeacher';
+import { ExamChanges } from 'src/app/models/ExamChanges';
 
 export function dateValidator(openingDate: any): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -46,6 +47,7 @@ export class CreateExamComponent {
     Validators.max(100),
     Validators.min(0),
   ]);
+  examFile!: File;
   visibleExam: string = 'false';
   calificationVisible: string = 'false';
   openingDate: FormControl = new FormControl(new Date(), Validators.required);
@@ -58,6 +60,8 @@ export class CreateExamComponent {
   date: Date = new Date();
   subjectId!: number;
   loading: boolean = false;
+  canRepeat : string = 'false';
+  canUploadLate : string = 'false';
 
   constructor(
     private _adapter: DateAdapter<any>,
@@ -101,6 +105,10 @@ export class CreateExamComponent {
     this.openingDate.valueChanges.subscribe((_) => {
       this.closingDate.updateValueAndValidity();
     });
+  }
+
+  onFileSelected(event: any){
+    this.examFile = event.target.files[0];
   }
 
   getNameError() {
@@ -167,8 +175,8 @@ export class CreateExamComponent {
 
   createExam() {
     this.loading = true;
-    const examDTO: ExamTeacher = {
-      id: 0,
+    const examDTO: ExamChanges = {
+      id: null as any,
       name: this.name.value,
       calificationPercentaje: this.calificationPercentaje.value,
       openingDate: this.openingDate.value,
@@ -177,9 +185,12 @@ export class CreateExamComponent {
       questions: this.questions,
       visibleExam: this.visibleExam === 'true',
       calificationVisible: this.calificationVisible === 'true',
-      exerciseUploads: 0
+      examFile: this.examFile,
+      deletedFile : false,
+      canRepeat : this.canRepeat === 'true',
+      canUploadLate : this.canUploadLate === 'true'
     };
-    this.examService.createExam(this.subjectId, examDTO).subscribe(
+    this.examService.createExam(this.subjectId, examDTO, this.examFile).subscribe(
       (_) => {
         this.router.navigate(['/subject/' + this.subjectId]);
       },
@@ -212,5 +223,9 @@ export class CreateExamComponent {
 
   goToSubject() {
     this.router.navigate(['/subject/' + this.subjectId]);
+  }
+
+  deleteFile(){
+    this.examFile = undefined as any;
   }
 }

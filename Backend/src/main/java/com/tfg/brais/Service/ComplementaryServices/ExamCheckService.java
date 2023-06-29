@@ -46,7 +46,7 @@ public class ExamCheckService {
             return ResponseEntity.notFound().build();
         }
 
-        if (!subjectCheckService.isTeacherOfSubject(id, user.getId())) {
+        if (!subjectCheckService.isTeacherOfSubject(user.getId(), id)) {
             return new ResponseEntity<>(HttpStatusCode.valueOf(403));
         }
 
@@ -134,7 +134,7 @@ public class ExamCheckService {
             return ResponseEntity.notFound().build();
         }
 
-        if (subjectCheckService.isTeacherOfSubject( user.getId(), subjectId) || subjectCheckService.isStudentOfSubject(user.getId(), subjectId)) {
+        if (subjectCheckService.isTeacherOfSubject(user.getId(), subjectId) || subjectCheckService.isStudentOfSubject(user.getId(), subjectId)) {
             return ResponseEntity.ok().build();
         }
         return new ResponseEntity<>(HttpStatusCode.valueOf(403));

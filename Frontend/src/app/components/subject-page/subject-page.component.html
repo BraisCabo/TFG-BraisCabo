@@ -3,6 +3,8 @@
   <div *ngIf="isTeacher;else isStudent">
     <button mat-raised-button color="primary" (click)="createExam()" style="margin-bottom: 2vh;"> <mat-icon>add</mat-icon> Nuevo
       examen</button>
+
+      <button mat-raised-button color="primary" (click)="goToCalifications()" style="margin-bottom: 2vh; margin-left: 1vw;">Calificaciones</button>
   </div>
   <ng-template #isStudent>
     <button mat-raised-button color="primary" (click)="goToCalifications()" style="margin-bottom: 2vh;">Mis calificaciones</button>

@@ -20,6 +20,7 @@ export class StudentExamPageComponent {
   subjectId: number = 0;
   loadingExam: boolean = true;
   loadingUpload: boolean = false;
+  loadingExamFile: boolean = false;
 
   constructor(
     private examService: ExamService,
@@ -260,4 +261,25 @@ export class StudentExamPageComponent {
   canUpload() : boolean{
     return this.exam.openingDate.getTime() < Date.now();
   }
+
+  downloadExamFile(){
+    this.loadingExamFile = true;
+    this.examService.getFiles(this.subjectId, this.examId).subscribe(
+      (response) => {
+        this.uploadService.donwloadFile(response);
+        this.loadingExamFile = false;
+      },
+      (_) => {
+        this.openSnackBar(
+          'Error al descargar el fichero intentalo de nuevo más tarde.'
+        );
+        this.loadingExamFile = false;
+      }
+    );
+  }
+
+  dateCondition() : boolean{
+    return this.exam.closingDate.getTime() > Date.now();
+  }
+
 }

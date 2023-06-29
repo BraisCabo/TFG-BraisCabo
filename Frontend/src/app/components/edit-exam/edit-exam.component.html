@@ -55,6 +55,24 @@
       </mat-radio-group>
     </div>
 
+    <div style="margin-top: 3vh;" *ngIf="type.value === 'UPLOAD'">
+      <span class="title">¿Los alumnos podrán hacer intentos ilimitados?</span>
+      <br>
+      <mat-radio-group [(ngModel)]="canRepeat" color="primary">
+        <mat-radio-button value="true">Si</mat-radio-button>
+        <mat-radio-button value="false">No</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div style="margin-top: 3vh;">
+      <span class="title">¿Los alumnos podrán hacer entregas tardías?</span>
+      <br>
+      <mat-radio-group [(ngModel)]="canUploadLate" color="primary">
+        <mat-radio-button value="true">Si</mat-radio-button>
+        <mat-radio-button value="false">No</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
     <div style="margin-top: 3vh;">
       <span class="title">Selecciona la fecha y la hora de apertura</span>
       <div class="container">
@@ -108,6 +126,12 @@
       <button (click)="newQuestion()" mat-raised-button color="primary" style="margin-top: 2vh;">
         <mat-icon>add</mat-icon>Añadir Pregunta</button>
     </div>
+
+    <input type="file" (change)="onFileSelected($event)" style="display:none" #fileUpload>
+  <button mat-raised-button color="primary" style="margin-top: 3vh;"
+    (click)="fileUpload.click()"><mat-icon>arrow_upward</mat-icon>Subir enunciado</button> <br>
+  <span *ngIf="examFileName">{{examFileName}}<button mat-icon-button (click)="deleteFile()"><mat-icon>close</mat-icon></button></span>
+  <br>
 
     <button *ngIf="!loading; else isLoading" [disabled]="!isValidExam()" mat-raised-button color="primary"
       (click)="openEditExamDialog()" style="margin-top: 3vh;">Editar Examen</button>

@@ -70,6 +70,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>5.5</version>
+		</dependency>
+		<dependency>
 			<groupId>org.zeroturnaround</groupId>
 			<artifactId>zt-zip</artifactId>
 			<version>1.15</version>
