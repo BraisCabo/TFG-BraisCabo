@@ -13,7 +13,12 @@ jobs:
         runs-on:
              ubuntu-latest
         steps:
-            
+            - uses: actions/checkout@v3
+            - name: Set up JDK 20
+              uses: actions/setup-java@v3
+              with:
+                distribution: 'temurin'
+                java-version: '20'
             - name: Install Okteto CLI
               run: curl https://get.okteto.com -sSfL | sh
             - name: Login into Okteto
