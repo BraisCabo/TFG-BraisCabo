@@ -1,0 +1,13 @@
+<mat-grid-list cols="1">
+  <div *ngIf="!loading; else isLoading">
+    <div *ngIf="isTeacher;else student">
+      <app-teacher-califications></app-teacher-califications>
+    </div>
+    <ng-template #student>
+      <app-student-califications></app-student-califications>
+    </ng-template>
+  </div>
+  <ng-template #isLoading>
+    <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+  </ng-template>
+</mat-grid-list>

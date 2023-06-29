@@ -5,7 +5,7 @@
         <button mat-raised-button color="primary" (click)="goToSubject()">Volver</button>
       </mat-list-item>
     </mat-list>
-    <table mat-table [dataSource]="getCalifications()" *ngIf="this.califications.califications.length > 0">
+    <table mat-table [dataSource]="getCalifications()">
 
       <!--- Note that these columns can be defined in any order.
           The actual rendered columns are set as a property on the row definition" -->
@@ -38,12 +38,6 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
     <mat-divider></mat-divider>
-
-    <mat-list-item>
-      <div style="margin-top: 2vh;">
-        Calificación final: {{califications.finalCalification}}
-      </div>
-    </mat-list-item>
   </div>
   <ng-template #notLoading>
     <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>

@@ -22,4 +22,7 @@ public interface ExerciseUploadRepository extends JpaRepository<ExerciseUpload, 
 
     @Query("SELECT e FROM ExerciseUpload e WHERE e.exam.subject.id = ?1 AND e.student.id = ?2 AND e.exam.calificationVisible = true")
     List<ExerciseUpload> findBySubjectIdStudentIdAndVisibleCalification(long id, long studentId);
+
+    @Query("SELECT e FROM ExerciseUpload e WHERE e.exam.subject.id = ?1 AND e.student.id = ?2")
+    List<ExerciseUpload> findSubjectCalifications(long id, long studentId);
 }

@@ -34,9 +34,11 @@ public class ExerciseUploadCheckService {
         if (!examOp.isPresent()) {
             return ResponseEntity.notFound().build();
         }
-
         Exam exam = examOp.get();
         if (exam.getOpeningDate().after(new Date())){
+            return ResponseEntity.status(403).build();
+        }
+        if (exam.getClosingDate().before(new Date()) && !exam.isCanUploadLate()) {
             return ResponseEntity.status(403).build();
         }
         if (!subjectCheckService.isStudentOfSubject(userId, id)) {
@@ -45,7 +47,9 @@ public class ExerciseUploadCheckService {
 
         try {
             ExerciseUpload exerciseUpload = exerciseUploadRepository.findByStudentIdAndExamIdAndExamSubjectId(userId, examId, id).get();
-            if(exerciseUpload.isUploaded()){
+            if(exerciseUpload.isUploaded() && exerciseUpload.getExam().getType().equals("QUESTIONS")){
+                return ResponseEntity.status(403).build();
+            }else if (exerciseUpload.isUploaded() && !exerciseUpload.getExam().isCanRepeat()){
                 return ResponseEntity.status(403).build();
             }
             return ResponseEntity.ok().build();
@@ -67,7 +71,7 @@ public class ExerciseUploadCheckService {
             return ResponseEntity.notFound().build();
         }
         ExerciseUpload upload = findById.get();
-        if (upload.getStudent().getId() != user.getId() && !subjectCheckService.isTeacherOfSubject(id, user.getId())) {
+        if (upload.getStudent().getId() != user.getId() && !subjectCheckService.isTeacherOfSubject(user.getId(), id)) {
             return ResponseEntity.status(403).build();
         }
 
@@ -87,7 +91,7 @@ public class ExerciseUploadCheckService {
 
         User user = responseUser.getBody();
 
-        if (!subjectCheckService.isTeacherOfSubject(id, user.getId())) {
+        if (!subjectCheckService.isTeacherOfSubject(user.getId(), id)) {
             return ResponseEntity.status(403).build();
         }
         return ResponseEntity.ok().build();

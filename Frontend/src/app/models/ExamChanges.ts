@@ -1,6 +1,5 @@
-import { ExerciseUpload } from "./ExerciseUpload"
 
-export class ExamStudent{
+export class ExamChanges{
   id: Number = new Number
   name: string = ""
   type: string = ""
@@ -12,9 +11,11 @@ export class ExamStudent{
 
   closingDate : Date = new Date()
 
-  exerciseUpload: ExerciseUpload = undefined as any
+  questions : string[] = []
 
-  examFile: string = ""
+  examFile!: File
+
+  deletedFile : boolean = false
 
   canRepeat: boolean = false
 

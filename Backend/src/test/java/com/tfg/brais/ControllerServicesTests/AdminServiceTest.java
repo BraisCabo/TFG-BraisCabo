@@ -3,8 +3,10 @@ package com.tfg.brais.ControllerServicesTests;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,7 @@ import com.tfg.brais.Model.DTOS.SubjectChangesDTO;
 import com.tfg.brais.Model.DTOS.SubjectDetailedDTO;
 import com.tfg.brais.Repository.SubjectRepository;
 import com.tfg.brais.Repository.UserRepository;
+import com.tfg.brais.Service.ComplementaryServices.FileService;
 import com.tfg.brais.Service.ComplementaryServices.SubjectCheckService;
 import com.tfg.brais.Service.ControllerServices.AdminService;
 
@@ -36,12 +39,15 @@ public class AdminServiceTest {
 
     private AdminService adminService;
 
+    private FileService fileService;
+
     @BeforeEach
     public void setUp() {
         this.subjectRepository = Mockito.mock(SubjectRepository.class);
         this.userRepository = Mockito.mock(UserRepository.class);
         this.subjectCheckService = Mockito.mock(SubjectCheckService.class);
-        this.adminService = new AdminService(subjectRepository, userRepository, subjectCheckService);
+        this.fileService = Mockito.mock(FileService.class);
+        this.adminService = new AdminService(subjectRepository, userRepository, subjectCheckService, fileService);
     }
 
     @Nested
@@ -68,6 +74,17 @@ public class AdminServiceTest {
         public void testDeleteByIdCantDelete() {
             when(subjectCheckService.findById(anyLong())).thenReturn(new ResponseEntity<>(HttpStatusCode.valueOf(404)));
             assertTrue(adminService.deleteById(1L).getStatusCode().is4xxClientError());
+        }
+
+        @Test
+        public void testDeleteByIdCantDeleteFiles() {
+            when(subjectCheckService.findById(anyLong())).thenReturn(ResponseEntity.ok(new Subject()));
+            try {
+                doThrow(IOException.class).when(fileService).deleteDirectory(any());
+                assertTrue(adminService.deleteById(1L).getStatusCode().is5xxServerError());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Test

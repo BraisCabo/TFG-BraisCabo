@@ -66,5 +66,7 @@ export class SubjectService {
     return this.http.get(BASE_URL + subjectId + "/users/" + userId + "/califications") as Observable<any>;
   }
 
-
+  getTeacherSubjectCalifications(subjectId: number): Observable<any> {
+    return this.http.get(BASE_URL + subjectId + "/califications") as Observable<any>;
+  }
 }

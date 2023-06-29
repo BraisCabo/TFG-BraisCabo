@@ -68,9 +68,9 @@ public class AccountService {
         }
     }
 
-    public ResponseEntity<UserDetailedDTO> editUser(Principal userPrincipal, long id, UserRegisterDTO newUser) {
+    public ResponseEntity<UserDetailedDTO> editUser(Principal userPrincipal, long userId, UserRegisterDTO newUser) {
         User user = newUser.createUser();
-        ResponseEntity<User> userCheckResponse = userCheckService.loadUserPrincipal(id, userPrincipal);
+        ResponseEntity<User> userCheckResponse = userCheckService.loadUserPrincipal(userId, userPrincipal);
         if(userCheckResponse.getStatusCode().is4xxClientError()){
             return new ResponseEntity<>(HttpStatusCode.valueOf(userCheckResponse.getStatusCode().value()));
         }

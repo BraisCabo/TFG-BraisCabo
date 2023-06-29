@@ -15,4 +15,10 @@ export class ExamTeacher{
 
   exerciseUploads : number = 0
 
+  examFile : string = ""
+
+  canRepeat: boolean = false
+
+  canUploadLate : boolean = false
+
 }

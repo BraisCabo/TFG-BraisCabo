@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.zeroturnaround.zip.ZipUtil;
+
+import com.opencsv.CSVWriter;
+
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
@@ -33,7 +36,6 @@ public class FileService {
             ResponseEntity<Resource> downloadFile = downloadFile(Paths.get(subjectPath, zipFileName));
             return downloadFile;
         } catch (Exception e) {
-            System.out.println(e);
             return ResponseEntity.notFound().build();
         }
     }
@@ -62,32 +64,42 @@ public class FileService {
         }
     }
 
-    public void createTextFile(String filePath, String fileName, List<String> questions, List<String> answers)
+    public void createTextFile(String name, String email, String filePath, String fileName, List<String> questions, List<String> answers)
             throws IOException {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < questions.size(); i++) {
-            sb.append(i + ". " + questions.get(i) + "\n");
-            sb.append(answers.get(i) + "\n\n\n");
-        }
         Files.createDirectories(Paths.get(fileDir, filePath.toString()));
-        Files.write(
-                Paths.get(fileDir, filePath.toString(), fileName),
-                sb.toString().getBytes(),
-                StandardOpenOption.CREATE);
+        ArrayList<String> firstRow = new ArrayList<String>();
+        firstRow.add("Nombre y apellidos");
+        firstRow.add("Email");
+        firstRow.addAll(questions);
+        ArrayList<String> secondRow = new ArrayList<String>();
+        secondRow.add(name);
+        secondRow.add(email);
+        secondRow.addAll(answers);
+        CSVWriter csvWriter = new CSVWriter(
+                Files.newBufferedWriter(Paths.get(fileDir, filePath.toString(), fileName)));
+        csvWriter.writeNext(firstRow.toArray(new String[firstRow.size()]));
+        csvWriter.writeNext(secondRow.toArray(new String[secondRow.size()]));
+        csvWriter.close();
     }
 
     public void deleteDirectory(String filePath) throws IOException {
         Path deletePath = Paths.get(fileDir, filePath);
         Files.walk(deletePath)
-                    .sorted((a, b) -> b.compareTo(a)) // Ordena de forma descendente para borrar primero los archivos/directorios internos
-                    .forEach(path -> {
-                        try {
-                            Files.delete(path);
-                        } catch (IOException e) {
-                            // Manejo de errores
-                            e.printStackTrace();
-                        }
-                    });
-            Files.deleteIfExists(deletePath);
+                .sorted((a, b) -> b.compareTo(a)) // Ordena de forma descendente para borrar primero los
+                                                  // archivos/directorios internos
+                .forEach(path -> {
+                    try {
+                        Files.delete(path);
+                    } catch (IOException e) {
+                        // Manejo de errores
+                        e.printStackTrace();
+                    }
+                });
+        Files.deleteIfExists(deletePath);
+    }
+
+    public void deleteFile(String filePath) throws IOException {
+        Path deletePath = Paths.get(fileDir, filePath);
+        Files.delete(deletePath);
     }
 }

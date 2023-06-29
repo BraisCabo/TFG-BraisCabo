@@ -3,6 +3,7 @@ package com.tfg.brais.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -12,9 +13,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 import com.tfg.brais.Model.DTOS.ExamBasicDTO;
+import com.tfg.brais.Model.DTOS.ExamChangesDTO;
 import com.tfg.brais.Model.DTOS.ExamTeacherDTO;
 import com.tfg.brais.Service.ControllerServices.ExamService;
 
@@ -28,8 +32,8 @@ public class ExamController {
     private ExamService examService;
 
     @PostMapping("/")
-    public ResponseEntity<ExamTeacherDTO> createExam(@PathVariable long id, @RequestBody ExamTeacherDTO exam, HttpServletRequest request){
-        return this.examService.createExam(id, exam, request.getUserPrincipal(), fromCurrentRequest().path("/{id}"));
+    public ResponseEntity<ExamTeacherDTO> createExam(@PathVariable long id, ExamChangesDTO exam, HttpServletRequest request, MultipartFile examFile){
+        return this.examService.createExam(id, exam, request.getUserPrincipal(), examFile, fromCurrentRequest().path("/{id}"));
     }
 
     @GetMapping("/")
@@ -48,12 +52,17 @@ public class ExamController {
     }
 
     @PutMapping("/{examId}")
-    public ResponseEntity<ExamTeacherDTO> updateExam(@PathVariable long id, @PathVariable long examId, @RequestBody ExamTeacherDTO exam, HttpServletRequest request){
-        return this.examService.updateExam(id, examId, exam, request.getUserPrincipal());
+    public ResponseEntity<ExamTeacherDTO> updateExam(@PathVariable long id, @PathVariable long examId, ExamChangesDTO exam, HttpServletRequest request, MultipartFile examFile){
+        return this.examService.updateExam(id, examId, exam, examFile, request.getUserPrincipal());
     }
 
     @PatchMapping("/{examId}")
     public ResponseEntity<ExamTeacherDTO> changeVisibility(@PathVariable long id, @PathVariable long examId, @RequestBody Boolean newVisibility, HttpServletRequest request){
         return this.examService.changeVisibility(id, examId, newVisibility, request.getUserPrincipal());
+    }
+
+    @GetMapping("/{examId}/files")
+    public ResponseEntity<Resource> getFiles(@PathVariable long id, @PathVariable long examId, HttpServletRequest request){
+        return this.examService.getExamFiles(id, examId, request.getUserPrincipal());
     }
 }

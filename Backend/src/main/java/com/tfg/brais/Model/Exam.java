@@ -46,6 +46,12 @@ public class Exam {
 
     private List<String> questions = new ArrayList<>();
 
+    private boolean canRepeat = true;
+
+    private boolean canUploadLate = true;
+
+    private String examFile; 
+
     public void update(Exam exam) {
         this.name = exam.getName();
         this.calificationPercentaje = exam.getCalificationPercentaje();
@@ -55,6 +61,8 @@ public class Exam {
         this.closingDate = exam.getClosingDate();
         this.questions = exam.getQuestions();
         this.type = exam.getType();
+        this.canRepeat = exam.isCanRepeat();
+        this.canUploadLate = exam.isCanUploadLate();
         
     }
 }

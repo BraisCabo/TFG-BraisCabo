@@ -1,6 +1,5 @@
 package com.tfg.brais.Model;
 
-
 import java.util.Date;
 import java.util.List;
 
@@ -39,4 +38,13 @@ public class ExerciseUpload {
     private Date uploadDate = new Date();
 
     private List<String> answers;
+
+    public void deleteUpload() {
+        setCalification("");
+        setComment("");
+        setUploadDate(null);
+        setAnswers(null);
+        setFileName(null);
+        this.isUploaded = false;
+    }
 }

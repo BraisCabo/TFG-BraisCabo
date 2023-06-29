@@ -30,10 +30,11 @@ public class AdminService {
     @Autowired
     private FileService fileService;
 
-    public AdminService(SubjectRepository subjectRepository, UserRepository userRepository, SubjectCheckService subjectCheckService) {
+    public AdminService(SubjectRepository subjectRepository, UserRepository userRepository, SubjectCheckService subjectCheckService, FileService fileService) {
         this.subjectRepository = subjectRepository;
         this.userRepository = userRepository;
         this.subjectCheckService = subjectCheckService;
+        this.fileService = fileService;
     }
 
     public ResponseEntity<SubjectDetailedDTO> createSubject(SubjectChangesDTO subjectDTO, UriComponentsBuilder path){
@@ -51,22 +52,22 @@ public class AdminService {
         return userRepository.findAllById(userList);
     }
 
-    public ResponseEntity<SubjectDetailedDTO> deleteById(long id){
-        ResponseEntity<Subject> response = subjectCheckService.findById(id);
+    public ResponseEntity<SubjectDetailedDTO> deleteById(long subjectId){
+        ResponseEntity<Subject> response = subjectCheckService.findById(subjectId);
         if (response.getStatusCode().is2xxSuccessful()){
             try {
-                fileService.deleteDirectory(Long.toString(id));
+                fileService.deleteDirectory(Long.toString(subjectId));
             } catch (Exception e) {
-                System.out.println(e);
+                return new ResponseEntity<>(HttpStatusCode.valueOf(500));
             }
-            subjectRepository.deleteById(id);
+            subjectRepository.deleteById(subjectId);
             return ResponseEntity.ok(new SubjectDetailedDTO(response.getBody()));
         }
         return new ResponseEntity<>(response.getStatusCode());
     }
 
-    public ResponseEntity<SubjectDetailedDTO> editSubject(long id, SubjectChangesDTO subjectDto){
-        ResponseEntity<Subject> response = subjectCheckService.canEditSubject(id, subjectDto);
+    public ResponseEntity<SubjectDetailedDTO> editSubject(long subjectId, SubjectChangesDTO subjectDto){
+        ResponseEntity<Subject> response = subjectCheckService.canEditSubject(subjectId, subjectDto);
         if (response.getStatusCode().is4xxClientError()){
             return new ResponseEntity<>(response.getStatusCode());
         }

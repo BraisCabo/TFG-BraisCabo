@@ -23,11 +23,22 @@ public class ExamStudentDTO extends ExamBasicDTO{
 
     private Date closingDate = new Date();
 
+    private String examFile;
+
+    private boolean canRepeat = true;
+
+    private boolean canUploadLate = true;
+
     public ExamStudentDTO(Exam exam){
         super(exam);
         this.calificationPercentaje = exam.getCalificationPercentaje();
         this.calificationVisible = exam.isCalificationVisible();
         this.openingDate = exam.getOpeningDate();
         this.closingDate = exam.getClosingDate();
+        if (exam.getClosingDate().before(new Date())){
+            this.examFile = exam.getExamFile();
+        }
+        this.canRepeat = exam.isCanRepeat();
+        this.canUploadLate = exam.isCanUploadLate();
     }
 }

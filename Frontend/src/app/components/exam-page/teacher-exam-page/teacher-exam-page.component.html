@@ -26,7 +26,13 @@
       <span class="text">{{getExamVisibility()}}</span> <br>
     </mat-list-item>
     <mat-list-item>
+      <span class="text">{{getLateUploadMessage()}}</span> <br>
+    </mat-list-item>
+    <mat-list-item>
       <span class="text">{{getCalificationVisibility()}}</span> <br>
+    </mat-list-item>
+    <mat-list-item *ngIf="exam.type === 'UPLOAD'">
+      <span class="text">{{getRepeatExamMessage()}}</span> <br>
     </mat-list-item>
     <mat-list-item>
       <span class="text">{{getNumberOfUploadsMessage()}}</span> <br>
@@ -50,6 +56,13 @@
       <button mat-raised-button color="primary" *ngIf="!loadingDownload; else isLoadingDownload"
         (click)="downloadAllUploads()"><mat-icon>arrow_downward</mat-icon>Descargar todas las entregas</button>
       <ng-template #isLoadingDownload>
+        <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+      </ng-template>
+    </mat-list-item>
+    <mat-list-item *ngIf="exam.examFile">
+      <button mat-raised-button color="primary" *ngIf="!loadingExamFile; else isLoadingExamFile"
+        (click)="downloadExam()"><mat-icon>arrow_downward</mat-icon>Descargar enunciado</button>
+      <ng-template #isLoadingExamFile>
         <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
       </ng-template>
     </mat-list-item>

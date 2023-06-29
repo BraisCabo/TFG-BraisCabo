@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   web:
-    image: braiscabo/tfg
+    image: ${ImageName}:${ImageTag}
     restart: on-failure
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db/keywhale
