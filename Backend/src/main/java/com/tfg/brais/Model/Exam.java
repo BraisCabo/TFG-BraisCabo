@@ -46,11 +46,13 @@ public class Exam {
 
     private List<String> questions = new ArrayList<>();
 
+    private List<Double> questionsCalifications = new ArrayList<>();
+
     private boolean canRepeat = true;
 
     private boolean canUploadLate = true;
 
-    private String examFile; 
+    private String examFile;
 
     public void update(Exam exam) {
         this.name = exam.getName();
@@ -63,6 +65,6 @@ public class Exam {
         this.type = exam.getType();
         this.canRepeat = exam.isCanRepeat();
         this.canUploadLate = exam.isCanUploadLate();
-        
+        this.questionsCalifications = exam.getQuestionsCalifications();
     }
 }

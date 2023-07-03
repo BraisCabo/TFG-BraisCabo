@@ -21,4 +21,6 @@ export class ExamTeacher{
 
   canUploadLate : boolean = false
 
+  questionsCalifications: String[] = []
+
 }

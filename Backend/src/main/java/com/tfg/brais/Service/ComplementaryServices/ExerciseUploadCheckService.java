@@ -136,4 +136,18 @@ public class ExerciseUploadCheckService {
         upload.setStudent(user);
         return ResponseEntity.ok(upload);
     }
+
+    public boolean checkIfCanSeeCalifications(long subjectId, Principal principal, ExerciseUpload upload){
+        ResponseEntity<User> responseUser = userCheckService.loadUserNoCkeck(principal);
+        if (responseUser.getStatusCode().is4xxClientError()) {
+            return false;
+        }
+        User user = responseUser.getBody();
+        if (upload.getExam().isCalificationVisible()){
+            return true;
+        }else if (subjectCheckService.isTeacherOfSubject(user.getId(), subjectId)){
+            return true;
+        }
+        return false;
+    }
 }

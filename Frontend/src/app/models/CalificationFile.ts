@@ -1,5 +1,5 @@
 
-export class Calification{
+export class CalificationFile{
   calification: string = '';
   comment: String = '';
 }

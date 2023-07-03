@@ -31,6 +31,8 @@ public class ExamTeacherDTO extends ExamBasicDTO{
 
     private boolean canUploadLate = true;
 
+    private List<Double> questionsCalifications;
+
     public ExamTeacherDTO(){}
 
     public ExamTeacherDTO(Exam exam){
@@ -44,6 +46,7 @@ public class ExamTeacherDTO extends ExamBasicDTO{
         this.examFile = exam.getExamFile();
         this.canRepeat = exam.isCanRepeat();
         this.canUploadLate = exam.isCanUploadLate();
+        this.questionsCalifications = exam.getQuestionsCalifications();
     }
 
     public Exam createExam(){

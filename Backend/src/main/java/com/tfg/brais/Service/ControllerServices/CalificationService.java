@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service;
 import com.tfg.brais.Model.ExerciseUpload;
 import com.tfg.brais.Model.Subject;
 import com.tfg.brais.Model.User;
-import com.tfg.brais.Model.DTOS.CalificationDTO;
+import com.tfg.brais.Model.DTOS.CalificationFileDTO;
+import com.tfg.brais.Model.DTOS.CalificationQuestionsDTO;
 import com.tfg.brais.Model.DTOS.StudentCalificationDTO;
 import com.tfg.brais.Model.DTOS.TeachersCalificationsDTO;
 import com.tfg.brais.Repository.ExerciseUploadRepository;
@@ -43,15 +44,15 @@ public class CalificationService {
 
     }
 
-    public ResponseEntity<ExerciseUpload> uploadCalification(long subjectId, long examId, long uploadId,
-            CalificationDTO calification, Principal principal) {
-        return calificationCheckService.changeCalification(subjectId, examId, uploadId, calification, principal,
+    public ResponseEntity<ExerciseUpload> uploadCalificationFiles(long subjectId, long examId, long uploadId,
+            CalificationFileDTO calification, Principal principal) {
+        return calificationCheckService.changeCalificationFiles(subjectId, examId, uploadId, calification, principal,
                 (s1) -> !s1.equals(""));
     }
 
-    public ResponseEntity<ExerciseUpload> editCalification(long subjectId, long examId, long uploadId,
-            CalificationDTO calification, Principal principal) {
-        return calificationCheckService.changeCalification(subjectId, examId, uploadId, calification, principal,
+    public ResponseEntity<ExerciseUpload> editCalificationFiles(long subjectId, long examId, long uploadId,
+            CalificationFileDTO calification, Principal principal) {
+        return calificationCheckService.changeCalificationFiles(subjectId, examId, uploadId, calification, principal,
                 (s1) -> s1 == null);
     }
 
@@ -73,7 +74,8 @@ public class CalificationService {
         return ResponseEntity.ok(studentCalificationDTO);
     }
 
-    public ResponseEntity<List<TeachersCalificationsDTO>> searchCalificationsTeachers(long subjectId, Principal userPrincipal) {
+    public ResponseEntity<List<TeachersCalificationsDTO>> searchCalificationsTeachers(long subjectId,
+            Principal userPrincipal) {
         ResponseEntity<User> userCheckResponse = userCheckService.loadUserNoCkeck(userPrincipal);
         if (userCheckResponse.getStatusCode().is4xxClientError()) {
             return new ResponseEntity<>(userCheckResponse.getStatusCode());
@@ -94,7 +96,8 @@ public class CalificationService {
         List<TeachersCalificationsDTO> teachersCalificationsDTO = new ArrayList<>();
 
         for (User student : subject.getStudents()) {
-            List<ExerciseUpload> uploads = exerciseUploadRepository.findSubjectCalifications(subjectId, student.getId());
+            List<ExerciseUpload> uploads = exerciseUploadRepository.findSubjectCalifications(subjectId,
+                    student.getId());
             TeachersCalificationsDTO teachersCalifications = new TeachersCalificationsDTO(uploads, student);
             teachersCalificationsDTO.add(teachersCalifications);
         }
@@ -102,5 +105,18 @@ public class CalificationService {
         return ResponseEntity.ok(teachersCalificationsDTO);
     }
 
+    public ResponseEntity<ExerciseUpload> uploadCalificationQuestions(long subjectId, long examId, long uploadId,
+            CalificationQuestionsDTO calification, Principal principal) {
+        return calificationCheckService.changeCalificationQuestions(subjectId, examId, uploadId, calification,
+                principal,
+                (s1) -> !s1.equals(""));
+    }
+
+    public ResponseEntity<ExerciseUpload> editCalificationQuestions(long subjectId, long examId, long uploadId,
+            CalificationQuestionsDTO calification, Principal principal) {
+        return calificationCheckService.changeCalificationQuestions(subjectId, examId, uploadId, calification,
+                principal,
+                (s1) -> s1 == null);
+    }
 
 }

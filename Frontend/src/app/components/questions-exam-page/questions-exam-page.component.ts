@@ -5,6 +5,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDialog } from '../dialogs/ConfirmDialog';
+import { QuestionsDTO } from 'src/app/models/QuestionsDTO';
 
 @Component({
   selector: 'app-questions-exam-page',
@@ -12,7 +13,7 @@ import { ConfirmDialog } from '../dialogs/ConfirmDialog';
   styleUrls: ['./questions-exam-page.component.css'],
 })
 export class QuestionsExamPageComponent {
-  questions: string[] = [];
+  questions!: QuestionsDTO;
   answers: string[] = [];
   subjectId: Number = 0;
   examId: Number = 0;
@@ -34,7 +35,7 @@ export class QuestionsExamPageComponent {
     this.examService.getQuestions(this.subjectId, this.examId).subscribe(
       (questions) => {
         this.questions = questions;
-        this.questions.forEach((question) => {
+        this.questions.questions.forEach((question) => {
           this.answers.push('');
         }
         );

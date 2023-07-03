@@ -1,7 +1,8 @@
 import { Observable } from 'rxjs';
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Calification } from '../models/Calification';
+import { CalificationFile } from '../models/CalificationFile';
+import { CalificationQuestions } from '../models/CalificationQuestions';
 
 const BASE_URL = '/api/subjects/';
 
@@ -66,11 +67,19 @@ export class UploadService {
     return this.http.delete(BASE_URL + `${subjectId}/exams/${examId}/uploads/${uploadId}`) as Observable<any>;
   }
 
-  public uploadCalification(subjectId: Number, examId : Number, uploadId : Number, calification : Calification) : Observable<any>{
-    return this.http.post(BASE_URL + `${subjectId}/exams/${examId}/uploads/${uploadId}/califications`, calification) as Observable<any>;
+  public uploadCalification(subjectId: Number, examId : Number, uploadId : Number, calification : CalificationFile) : Observable<any>{
+    return this.http.post(BASE_URL + `${subjectId}/exams/${examId}/uploads/${uploadId}/califications/files`, calification) as Observable<any>;
   }
 
-  public editCalification(subjectId: Number, examId : Number, uploadId : Number, calification : Calification) : Observable<any>{
-    return this.http.put(BASE_URL + `${subjectId}/exams/${examId}/uploads/${uploadId}/califications`, calification) as Observable<any>;
+  public editCalification(subjectId: Number, examId : Number, uploadId : Number, calification : CalificationFile) : Observable<any>{
+    return this.http.put(BASE_URL + `${subjectId}/exams/${examId}/uploads/${uploadId}/califications/files`, calification) as Observable<any>;
+  }
+
+  public uploadCalificationQuestions(subjectId: Number, examId : Number, uploadId : Number, calification : CalificationQuestions) : Observable<any>{
+    return this.http.post(BASE_URL + `${subjectId}/exams/${examId}/uploads/${uploadId}/califications/questions`, calification) as Observable<any>;
+  }
+
+  public editCalificationQuestions(subjectId: Number, examId : Number, uploadId : Number, calification : CalificationQuestions) : Observable<any>{
+    return this.http.put(BASE_URL + `${subjectId}/exams/${examId}/uploads/${uploadId}/califications/questions`, calification) as Observable<any>;
   }
 }

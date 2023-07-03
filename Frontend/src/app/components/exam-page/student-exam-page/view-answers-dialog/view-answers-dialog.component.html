@@ -9,8 +9,11 @@
     <mat-card style="margin-bottom: 2vh;">
       <mat-card-header>
         <mat-card-title>
-          <p class="title">{{i + 1}}. {{question}}</p>
+          <span class="title">{{i + 1}}. {{question}}</span>
         </mat-card-title>
+        <mat-card-subtitle>
+          {{ califications ? califications[i] : "_" }} / {{ questionCalifications[i] }}
+        </mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <p>{{answers[i]}}</p>

@@ -2,7 +2,6 @@ package com.tfg.brais.Service.ControllerServices;
 
 import java.nio.file.Paths;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +22,7 @@ import com.tfg.brais.Model.DTOS.ExamBasicDTO;
 import com.tfg.brais.Model.DTOS.ExamChangesDTO;
 import com.tfg.brais.Model.DTOS.ExamStudentDTO;
 import com.tfg.brais.Model.DTOS.ExamTeacherDTO;
+import com.tfg.brais.Model.DTOS.QuestionsDTO;
 import com.tfg.brais.Repository.ExamRepository;
 import com.tfg.brais.Repository.ExerciseUploadRepository;
 import com.tfg.brais.Service.ComplementaryServices.ExamCheckService;
@@ -118,12 +118,14 @@ public class ExamService {
         if (checkIfCanCreateOrEdit.getStatusCode().is4xxClientError()) {
             return new ResponseEntity<ExamTeacherDTO>(checkIfCanCreateOrEdit.getStatusCode());
         }
-        if (exam.getType() == "UPLOAD") {
-            exam.setQuestions(new ArrayList<>());
+        ResponseEntity<Exam> questionsCheck = examCheckService.questionsCheck(exam, examChanges);
+        if (questionsCheck.getStatusCode().is4xxClientError()) {
+            return new ResponseEntity<ExamTeacherDTO>(questionsCheck.getStatusCode());
         }
+        exam = questionsCheck.getBody();
         Exam examToUpdate = checkIfCanCreateOrEdit.getBody();
         examToUpdate.update(exam);
-        if (examFile != null){
+        if (examFile != null) {
             try {
                 if (examToUpdate.getExamFile() != null) {
                     fileService.deleteFile(Paths.get(Long.toString(subjectId), examToUpdate.getExamFile()).toString());
@@ -133,7 +135,7 @@ public class ExamService {
             } catch (Exception e) {
                 return new ResponseEntity<>(HttpStatus.valueOf(500));
             }
-        }else if (examChanges.isDeletedFile() && examToUpdate.getExamFile() != null){
+        } else if (examChanges.isDeletedFile() && examToUpdate.getExamFile() != null) {
             try {
                 fileService.deleteFile(Paths.get(Long.toString(subjectId), examToUpdate.getExamFile()).toString());
                 examToUpdate.setExamFile(null);
@@ -153,9 +155,11 @@ public class ExamService {
         if (checkIfCanCreate.getStatusCode().is4xxClientError()) {
             return new ResponseEntity<ExamTeacherDTO>(checkIfCanCreate.getStatusCode());
         }
-        if (exam.getType().equals("UPLOAD")) {
-            exam.setQuestions(new ArrayList<>());
+        ResponseEntity<Exam> questionsCheck = examCheckService.questionsCheck(exam, examChangesDTO);
+        if (questionsCheck.getStatusCode().is4xxClientError()) {
+            return new ResponseEntity<ExamTeacherDTO>(questionsCheck.getStatusCode());
         }
+        exam = questionsCheck.getBody();
         exam.setSubject(subjectService.findSubjectById(subjectId).getBody());
         if (examFile != null) {
             try {
@@ -194,12 +198,12 @@ public class ExamService {
         return ResponseEntity.ok(new ExamTeacherDTO(exam));
     }
 
-    public ResponseEntity<List<String>> getExamQuestions(long subjectId, long examId, Principal userPrincipal) {
+    public ResponseEntity<QuestionsDTO> getExamQuestions(long subjectId, long examId, Principal userPrincipal) {
         ResponseEntity<Exam> checkIfCanSee = examCheckService.checkIfCanSee(examId, subjectId, userPrincipal);
         if (checkIfCanSee.getStatusCode().is4xxClientError()) {
-            return new ResponseEntity<List<String>>(checkIfCanSee.getStatusCode());
+            return new ResponseEntity<>(checkIfCanSee.getStatusCode());
         }
-        return ResponseEntity.ok(checkIfCanSee.getBody().getQuestions());
+        return ResponseEntity.ok(new QuestionsDTO(checkIfCanSee.getBody()));
     }
 
     public ResponseEntity<Resource> getExamFiles(long subjectId, long examId, Principal userPrincipal) {

@@ -47,7 +47,7 @@
       <mat-divider></mat-divider>
       <span *ngFor="let question of exam.questions; let i = index">
         <mat-list-item>
-          {{i + 1}}. {{question}}
+          {{i + 1}}. {{question}} ({{exam.questionsCalifications[i]}} puntos)
         </mat-list-item>
         <mat-divider></mat-divider>
       </span>

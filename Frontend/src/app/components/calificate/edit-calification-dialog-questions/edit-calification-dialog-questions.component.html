@@ -1,0 +1,30 @@
+<mat-grid-list cols="1">
+  <div style="display: flex; justify-content: flex-end; margin-top: 2vh;">
+    <button mat-icon-button color="primary" (click)="closeDialog()" style="margin-bottom: 2vh;">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <mat-card *ngFor="let calification of questionsCalification; let i = index">
+    <mat-card-header>
+      <mat-card-title>Pregunta {{i+1}}</mat-card-title>
+      <mat-card-subtitle>{{calification}} ptos.</mat-card-subtitle>
+    </mat-card-header>
+    <br>
+    <mat-card-content>
+      <mat-form-field>
+        <input matInput type="number" min="0" max="{{calification}}" [(ngModel)]="califications[i]">
+        <mat-error>No válida</mat-error>
+      </mat-form-field>
+    </mat-card-content>
+  </mat-card>
+  <mat-form-field style="width: 90%; margin-top: 2vh;">
+    <mat-label>Comentario sobre la tarea</mat-label>
+    <textarea matInput [(ngModel)]="comment"></textarea>
+  </mat-form-field>
+  <br>
+  <button [disabled]="!isValid()" mat-raised-button color="primary" (click)="openDialog()"
+    *ngIf="!loading; else isLoading">Editar calificación</button>
+  <ng-template #isLoading>
+    <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+  </ng-template>
+</mat-grid-list>

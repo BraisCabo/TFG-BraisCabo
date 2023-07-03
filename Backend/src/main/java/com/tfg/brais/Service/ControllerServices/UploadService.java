@@ -200,6 +200,10 @@ public class UploadService {
         AnswersDTO answersDTO = new AnswersDTO();
         answersDTO.setAnswers(upload.getAnswers());
         answersDTO.setQuestions(upload.getExam().getQuestions());
+        answersDTO.setQuestionCalifications(upload.getExam().getQuestionsCalifications());
+        if (exerciseUploadCheckService.checkIfCanSeeCalifications(subjectId, principal, upload)){
+            answersDTO.setCalifications(upload.getQuestionsCalification());
+        }
         return ResponseEntity.ok(answersDTO);
     }
 

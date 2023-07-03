@@ -20,7 +20,7 @@
           {{upload.student.lastName}}</span></mat-card-title>
       <mat-card-subtitle>{{getTimeMessage(upload)}}<br>
         <span *ngIf="upload.calification!=''; else noCalificated">
-          Calificación: {{upload.calification}} <br>
+          Calificación: {{upload.calification | number:'1.2-2'}} <br>
           Comentario: {{upload.comment}}
         </span>
         <ng-template #noCalificated>

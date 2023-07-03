@@ -10,55 +10,63 @@ import { UploadService } from 'src/app/services/UploadService';
 import { ConfirmDialog } from '../../dialogs/ConfirmDialog';
 import { CalificationFile } from 'src/app/models/CalificationFile';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CalificationQuestions } from 'src/app/models/CalificationQuestions';
+
+
 @Component({
-  selector: 'app-edit-calification-dialog',
-  templateUrl: './edit-calification-dialog.component.html',
-  styleUrls: ['./edit-calification-dialog.component.css'],
+  selector: 'app-edit-calification-dialog-questions',
+  templateUrl: './edit-calification-dialog-questions.component.html',
+  styleUrls: ['./edit-calification-dialog-questions.component.css']
 })
-export class EditCalificationDialogComponent {
+export class EditCalificationDialogQuestionsComponent {
   subjectId: Number = 0;
   examId: Number = 0;
   uploadId: Number = 0;
-  calification: FormControl = new FormControl(0, [
-    Validators.required,
-    Validators.min(0),
-    Validators.max(10),
-  ]);
+  califications: Number[] = [];
   comment: String = '';
   loading : boolean = false;
+  questionsCalification : String[] = [];
 
   constructor(
-    public dialogRef: MatDialogRef<EditCalificationDialogComponent>,
+    public dialogRef: MatDialogRef<EditCalificationDialogQuestionsComponent>,
     private uploadService: UploadService,
     private router: Router,
     private _snackBar: MatSnackBar,
     private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA)
-    public data: { subjectId: Number; examId: Number; uploadId: Number, calification: String, comment: String}
+    public data: { subjectId: Number; examId: Number; uploadId: Number, questionsCalifications: String[], califications: String[], comment: String }
   ) {
     this.subjectId = data.subjectId;
     this.examId = data.examId;
     this.uploadId = data.uploadId;
-    this.calification.setValue(data.calification);
+    this.califications = data.califications.map(calification => Number(calification));
     this.comment = data.comment;
+    this.questionsCalification = data.questionsCalifications;
   }
 
   getErrorMessage() {
-    if (this.calification.hasError('required')) {
-      return 'Debe ingresar una calificación';
+    return 'La calificación de todas las preguntas debe ser mayor a 0 y menor que la puntuación de esa pregunta';
+  }
+
+  isValid(){
+    for(let i = 0; i < this.califications.length; i++){
+      if(Number(this.califications[i]) < 0 || Number(this.califications[i]) > Number(this.questionsCalification[i])){
+        return false;
+      }
     }
-    if (this.calification.hasError('min')) {
-      return 'La nota mínima es 0';
+    return true;
+  }
+
+  isValidCalification(index: number){
+    if(Number(this.califications[index]) < 0 || Number(this.califications[index]) > Number(this.questionsCalification[index])){
+      return false;
     }
-    if (this.calification.hasError('max')) {
-      return 'La nota máxima es 10';
-    }
-    return '';
+    return true;
   }
 
   openDialog(): void {
     let dialogRef = this.dialog.open(ConfirmDialog, {
-      data: { message: `¿Deseas cambiar esta calificación?` },
+      data: { message: `¿Deseas establecer esta calificación?` },
       width: '250px',
     });
 
@@ -71,12 +79,15 @@ export class EditCalificationDialogComponent {
 
   setCalification() {
     this.loading = true;
-    let studentCalification: CalificationFile = new CalificationFile();
-    studentCalification.calification = this.calification.value;
+    let studentCalification: CalificationQuestions = new CalificationQuestions();
     studentCalification.comment = this.comment;
+    studentCalification.questionsCalification = this.califications.map((calification) => {
+      return calification.toString();
+    });
+
 
     this.uploadService
-      .editCalification(
+      .editCalificationQuestions(
         this.subjectId,
         this.examId,
         this.uploadId,

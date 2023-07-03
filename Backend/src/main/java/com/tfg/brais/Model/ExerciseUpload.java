@@ -25,6 +25,8 @@ public class ExerciseUpload {
 
     private String calification = "";
 
+    private List<String> questionsCalification;
+
     private String comment = "";
 
     @JsonIgnore

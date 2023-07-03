@@ -14,7 +14,6 @@ import { AuthService } from 'src/app/services/AuthService';
 import { ExamService } from 'src/app/services/ExamService';
 import { SubjectService } from 'src/app/services/SubjectService';
 import { ConfirmDialog } from '../dialogs/ConfirmDialog';
-import { ExamTeacher } from 'src/app/models/ExamTeacher';
 import { ExamChanges } from 'src/app/models/ExamChanges';
 
 export function dateValidator(openingDate: any): ValidatorFn {
@@ -62,6 +61,7 @@ export class CreateExamComponent {
   loading: boolean = false;
   canRepeat : string = 'false';
   canUploadLate : string = 'false';
+  questionsCalification: Number[] = [];
 
   constructor(
     private _adapter: DateAdapter<any>,
@@ -163,10 +163,12 @@ export class CreateExamComponent {
 
   newQuestion() {
     this.questions.push('');
+    this.questionsCalification.push(0);
   }
 
   deleteQuestion(index: number) {
     this.questions.splice(index, 1);
+    this.questionsCalification.splice(index, 1);
   }
 
   trackByFn(index: number, item: any): any {
@@ -188,7 +190,10 @@ export class CreateExamComponent {
       examFile: this.examFile,
       deletedFile : false,
       canRepeat : this.canRepeat === 'true',
-      canUploadLate : this.canUploadLate === 'true'
+      canUploadLate : this.canUploadLate === 'true',
+      questionsCalifications: this.questionsCalification.map((calification) => {
+        return calification.toString();
+      }),
     };
     this.examService.createExam(this.subjectId, examDTO, this.examFile).subscribe(
       (_) => {

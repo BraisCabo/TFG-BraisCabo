@@ -20,6 +20,7 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 import com.tfg.brais.Model.DTOS.ExamBasicDTO;
 import com.tfg.brais.Model.DTOS.ExamChangesDTO;
 import com.tfg.brais.Model.DTOS.ExamTeacherDTO;
+import com.tfg.brais.Model.DTOS.QuestionsDTO;
 import com.tfg.brais.Service.ControllerServices.ExamService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,7 +48,7 @@ public class ExamController {
     }
 
     @GetMapping("/{examId}/questions")
-    public ResponseEntity<List<String>> getQuestions(@PathVariable long id, @PathVariable long examId, HttpServletRequest request){
+    public ResponseEntity<QuestionsDTO> getQuestions(@PathVariable long id, @PathVariable long examId, HttpServletRequest request){
         return this.examService.getExamQuestions(id, examId, request.getUserPrincipal());
     }
 

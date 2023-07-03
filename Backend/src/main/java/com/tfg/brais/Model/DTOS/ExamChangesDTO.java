@@ -29,6 +29,8 @@ public class ExamChangesDTO extends ExamBasicDTO{
 
     private boolean canUploadLate = true;
 
+    private List<String> questionsCalifications = new ArrayList<>();
+
     public ExamChangesDTO(){}
 
     public ExamChangesDTO(Exam exam){

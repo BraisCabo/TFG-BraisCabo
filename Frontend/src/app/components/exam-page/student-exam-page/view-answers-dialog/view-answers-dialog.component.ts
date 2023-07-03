@@ -13,6 +13,8 @@ import { SubjectEditingDialog } from 'src/app/components/edit-subject/edit-subje
 export class ViewAnswersDialogComponent {
   questions: string[] = [];
   answers: string[] = [];
+  califications : string[] = [];
+  questionCalifications : string[] = [];
   loadingData: boolean = true;
 
   constructor(
@@ -24,8 +26,9 @@ export class ViewAnswersDialogComponent {
     uploadService.getAnswersAndQuestions(this.data.subjectId, this.data.examId, this.data.uploadId).subscribe((response: any) => {
       this.questions = response.questions;
       this.answers = response.answers;
+      this.califications = response.califications;
+      this.questionCalifications = response.questionCalifications;
       this.loadingData = false;
-      console.log(response)
     }, (error) => {
       this.router.navigate(['/error']);
     });

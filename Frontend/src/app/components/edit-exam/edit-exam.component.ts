@@ -47,6 +47,7 @@ export class EditExamComponent {
   examFileName : string = "";
   canRepeat : string = 'false';
   canUploadLate : string = 'false';
+  questionsCalifications : Number[] = [];
 
   constructor(
     private _adapter: DateAdapter<any>,
@@ -74,10 +75,10 @@ export class EditExamComponent {
 
         this.type.setValue(exam.type)
         this.questions = exam.questions
+        this.questionsCalifications = exam.questionsCalifications
         this.canRepeat = exam.canRepeat ? 'true' : 'false'
         this.canUploadLate = exam.canUploadLate ? 'true' : 'false'
         this.loadingExam = false;
-        console.log(this.loadingExam)
       },
       (_) => {
         router.navigate(['/error']);
@@ -143,10 +144,12 @@ export class EditExamComponent {
 
   newQuestion() {
     this.questions.push('');
+    this.questionsCalifications.push(0);
   }
 
   deleteQuestion(index: number) {
     this.questions.splice(index, 1);
+    this.questionsCalifications.splice(index, 1);
   }
 
   trackByFn(index: number, item: any): any {
@@ -168,7 +171,10 @@ export class EditExamComponent {
       examFile: this.examFile,
       deletedFile: this.deletedFile,
       canRepeat: this.canRepeat === 'true',
-      canUploadLate: this.canUploadLate === 'true'
+      canUploadLate: this.canUploadLate === 'true',
+      questionsCalifications: this.questionsCalifications.map((calification) => {
+        return calification.toString();
+      }),
     };
     this.examService.updateExam(this.subjectId, examDTO).subscribe(
       (_) => {

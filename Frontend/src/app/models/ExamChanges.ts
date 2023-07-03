@@ -21,4 +21,6 @@ export class ExamChanges{
 
   canUploadLate : boolean = false
 
+  questionsCalifications: String[] = []
+
 }
