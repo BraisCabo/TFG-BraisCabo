@@ -34,6 +34,8 @@ public class ExerciseUpload {
 
     private boolean isUploaded;
 
+    private Date startedDate;
+
     @ManyToOne
     private Exam exam;
 
@@ -48,5 +50,6 @@ public class ExerciseUpload {
         setAnswers(null);
         setFileName(null);
         this.isUploaded = false;
+        this.startedDate = null;
     }
 }

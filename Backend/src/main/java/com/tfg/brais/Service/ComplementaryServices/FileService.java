@@ -64,7 +64,8 @@ public class FileService {
         }
     }
 
-    public void createTextFile(String name, String email, String filePath, String fileName, List<String> questions, List<String> answers)
+    public void createTextFile(String name, String email, String filePath, String fileName, List<String> questions,
+            List<String> answers)
             throws IOException {
         Files.createDirectories(Paths.get(fileDir, filePath.toString()));
         ArrayList<String> firstRow = new ArrayList<String>();
@@ -76,7 +77,11 @@ public class FileService {
         secondRow.add(email);
         secondRow.addAll(answers);
         CSVWriter csvWriter = new CSVWriter(
-                Files.newBufferedWriter(Paths.get(fileDir, filePath.toString(), fileName)));
+                Files.newBufferedWriter(Paths.get(fileDir, filePath.toString(), fileName)),
+                ';',
+                CSVWriter.DEFAULT_QUOTE_CHARACTER,
+                CSVWriter.DEFAULT_ESCAPE_CHARACTER,
+                CSVWriter.DEFAULT_LINE_END);
         csvWriter.writeNext(firstRow.toArray(new String[firstRow.size()]));
         csvWriter.writeNext(secondRow.toArray(new String[secondRow.size()]));
         csvWriter.close();

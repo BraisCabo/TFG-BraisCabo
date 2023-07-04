@@ -2,6 +2,7 @@ package com.tfg.brais.Service.ControllerServices;
 
 import java.nio.file.Paths;
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -203,7 +204,15 @@ public class ExamService {
         if (checkIfCanSee.getStatusCode().is4xxClientError()) {
             return new ResponseEntity<>(checkIfCanSee.getStatusCode());
         }
-        return ResponseEntity.ok(new QuestionsDTO(checkIfCanSee.getBody()));
+        User user = userCheckService.loadUserNoCkeck(userPrincipal).getBody();
+        ExerciseUpload upload = exerciseUploadRepository.findByStudentIdAndExamIdAndExamSubjectId(user.getId(), examId, subjectId).get();
+        if (upload.getStartedDate() == null) {
+            upload.setStartedDate(new Date());
+            exerciseUploadRepository.save(upload);
+        }
+        QuestionsDTO questionsDTO = new QuestionsDTO(checkIfCanSee.getBody());
+        questionsDTO.setStartedDate(upload.getStartedDate());
+        return ResponseEntity.ok(questionsDTO);
     }
 
     public ResponseEntity<Resource> getExamFiles(long subjectId, long examId, Principal userPrincipal) {

@@ -23,4 +23,6 @@ export class ExamChanges{
 
   questionsCalifications: String[] = []
 
+  maxTime : string = ""
+
 }

@@ -20,4 +20,6 @@ export class ExamStudent{
 
   canUploadLate : boolean = false
 
+  maxTime : string = ""
+
 }

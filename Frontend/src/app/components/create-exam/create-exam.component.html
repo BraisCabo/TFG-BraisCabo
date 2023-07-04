@@ -29,14 +29,19 @@
       <mat-option value="QUESTIONS">Preguntas Cortas</mat-option>
     </mat-select>
   </mat-form-field>
+
+  <mat-form-field *ngIf="type.value === 'QUESTIONS'">
+    <mat-label>Tiempo máximo (en minutos)</mat-label>
+    <input matInput [formControl]="maxTime" type="number">
+    <mat-error *ngIf="maxTime.invalid">
+      No válido
+    </mat-error>
+  </mat-form-field>
   <br>
 
   <div>
     <span class="title">Selecciona la visibilidad del examen</span>
     <br>
-
-
-
     <mat-radio-group [(ngModel)]="visibleExam" color="primary">
       <mat-radio-button value="true">Visible</mat-radio-button>
       <mat-radio-button value="false">Oculto</mat-radio-button>

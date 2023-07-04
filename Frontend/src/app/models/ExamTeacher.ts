@@ -23,4 +23,6 @@ export class ExamTeacher{
 
   questionsCalifications: String[] = []
 
+  maxTime : string = ""
+
 }

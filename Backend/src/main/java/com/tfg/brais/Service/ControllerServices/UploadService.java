@@ -3,7 +3,6 @@ package com.tfg.brais.Service.ControllerServices;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +80,6 @@ public class UploadService {
             fileService.saveFile(file, path);
             upload.setFileName(file.getOriginalFilename());
             upload.setUploaded(true);
-            upload.setUploadDate(new Date());
             exerciseUploadRepository.save(upload);
             return ResponseEntity.ok(upload);
         } catch (Exception e) {

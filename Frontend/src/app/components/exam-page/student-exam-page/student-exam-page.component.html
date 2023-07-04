@@ -15,6 +15,9 @@
     <mat-list-item>
       <span class="text">Fecha de cierre: {{getClosingDate()}}</span> <br>
     </mat-list-item>
+    <mat-list-item *ngIf="exam.type == 'QUESTIONS'">
+      <span class="text">Tiempo máximo para hacer el examen: {{exam.maxTime}} minutos</span> <br>
+    </mat-list-item>
     <mat-list-item>
       <span class="text">{{getUploadingDate()}}</span> <br>
     </mat-list-item>

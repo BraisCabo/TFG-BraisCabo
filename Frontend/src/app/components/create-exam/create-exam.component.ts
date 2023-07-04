@@ -62,6 +62,7 @@ export class CreateExamComponent {
   canRepeat : string = 'false';
   canUploadLate : string = 'false';
   questionsCalification: Number[] = [];
+  maxTime : FormControl = new FormControl(1,[Validators.required, Validators.min(1)]);
 
   constructor(
     private _adapter: DateAdapter<any>,
@@ -194,6 +195,7 @@ export class CreateExamComponent {
       questionsCalifications: this.questionsCalification.map((calification) => {
         return calification.toString();
       }),
+      maxTime : this.maxTime.value.toString()
     };
     this.examService.createExam(this.subjectId, examDTO, this.examFile).subscribe(
       (_) => {
@@ -222,7 +224,8 @@ export class CreateExamComponent {
       this.openingDate.valid &&
       this.closingDate.valid &&
       this.type.valid &&
-      !this.invalidQuestions()
+      !this.invalidQuestions() &&
+      (this.maxTime.valid || this.type.value === 'UPLOAD')
     );
   }
 

@@ -42,6 +42,7 @@ export class ExamService {
     formData.append("canRepeat", exam.canRepeat.toString());
     formData.append("canUploadLate", exam.canUploadLate.toString());
     formData.append("questionsCalifications", exam.questionsCalifications.toString())
+    formData.append("maxTime", exam.maxTime.toString())
 
 
     return this.http.post(BASE_URL + subjectId + "/exams/", formData) as Observable<ExamTeacher>;
@@ -63,6 +64,7 @@ export class ExamService {
     formData.append("canRepeat", exam.canRepeat.toString());
     formData.append("canUploadLate", exam.canUploadLate.toString());
     formData.append("questionsCalifications", exam.questionsCalifications.toString())
+    formData.append("maxTime", exam.maxTime.toString())
 
     return this.http.put(BASE_URL + subjectId + "/exams/" + exam.id, formData) as Observable<ExamTeacher>;
   }

@@ -68,6 +68,10 @@ public class ExamCheckService {
             return new ResponseEntity<Exam>(HttpStatusCode.valueOf(403));
         }
 
+        if (exam.getMaxTime() < 0) {
+            return new ResponseEntity<Exam>(HttpStatusCode.valueOf(403));
+        }
+
         return ResponseEntity.ok().build();
     }
 

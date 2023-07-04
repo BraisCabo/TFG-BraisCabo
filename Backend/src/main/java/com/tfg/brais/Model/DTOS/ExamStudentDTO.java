@@ -29,6 +29,8 @@ public class ExamStudentDTO extends ExamBasicDTO{
 
     private boolean canUploadLate = true;
 
+    private String maxTime;
+
     public ExamStudentDTO(Exam exam){
         super(exam);
         this.calificationPercentaje = exam.getCalificationPercentaje();
@@ -40,5 +42,6 @@ public class ExamStudentDTO extends ExamBasicDTO{
         }
         this.canRepeat = exam.isCanRepeat();
         this.canUploadLate = exam.isCanUploadLate();
+        this.maxTime = Integer.toString(exam.getMaxTime());
     }
 }

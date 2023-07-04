@@ -54,6 +54,8 @@ public class Exam {
 
     private String examFile;
 
+    private int maxTime;
+
     public void update(Exam exam) {
         this.name = exam.getName();
         this.calificationPercentaje = exam.getCalificationPercentaje();
@@ -66,5 +68,6 @@ public class Exam {
         this.canRepeat = exam.isCanRepeat();
         this.canUploadLate = exam.isCanUploadLate();
         this.questionsCalifications = exam.getQuestionsCalifications();
+        this.maxTime = exam.getMaxTime();
     }
 }

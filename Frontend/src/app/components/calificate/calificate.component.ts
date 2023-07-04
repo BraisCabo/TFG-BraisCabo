@@ -156,8 +156,7 @@ export class CalificateComponent {
     }
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        this.exerciseUploads[i].calification = result.calification;
-        this.exerciseUploads[i].comment = result.comment;
+        this.exerciseUploads[i] = result;
       }
     });
   }
@@ -194,8 +193,7 @@ export class CalificateComponent {
 
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        this.exerciseUploads[i].calification = result.calification;
-        this.exerciseUploads[i].comment = result.comment;
+        this.exerciseUploads[i] = result;
       }
     });
   }

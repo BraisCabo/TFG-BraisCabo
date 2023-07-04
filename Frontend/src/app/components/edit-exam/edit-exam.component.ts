@@ -48,6 +48,7 @@ export class EditExamComponent {
   canRepeat : string = 'false';
   canUploadLate : string = 'false';
   questionsCalifications : Number[] = [];
+  maxTime : FormControl = new FormControl(1,[Validators.required, Validators.min(1)]);
 
   constructor(
     private _adapter: DateAdapter<any>,
@@ -78,6 +79,7 @@ export class EditExamComponent {
         this.questionsCalifications = exam.questionsCalifications
         this.canRepeat = exam.canRepeat ? 'true' : 'false'
         this.canUploadLate = exam.canUploadLate ? 'true' : 'false'
+        this.maxTime.setValue(exam.maxTime)
         this.loadingExam = false;
       },
       (_) => {
@@ -175,6 +177,7 @@ export class EditExamComponent {
       questionsCalifications: this.questionsCalifications.map((calification) => {
         return calification.toString();
       }),
+      maxTime : this.maxTime.value.toString(),
     };
     this.examService.updateExam(this.subjectId, examDTO).subscribe(
       (_) => {
@@ -194,17 +197,6 @@ export class EditExamComponent {
       verticalPosition: "top",
       duration: 5000
     });
-  }
-
-  isValidExam() {
-    return (
-      this.name.valid &&
-      this.calificationPercentaje.valid &&
-      this.openingDate.valid &&
-      this.closingDate.valid &&
-      this.type.valid &&
-      !this.invalidQuestions()
-    );
   }
 
   getTime(date: Date): string{
@@ -228,5 +220,17 @@ export class EditExamComponent {
       this.examFile = event.target.files[0];
       this.examFileName = this.examFile.name;
     }
+  }
+
+  isValidExam() {
+    return (
+      this.name.valid &&
+      this.calificationPercentaje.valid &&
+      this.openingDate.valid &&
+      this.closingDate.valid &&
+      this.type.valid &&
+      !this.invalidQuestions() &&
+      (this.maxTime.valid || this.type.value === 'UPLOAD')
+    );
   }
 }
