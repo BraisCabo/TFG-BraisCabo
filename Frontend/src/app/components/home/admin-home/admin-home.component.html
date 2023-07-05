@@ -1,5 +1,5 @@
 <mat-grid-list cols="1">
-  <button mat-raised-button color="primary" [routerLink]="['/newSubject']" style="margin-bottom: 2vh;">
+  <button mat-raised-button color="primary" [routerLink]="['/newSubject']" style="margin-bottom: 2vh;" id="newSubjectButton">
     <mat-icon>add</mat-icon> Nueva
     asignatura</button>
   <br>
@@ -12,25 +12,25 @@
   </mat-form-field>
   <div *ngIf="!loadingSubjects; else loading">
     <div *ngIf="this.subjects.length > 0; else noSubjects">
-      <mat-card *ngFor="let subject of this.subjects">
+      <mat-card *ngFor="let subject of this.subjects" id="subjectsList">
         <mat-card-header>
           <mat-card-title style="font-size: x-large;">
-            {{subject.name}}
+            <span id="subjectName">{{subject.name}}</span>
           </mat-card-title>
           <mat-card-subtitle>
             {{this.getTeachers(subject)}}
             <br>
-            {{this.getStudents(subject)}}
+            <span id="numberOfStudents">{{this.getStudents(subject)}}</span>
           </mat-card-subtitle>
         </mat-card-header>
         <mat-card-actions align="end">
           <button mat-icon-button color="primary" (click)="viewSubject(subject)">
             <mat-icon>remove_red_eye</mat-icon>
           </button>
-          <button mat-icon-button color="primary" (click)="editSubject(subject)">
+          <button mat-icon-button color="primary" (click)="editSubject(subject)" id="editButton">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button color="primary" (click)="deleteSubject(subject)">
+          <button mat-icon-button color="primary" (click)="deleteSubject(subject)" id="deleteButton">
             <mat-icon>delete</mat-icon>
           </button>
         </mat-card-actions>

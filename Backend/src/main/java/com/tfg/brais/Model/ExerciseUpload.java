@@ -52,4 +52,8 @@ public class ExerciseUpload {
         this.isUploaded = false;
         this.startedDate = null;
     }
+
+    public int calculateTimeDifference(){
+        return (int) ((exam.getMaxTime() * 60 * 1000 + 3000 + startedDate.getTime() - new Date().getTime()) / 1000);
+    }
 }

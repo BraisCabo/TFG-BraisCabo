@@ -29,6 +29,7 @@ import com.tfg.brais.Repository.ExerciseUploadRepository;
 import com.tfg.brais.Service.ComplementaryServices.ExamCheckService;
 import com.tfg.brais.Service.ComplementaryServices.FileService;
 import com.tfg.brais.Service.ComplementaryServices.SubjectCheckService;
+import com.tfg.brais.Service.ComplementaryServices.TaskDelayerService;
 import com.tfg.brais.Service.ComplementaryServices.UserCheckService;
 
 @Service
@@ -55,15 +56,19 @@ public class ExamService {
     @Autowired
     private FileService fileService;
 
+    @Autowired
+    private TaskDelayerService taskDelayerService;
+
     public ExamService(ExamRepository examRepository, SubjectService subjectService, ExamCheckService examCheckService,
             SubjectCheckService subjectCheckService, UserCheckService userCheckService,
-            ExerciseUploadRepository exerciseUploadRepository) {
+            ExerciseUploadRepository exerciseUploadRepository, TaskDelayerService taskDelayerService) {
         this.examRepository = examRepository;
         this.subjectService = subjectService;
         this.examCheckService = examCheckService;
         this.subjectCheckService = subjectCheckService;
         this.userCheckService = userCheckService;
         this.exerciseUploadRepository = exerciseUploadRepository;
+        this.taskDelayerService = taskDelayerService;
     }
 
     public ResponseEntity<ExamBasicDTO> findBySubjectIdAndId(long subjectId, long examId, Principal principal) {
@@ -205,13 +210,17 @@ public class ExamService {
             return new ResponseEntity<>(checkIfCanSee.getStatusCode());
         }
         User user = userCheckService.loadUserNoCkeck(userPrincipal).getBody();
-        ExerciseUpload upload = exerciseUploadRepository.findByStudentIdAndExamIdAndExamSubjectId(user.getId(), examId, subjectId).get();
+        ExerciseUpload upload = exerciseUploadRepository
+                .findByStudentIdAndExamIdAndExamSubjectId(user.getId(), examId, subjectId).get();
         if (upload.getStartedDate() == null) {
             upload.setStartedDate(new Date());
             exerciseUploadRepository.save(upload);
         }
         QuestionsDTO questionsDTO = new QuestionsDTO(checkIfCanSee.getBody());
         questionsDTO.setStartedDate(upload.getStartedDate());
+
+        taskDelayerService.delayTask(taskDelayerService.createAutoUploadTask(subjectId, examId, userPrincipal,
+                upload.getExam().getQuestions().size()), upload.calculateTimeDifference());
         return ResponseEntity.ok(questionsDTO);
     }
 
@@ -222,4 +231,5 @@ public class ExamService {
         }
         return fileService.downloadFile(Paths.get(Long.toString(subjectId), checkIfCanSee.getBody().getExamFile()));
     }
+
 }

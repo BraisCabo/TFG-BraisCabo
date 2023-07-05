@@ -56,7 +56,9 @@ public class ExamChangesDTO extends ExamBasicDTO{
         exam.setQuestions(this.getQuestions());
         exam.setCanRepeat(this.isCanRepeat());
         exam.setCanUploadLate(this.isCanUploadLate());
-        exam.setMaxTime(Integer.parseInt(this.getMaxTime()));
+        if (this.getMaxTime() != null){
+            exam.setMaxTime(Integer.parseInt(this.getMaxTime()));
+        }
         return exam;
     }
 }
