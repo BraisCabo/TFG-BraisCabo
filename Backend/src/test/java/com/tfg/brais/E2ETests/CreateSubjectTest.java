@@ -4,24 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CreateSubjectTest {
     
-    private static DriverMethodsExecutor driver = new DriverMethodsExecutor();
+    private DriverMethodsExecutor driver;
 
-    @AfterAll
-    public static void close(){
-        driver.close();
+    public CreateSubjectTest(DriverMethodsExecutor driver){
+        this.driver = driver;
     }
 
-    @Test
-    @Order(3)
     public void createEmpty(){
         driver.login("admin", "admin");
         driver.clickButton("newSubjectButton");
@@ -37,8 +27,6 @@ public class CreateSubjectTest {
         assertEquals(driver.getCurrentUrl(), "http://localhost:4200/");
     }
 
-    @Test
-    @Order(4)
     public void createEqual(){
         driver.login("admin", "admin");
         driver.clickButton("newSubjectButton");
@@ -49,8 +37,6 @@ public class CreateSubjectTest {
         assertEquals(driver.getCurrentUrl(), "http://localhost:4200/newSubject");
     }
 
-    @Test
-    @Order(5)
     public void createSubject(){
         driver.login("admin", "admin");
         driver.clickButton("newSubjectButton");

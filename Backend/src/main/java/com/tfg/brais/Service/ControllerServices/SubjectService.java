@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.tfg.brais.Model.Subject;
+import com.tfg.brais.Model.User;
 import com.tfg.brais.Model.DTOS.SubjectDetailedDTO;
 import com.tfg.brais.Repository.SubjectRepository;
 import com.tfg.brais.Service.ComplementaryServices.SubjectCheckService;
@@ -40,5 +41,15 @@ public class SubjectService {
 
     public ResponseEntity<Subject> findSubjectById(long subjectId){
         return subjectCheckService.findById(subjectId);
+    }
+
+    public ResponseEntity<Subject> addStudent(User user, long subjectId) {
+        ResponseEntity<Subject> subjectCheckResponse = subjectCheckService.findById(subjectId);
+        if (subjectCheckResponse.getStatusCode().is4xxClientError()) {
+            return new ResponseEntity<Subject>(subjectCheckResponse.getStatusCode());
+        }
+        Subject subject = subjectCheckResponse.getBody();
+        subject.getStudents().add(user);
+        return ResponseEntity.ok(subjectRepository.save(subject));
     }
 }

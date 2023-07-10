@@ -23,9 +23,11 @@ import com.tfg.brais.Model.DTOS.ExamBasicDTO;
 import com.tfg.brais.Model.DTOS.ExamChangesDTO;
 import com.tfg.brais.Model.DTOS.ExamStudentDTO;
 import com.tfg.brais.Model.DTOS.ExamTeacherDTO;
+import com.tfg.brais.Model.DTOS.ImportedExamDTO;
 import com.tfg.brais.Model.DTOS.QuestionsDTO;
 import com.tfg.brais.Repository.ExamRepository;
 import com.tfg.brais.Repository.ExerciseUploadRepository;
+import com.tfg.brais.Service.ComplementaryServices.CSVService;
 import com.tfg.brais.Service.ComplementaryServices.ExamCheckService;
 import com.tfg.brais.Service.ComplementaryServices.FileService;
 import com.tfg.brais.Service.ComplementaryServices.SubjectCheckService;
@@ -58,6 +60,9 @@ public class ExamService {
 
     @Autowired
     private TaskDelayerService taskDelayerService;
+
+    @Autowired
+    private CSVService csvService;
 
     public ExamService(ExamRepository examRepository, SubjectService subjectService, ExamCheckService examCheckService,
             SubjectCheckService subjectCheckService, UserCheckService userCheckService,
@@ -230,6 +235,16 @@ public class ExamService {
             return new ResponseEntity<>(checkIfCanSee.getStatusCode());
         }
         return fileService.downloadFile(Paths.get(Long.toString(subjectId), checkIfCanSee.getBody().getExamFile()));
+    }
+
+    public ResponseEntity<ExamTeacherDTO> importExamFile(long subjectId, ImportedExamDTO importedExam,
+            Principal userPrincipal, UriComponentsBuilder uBuilder) {
+        ResponseEntity<Exam> csvToExam = csvService.CSVToExam(subjectId, importedExam, userPrincipal);
+        if (csvToExam.getStatusCode().is4xxClientError()) {
+            return new ResponseEntity<ExamTeacherDTO>(csvToExam.getStatusCode());
+        }
+        Exam exam = csvToExam.getBody();
+        return ResponseEntity.created(uBuilder.buildAndExpand(exam.getId()).toUri()).body(new ExamTeacherDTO(exam));
     }
 
 }

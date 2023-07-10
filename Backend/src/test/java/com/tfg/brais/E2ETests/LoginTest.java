@@ -2,23 +2,14 @@ package com.tfg.brais.E2ETests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class LoginTest {
 
-    private static DriverMethodsExecutor driver = new DriverMethodsExecutor();
+    private DriverMethodsExecutor driver;
 
-    @AfterAll
-    public static void close(){
-        driver.close();
+    public LoginTest(DriverMethodsExecutor driver){
+        this.driver = driver;
     }
 
-    @Test
-    @Order(2)
     public void login(){
         driver.navigateTo("http://localhost:4200/login");
         driver.changeInput("email", "nocorrectemail@gmail.com");

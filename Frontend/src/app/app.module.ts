@@ -57,6 +57,7 @@ import { CalificationsPageComponent } from './components/califications-page/cali
 import { TeacherCalificationsComponent } from './components/califications-page/teacher-califications/teacher-califications.component';
 import { SetCalificationDialogQuestionsComponent } from './components/calificate/set-calification-dialog-questions/set-calification-dialog-questions.component';
 import { EditCalificationDialogQuestionsComponent } from './components/calificate/edit-calification-dialog-questions/edit-calification-dialog-questions.component';
+import { ImportExamComponent } from './components/import-exam/import-exam.component';
 
 @NgModule({
   declarations: [
@@ -88,7 +89,8 @@ import { EditCalificationDialogQuestionsComponent } from './components/calificat
     CalificationsPageComponent,
     TeacherCalificationsComponent,
     SetCalificationDialogQuestionsComponent,
-    EditCalificationDialogQuestionsComponent
+    EditCalificationDialogQuestionsComponent,
+    ImportExamComponent
   ],
   imports: [
     BrowserModule,

@@ -4,23 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class RegisterTest {
 
-    private static DriverMethodsExecutor driver = new DriverMethodsExecutor();
+    private DriverMethodsExecutor driver;
 
-    @AfterAll
-    public static void close(){
-        driver.close();
+    public RegisterTest(DriverMethodsExecutor driver){
+        this.driver = driver;
     }
 
-    @Test
-    @Order(1)
     public void Register() {
         driver.navigateTo("http://localhost:4200/register");
         assertFalse(driver.isEnableButton("registerButton"));

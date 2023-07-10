@@ -3,6 +3,7 @@ package com.tfg.brais.E2ETests;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -33,6 +34,10 @@ public class DriverMethodsExecutor {
     public void changeInput(String inputId, String value) {
         driver.findElement(By.id(inputId)).clear();
         driver.findElement(By.id(inputId)).sendKeys(value);
+    }
+
+    public void clearInput(String inputId) {
+        driver.findElement(By.id(inputId)).sendKeys(Keys.chord(Keys.CONTROL, "a"), Keys.DELETE);
     }
 
     public void navigateTo(String url) {
@@ -67,7 +72,7 @@ public class DriverMethodsExecutor {
 
     public void selectElementOfList(String elementId, String tagName, String buttonId, int index){
         WebElement findElements = driver.findElement(By.id(elementId));
-        List<WebElement> elements = findElements.findElements(By.tagName("mat-list-item"));
+        List<WebElement> elements = findElements.findElements(By.tagName(tagName));
         elements.get(index).findElement(By.id(buttonId)).click();
     }
 
@@ -92,5 +97,17 @@ public class DriverMethodsExecutor {
         changeInput("password", password);
         clickButton("loginButton");
         waitTime();
+    }
+
+    public void clickCard(String elementId, int index){
+        WebElement findElements = driver.findElement(By.id(elementId));
+        List<WebElement> elements = findElements.findElements(By.tagName("mat-card"));
+        elements.get(index).click();
+    }
+
+    public void writeOnElement(String elementId, String text, String textId, int index){
+        List<WebElement> elements = driver.findElements(By.id(elementId));
+        elements.get(index).findElement(By.id(textId)).clear();
+        elements.get(index).findElement(By.id(textId)).sendKeys(text);;
     }
 }

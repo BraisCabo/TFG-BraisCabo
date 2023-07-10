@@ -88,6 +88,10 @@ export class SubjectPageComponent {
     this.router.navigate(['/subject/'+this.subjectId+'/newExam']);
   }
 
+  importExam(){
+    this.router.navigate(['/subject/'+this.subjectId+'/importExam']);
+  }
+
   goToExam(exam: ExamBasic){
     this.router.navigate(['/subject/'+this.subjectId+'/exam/'+exam.id]);
   }

@@ -17,6 +17,7 @@ import com.tfg.brais.Model.User;
 import com.tfg.brais.Model.DTOS.AnswersDTO;
 import com.tfg.brais.Repository.ExamRepository;
 import com.tfg.brais.Repository.ExerciseUploadRepository;
+import com.tfg.brais.Service.ComplementaryServices.CSVService;
 import com.tfg.brais.Service.ComplementaryServices.ExerciseUploadCheckService;
 import com.tfg.brais.Service.ComplementaryServices.FileService;
 
@@ -34,6 +35,9 @@ public class UploadService {
 
     @Autowired
     private ExamRepository examRepository;
+
+    @Autowired
+    private CSVService csvService;
 
     public UploadService(ExerciseUploadRepository exerciseUploadRepository2,
             ExerciseUploadCheckService exerciseUploadCheckService2, FileService fileService2,
@@ -176,7 +180,7 @@ public class UploadService {
             upload.setFileName(user.getName() + user.getLastName() + ".csv");
             Path path = Paths.get(exam.getSubject().getId().toString(), exam.getId().toString(),
                     user.getName() + user.getLastName());
-            fileService.createTextFile(user.getName() + " " + user.getLastName(), user.getEmail(), path.toString(),
+            csvService.examToCSV(user.getName() + " " + user.getLastName(), user.getEmail(), path.toString(),
                     upload.getFileName(), exam.getQuestions(), upload.getAnswers());
             upload.setUploaded(true);
             exerciseUploadRepository.save(upload);

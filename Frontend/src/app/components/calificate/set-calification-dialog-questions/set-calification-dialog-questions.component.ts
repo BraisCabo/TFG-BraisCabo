@@ -82,6 +82,9 @@ export class SetCalificationDialogQuestionsComponent {
     let studentCalification: CalificationQuestions = new CalificationQuestions();
     studentCalification.comment = this.comment;
     studentCalification.questionsCalification = this.califications.map((calification) => {
+      if (calification === null) {
+        return "0";
+      }
       return calification.toString();
     });
 

@@ -157,6 +157,7 @@ export class CalificateComponent {
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
         this.exerciseUploads[i] = result;
+        this.exerciseUploads[i].uploadDate = new Date(result.uploadDate);
       }
     });
   }
@@ -194,6 +195,7 @@ export class CalificateComponent {
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
         this.exerciseUploads[i] = result;
+        this.exerciseUploads[i].uploadDate = new Date(result.uploadDate);
       }
     });
   }

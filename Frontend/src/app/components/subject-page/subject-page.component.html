@@ -1,8 +1,11 @@
 <mat-grid-list cols="1">
   <div *ngIf="!isLoading(); else loading">
   <div *ngIf="isTeacher;else isStudent">
-    <button mat-raised-button color="primary" (click)="createExam()" style="margin-bottom: 2vh;"> <mat-icon>add</mat-icon> Nuevo
+    <button mat-raised-button color="primary" (click)="createExam()" style="margin-bottom: 2vh;" id="createExamButton"> <mat-icon>add</mat-icon> Nuevo
       examen</button>
+
+      <button mat-raised-button color="primary" (click)="importExam()" style="margin-bottom: 2vh; margin-left: 1vw;" id="importExamButton"> <mat-icon>add</mat-icon> Importar
+        examen</button>
 
       <button mat-raised-button color="primary" (click)="goToCalifications()" style="margin-bottom: 2vh; margin-left: 1vw;">Calificaciones</button>
   </div>

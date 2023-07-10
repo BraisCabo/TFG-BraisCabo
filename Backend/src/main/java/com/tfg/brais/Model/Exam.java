@@ -7,6 +7,8 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -44,6 +46,8 @@ public class Exam {
 
     private Date closingDate = new Date();
 
+    @ElementCollection
+    @Column(columnDefinition = "TEXT")
     private List<String> questions = new ArrayList<>();
 
     private List<Double> questionsCalifications = new ArrayList<>();

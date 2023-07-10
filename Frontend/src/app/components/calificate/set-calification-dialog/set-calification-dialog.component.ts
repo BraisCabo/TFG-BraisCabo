@@ -71,7 +71,7 @@ export class SetCalificationDialogComponent {
   setCalification() {
     this.loading = true;
     let studentCalification: CalificationFile = new CalificationFile();
-    studentCalification.calification = this.calification.value;
+    studentCalification.calification = this.calification.value == '' ? 0 : this.calification.value;
     studentCalification.comment = this.comment;
 
 

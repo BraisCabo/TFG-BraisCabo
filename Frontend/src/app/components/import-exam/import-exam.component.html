@@ -1,6 +1,6 @@
 <mat-grid-list cols="1">
   <div class="container2">
-    <span class="title">Nuevo Examen</span>
+    <span class="title">Importar Examen</span>
     <button mat-raised-button color="primary" (click)="goToSubject()" id="cancelButton">Cancelar</button>
   </div>
   <mat-form-field>
@@ -21,15 +21,8 @@
   </mat-form-field>
 
   <br>
-  <mat-form-field>
-    <mat-label>Tipo de examen</mat-label>
-    <mat-select [formControl]="type" id="typeSelector">
-      <mat-option value="UPLOAD">Fichero</mat-option>
-      <mat-option value="QUESTIONS" id="questions">Preguntas Cortas</mat-option>
-    </mat-select>
-  </mat-form-field>
 
-  <mat-form-field *ngIf="type.value === 'QUESTIONS'">
+  <mat-form-field>
     <mat-label>Tiempo máximo (en minutos)</mat-label>
     <input matInput [formControl]="maxTime" type="number" id="maxTime">
     <mat-error *ngIf="maxTime.invalid">
@@ -59,15 +52,6 @@
     </mat-radio-group>
   </div>
 
-  <div style="margin-top: 3vh;" *ngIf="type.value === 'UPLOAD'">
-    <span class="title">¿Los alumnos podrán hacer intentos ilimitados?</span>
-    <br>
-    <mat-radio-group [(ngModel)]="canRepeat" color="primary">
-      <mat-radio-button value="true" id="unlimitedAttemps">Si</mat-radio-button>
-      <mat-radio-button value="false">No</mat-radio-button>
-    </mat-radio-group>
-  </div>
-
   <div style="margin-top: 3vh;">
     <span class="title">¿Los alumnos podrán hacer entregas tardías?</span>
     <br>
@@ -82,13 +66,13 @@
     <div class="container">
       <mat-form-field color="primary">
         <mat-label>Fecha</mat-label>
-        <input matInput [matDatepicker]="picker" [formControl]="openingDate" [min]="date" id="openingDate">
+        <input matInput [matDatepicker]="picker" [formControl]="openingDate" id="openingDate">
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
 
-      <ngx-timepicker-field [format]="24" [defaultTime]="'00:00'"
-        (timeChanged)="changedOpeningTime($event)" id="timePickerOpening"></ngx-timepicker-field>
+      <ngx-timepicker-field [format]="24" [defaultTime]="'00:00'" (timeChanged)="changedOpeningTime($event)"
+        id="timePickerOpening"></ngx-timepicker-field>
     </div>
   </div>
 
@@ -98,7 +82,7 @@
       <mat-form-field color="primary">
         <mat-label>Fecha</mat-label>
         <input matInput placeholder="DD/MM/AAAA" [matDatepicker]="pickerClosing" [formControl]="closingDate"
-          [min]="date" id="closingDate">
+           id="closingDate">
         <mat-datepicker-toggle matIconSuffix [for]="pickerClosing"></mat-datepicker-toggle>
         <mat-datepicker #pickerClosing></mat-datepicker>
         <mat-error *ngIf="closingDate.invalid">
@@ -111,45 +95,19 @@
     </div>
   </div>
 
-  <div style="margin-top: 3vh;" *ngIf="type.value === 'QUESTIONS'">
-    <span class="title">Introduce las preguntas del examen</span>
-    <div *ngIf="invalidQuestions(); else allQuestions">
-      Debes introducir por lo menos una pregunta
-    </div>
-    <ng-template #allQuestions>
-      <mat-card *ngFor="let question of questions; let i = index; trackBy: trackByFn" id="questionsList">
-        <mat-card-header>
-          <mat-card-title>Pregunta {{i+1}}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <mat-form-field style="width: 90%;">
-            <mat-label>Pregunta</mat-label>
-            <textarea matInput [(ngModel)]="questions[i]" id="textQuestion"></textarea>
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Valor de la pregunta</mat-label>
-            <input matInput type="number" [(ngModel)]="questionsCalification[i]" min="0" id="calificationQuestion">
-            <mat-error>No válido</mat-error>
-          </mat-form-field>
-        </mat-card-content>
-        <mat-card-actions>
-          <button (click)="deleteQuestion(i)" mat-icon-button color="primary"> <mat-icon>delete</mat-icon></button>
-        </mat-card-actions>
 
-      </mat-card>
-    </ng-template>
-
-    <button (click)="newQuestion()" mat-raised-button color="primary"  style="margin-top: 2vh;" id="addQuestion"> <mat-icon>add</mat-icon>Añadir Pregunta</button>
-  </div>
-
-
-  <input type="file" (change)="onFileSelected($event)" style="display:none" #fileUpload>
+  <input type="file" (change)="onFileSelected($event)" style="display:none" accept=".csv" #fileUpload>
   <button mat-raised-button color="primary" style="margin-top: 3vh;"
-    (click)="fileUpload.click()"><mat-icon>arrow_upward</mat-icon>Subir enunciado</button> <br>
-  <span *ngIf="examFile">{{examFile.name}}<button mat-icon-button (click)="deleteFile()"><mat-icon>close</mat-icon></button></span>
+    (click)="fileUpload.click()"><mat-icon>arrow_upward</mat-icon>Subir fichero para importar</button> <br>
+  <span *ngIf="examFile; else noFileSelected">{{examFile.name}}<button mat-icon-button
+      (click)="deleteFile()"><mat-icon>close</mat-icon></button></span>
+      <ng-template #noFileSelected>
+        <span>Debes seleccionar un fichero del que importar el examen</span>
+      </ng-template>
   <br>
 
-  <button id="createExamButton" *ngIf="!loading; else isLoading" [disabled]="!isValidExam()" mat-raised-button color="primary" (click)="openCreateExamDialog()" style="margin-top: 3vh;">Crear Examen</button>
+  <button id="createExamButton" *ngIf="!loading; else isLoading" [disabled]="!isValidExam()" mat-raised-button
+    color="primary" (click)="openCreateExamDialog()" style="margin-top: 3vh;">Crear Examen</button>
   <ng-template #isLoading>
     <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
   </ng-template>
