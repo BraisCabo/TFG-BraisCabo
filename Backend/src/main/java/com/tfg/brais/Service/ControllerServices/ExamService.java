@@ -247,4 +247,13 @@ public class ExamService {
         return ResponseEntity.created(uBuilder.buildAndExpand(exam.getId()).toUri()).body(new ExamTeacherDTO(exam));
     }
 
+    public ResponseEntity<Resource> exportExam(long subjectId, long examId, Principal userPrincipal) {
+        ResponseEntity<Exam> checkIfCanSee = examCheckService.checkIfCanSee(examId, subjectId, userPrincipal);
+        if (checkIfCanSee.getStatusCode().is4xxClientError()) {
+            return new ResponseEntity<>(checkIfCanSee.getStatusCode());
+        }
+        Exam exam = checkIfCanSee.getBody();
+        return csvService.exportToCSV(exam);
+    }
+
 }

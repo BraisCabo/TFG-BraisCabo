@@ -72,4 +72,9 @@ public class ExamController {
     public ResponseEntity<ExamTeacherDTO> importExam(@PathVariable long id, HttpServletRequest request, ImportedExamDTO importedExam){
         return this.examService.importExamFile(id, importedExam, request.getUserPrincipal(), fromCurrentRequest().path("/{id}"));
     }
+
+    @GetMapping("/{examId}/files/exports")
+    public ResponseEntity<Resource> getExportedFiles(@PathVariable long id, @PathVariable long examId, HttpServletRequest request){
+        return this.examService.exportExam(id, examId, request.getUserPrincipal());
+    }
 }

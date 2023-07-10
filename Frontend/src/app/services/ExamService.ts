@@ -89,4 +89,8 @@ export class ExamService {
     return this.http.post(BASE_URL + subjectId + "/exams/files", formData) as Observable<any>;
   }
 
+  exportExam(subjectId: number, examId: number) : Observable<any> {
+    return this.http.get(BASE_URL + subjectId + "/exams/" + examId + "/files/exports", {responseType: 'blob', observe: 'response' }) as Observable<any>;
+  }
+
 }

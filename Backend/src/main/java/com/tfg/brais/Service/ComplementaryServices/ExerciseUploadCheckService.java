@@ -47,6 +47,8 @@ public class ExerciseUploadCheckService {
             }else{
                 upload.setUploadDate(limitDate(upload));
             }
+        }else{
+            upload.setUploadDate(new Date());
         }
         if (!subjectCheckService.isStudentOfSubject(userId, id)) {
             return ResponseEntity.status(403).build();

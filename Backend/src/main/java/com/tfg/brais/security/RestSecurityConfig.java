@@ -47,6 +47,8 @@ public class RestSecurityConfig {
 						.requestMatchers(HttpMethod.POST, "/api/subjects/**/exams/").hasRole("USER")
 						.requestMatchers(HttpMethod.GET, "/api/subjects/**/exams/").hasRole("USER")
 						.requestMatchers(HttpMethod.POST, "/api/subjects/**/exams/files").hasRole("USER")
+						.requestMatchers(HttpMethod.GET, "/api/subjects/**/exams/files").hasRole("USER")
+						.requestMatchers(HttpMethod.GET, "/api/subjects/**/exams/files/exports").hasRole("USER")
 						.requestMatchers(HttpMethod.GET, "/api/subjects/**/exams/**").hasRole("USER")
 						.requestMatchers(HttpMethod.GET, "/api/subjects/**/exams/**/questions").hasRole("USER")
 						.requestMatchers(HttpMethod.PUT, "/api/subjects/**/exams/**").hasRole("USER")
