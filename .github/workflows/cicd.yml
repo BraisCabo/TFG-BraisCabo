@@ -29,7 +29,7 @@ jobs:
             - name: Build the docker image
               run:  docker build -f Docker/Dockerfile -t ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }} .
             - name: Push the docker image
-              run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/tfg
+              run: docker push ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }}
             - name: Run tests
               run: mvn -f Backend/pom.xml test
             - name: Setup docker compose
