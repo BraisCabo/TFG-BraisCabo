@@ -23,7 +23,8 @@ jobs:
             - run: chrome --version
             - name: 'Create env file'
               run: |
-                    echo "ImageName=${{ secrets.DOCKERHUB_IMAGE }} \n ImageTag=${{github.sha}}" > .env
+                    echo "ImageName=${{ secrets.DOCKERHUB_IMAGE }}" > .env
+                    echo "ImageTag=${{github.sha}}" > .env
             - name: Login to docker
               run: docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_TOKEN }}"
             - name: Build the docker image
