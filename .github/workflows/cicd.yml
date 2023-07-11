@@ -23,8 +23,8 @@ jobs:
             - run: chrome --version
             - name: 'Create env file'
               run: |
-                    echo "ImageName=${{ secrets.DOCKERHUB_IMAGE }}" > .env
-                    echo "ImageTag=${{github.sha}}" > .env
+                echo "ImageName=${{ secrets.DOCKERHUB_IMAGE }}" > .env
+                echo "ImageTag=${{ github.sha }}" >> .env
             - name: Setup docker compose
               run: docker-compose up
             - name: Run tests
