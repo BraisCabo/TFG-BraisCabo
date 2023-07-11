@@ -7,14 +7,20 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class DriverMethodsExecutor {
     private WebDriver driver;
 
     public DriverMethodsExecutor() {
-        System.setProperty("webdriver.chrome.driver",
-                "C:\\Users\\brais\\Downloads\\chromedriver_win32\\chromedriver.exe");
-        driver = new ChromeDriver();
+        WebDriverManager.chromedriver().setup();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--remote-allow-origins=*");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--headless");
+        driver = new ChromeDriver(options);
         driver.get("http://localhost:4200");
     }
 
@@ -48,7 +54,7 @@ public class DriverMethodsExecutor {
         return driver.findElement(By.id(infoId)).getText();
     }
 
-    public void waitTime(){
+    public void waitTime() {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -59,39 +65,39 @@ public class DriverMethodsExecutor {
     public void close() {
         driver.close();
     }
-    
-    public String getUrlNoWait(){
+
+    public String getUrlNoWait() {
         return driver.getCurrentUrl();
     }
 
-    public int getNumberOfElements(String elementId, String tagName){
+    public int getNumberOfElements(String elementId, String tagName) {
         WebElement findElements = driver.findElement(By.id(elementId));
         List<WebElement> elements = findElements.findElements(By.tagName(tagName));
         return elements.size();
     }
 
-    public void selectElementOfList(String elementId, String tagName, String buttonId, int index){
+    public void selectElementOfList(String elementId, String tagName, String buttonId, int index) {
         WebElement findElements = driver.findElement(By.id(elementId));
         List<WebElement> elements = findElements.findElements(By.tagName(tagName));
         elements.get(index).findElement(By.id(buttonId)).click();
     }
 
-    public int getNumberOfElementsWithId(String elementId){
+    public int getNumberOfElementsWithId(String elementId) {
         return driver.findElements(By.id(elementId)).size();
-    
+
     }
 
-     public void selectElementWithId(String elementId, String buttonId, int index){
+    public void selectElementWithId(String elementId, String buttonId, int index) {
         List<WebElement> elements = driver.findElements(By.id(elementId));
         elements.get(index).findElement(By.id(buttonId)).click();
     }
 
-    public String getElementWithIdText(String elementId, String textId, int index){
+    public String getElementWithIdText(String elementId, String textId, int index) {
         List<WebElement> elements = driver.findElements(By.id(elementId));
         return elements.get(index).findElement(By.id(textId)).getText();
     }
 
-    public void login(String email, String password){
+    public void login(String email, String password) {
         navigateTo("http://localhost:4200/login");
         changeInput("email", email);
         changeInput("password", password);
@@ -99,15 +105,16 @@ public class DriverMethodsExecutor {
         waitTime();
     }
 
-    public void clickCard(String elementId, int index){
+    public void clickCard(String elementId, int index) {
         WebElement findElements = driver.findElement(By.id(elementId));
         List<WebElement> elements = findElements.findElements(By.tagName("mat-card"));
         elements.get(index).click();
     }
 
-    public void writeOnElement(String elementId, String text, String textId, int index){
+    public void writeOnElement(String elementId, String text, String textId, int index) {
         List<WebElement> elements = driver.findElements(By.id(elementId));
         elements.get(index).findElement(By.id(textId)).clear();
-        elements.get(index).findElement(By.id(textId)).sendKeys(text);;
+        elements.get(index).findElement(By.id(textId)).sendKeys(text);
+        ;
     }
 }

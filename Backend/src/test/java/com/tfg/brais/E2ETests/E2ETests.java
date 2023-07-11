@@ -1,16 +1,22 @@
 package com.tfg.brais.E2ETests;
 
 import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 
 public class E2ETests {
 
-    DriverMethodsExecutor driver = new DriverMethodsExecutor();
+    DriverMethodsExecutor driver;
     
     @AfterSuite
     public void close(){
         driver.close();
+    }
+
+    @BeforeSuite
+    public void setUP(){
+        driver = new DriverMethodsExecutor();
     }
 
     @Test(priority = 1)
@@ -54,6 +60,4 @@ public class E2ETests {
         createExamTest.createExamFileRepeat();
         createExamTest.createExamQuestions();
     }
-    
-    
 }
