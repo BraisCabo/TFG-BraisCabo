@@ -30,10 +30,10 @@ jobs:
               run:  docker build -f Docker/Dockerfile -t ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }} .
             - name: Push the docker image
               run: docker push ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }}
-            - name: Run tests
-              run: mvn -f Backend/pom.xml test
             - name: Setup docker compose
               run: docker-compose up
+            - name: Run tests
+              run: mvn -f Backend/pom.xml test
             - name: Install Okteto CLI
               run: curl https://get.okteto.com -sSfL | sh
             - name: Login into Okteto
