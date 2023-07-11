@@ -18,9 +18,9 @@ public class CreateExamTest {
         driver.login("test@gmail.com", "12345678");
         assertEquals(driver.getNumberOfElements("teachedSubjects", "mat-card"), 1);
         driver.clickCard("teachedSubjects", 0);
-        assertEquals(driver.getCurrentUrl(), driver.getURL() + "/subject/2");
+        assertEquals(driver.getCurrentUrl(), driver.getBaseURL() + "/subject/2");
         driver.clickButton("createExamButton");
-        assertEquals(driver.getCurrentUrl(), driver.getURL() + "/subject/2/newExam");
+        assertEquals(driver.getCurrentUrl(), driver.getBaseURL() + "/subject/2/newExam");
         assertFalse(driver.isEnableButton("createExamButton"));
         driver.changeInput("examName", "TestExamFile");
         driver.changeInput("examPercentaje", "50");
@@ -41,7 +41,7 @@ public class CreateExamTest {
         driver.changeInput("examPercentaje", "50");
         driver.clickButton("createExamButton");
         driver.clickButton("confirmButton");
-        assertEquals(driver.getCurrentUrl(), driver.getURL() + "/subject/2");
+        assertEquals(driver.getCurrentUrl(), driver.getBaseURL() + "/subject/2");
     }
 
     public void createExamFileRepeat() {
@@ -64,7 +64,7 @@ public class CreateExamTest {
                 localDate.getMonthValue() + "/" + (localDate.getDayOfMonth() + 1) + "/" + localDate.getYear());
         driver.clickButton("createExamButton");
         driver.clickButton("confirmButton");
-        assertEquals(driver.getCurrentUrl(), driver.getURL() + "/subject/2/newExam");
+        assertEquals(driver.getCurrentUrl(), driver.getBaseURL() + "/subject/2/newExam");
     }
 
     public void createExamQuestions() {
@@ -95,6 +95,6 @@ public class CreateExamTest {
         driver.writeOnElement("questionsList", "5", "calificationQuestion", 1);
         driver.clickButton("createExamButton");
         driver.clickButton("confirmButton");
-        assertEquals(driver.getCurrentUrl(), driver.getURL() + "/subject/2");
+        assertEquals(driver.getCurrentUrl(), driver.getBaseURL() + "/subject/2");
     }
 }

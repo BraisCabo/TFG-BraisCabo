@@ -32,7 +32,7 @@ public class RegisterTest {
         driver.changeInput("email", "test@gmail.com");
         assertTrue(driver.isEnableButton("registerButton"));
         driver.clickButton("registerButton");
-        assertEquals(driver.getCurrentUrl(), driver.getURL() + "/");
+        assertEquals(driver.getCurrentUrl(), driver.getBaseURL() + "/");
         driver.navigateTo("/register");
         driver.changeInput("name", "NameTest2");
         driver.changeInput("lastName", "LastNameTest2");
@@ -40,10 +40,10 @@ public class RegisterTest {
         driver.changeInput("password", "12345678");
         driver.changeInput("repeatPassword", "12345678");
         driver.clickButton("registerButton");
-        assertEquals(driver.getCurrentUrl(), driver.getURL() + "/register");
+        assertEquals(driver.getCurrentUrl(), driver.getBaseURL() + "/register");
         driver.changeInput("email", "test2@gmail.com");
         driver.clickButton("registerButton");
-        assertEquals(driver.getCurrentUrl(), driver.getURL() + "/");
+        assertEquals(driver.getCurrentUrl(), driver.getBaseURL() + "/");
     }
 
 }

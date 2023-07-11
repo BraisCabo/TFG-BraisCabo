@@ -37,6 +37,8 @@ jobs:
               run: sleep 60
             - name: Run tests
               run: mvn -f Backend/pom.xml test
+            - name: Stop docker compose
+              run: docker-compose down
             - name: Install Okteto CLI
               run: curl https://get.okteto.com -sSfL | sh
             - name: Login into Okteto

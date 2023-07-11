@@ -9,7 +9,7 @@ services:
     volumes:
       - ../backend/.mysql:/var/lib/mysql
   web:
-    image: braiscabo/tfg
+    image: braiscabo/tfg:2d0bfb8e72f2b6f900ce1f10fbd3d35b50eb8cbd
     restart: on-failure
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db/keywhale

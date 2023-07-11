@@ -15,16 +15,16 @@ public class CreateSubjectTest {
     public void createEmpty(){
         driver.login("admin", "admin");
         driver.clickButton("newSubjectButton");
-        assertEquals(driver.getCurrentUrl(), driver.getURL() +"/newSubject");
+        assertEquals(driver.getCurrentUrl(), driver.getBaseURL() +"/newSubject");
         assertFalse(driver.isEnableButton("createSubjectButton"));
         driver.changeInput("subjectName", "SubjectTest1");
         assertTrue(driver.isEnableButton("createSubjectButton"));
         driver.clickButton("createSubjectButton");
         driver.clickButton("cancelButton");
-        assertEquals(driver.getUrlNoWait(), driver.getURL() +"/newSubject");
+        assertEquals(driver.getUrlNoWait(), driver.getBaseURL() +"/newSubject");
         driver.clickButton("createSubjectButton");
         driver.clickButton("confirmButton");
-        assertEquals(driver.getCurrentUrl(), driver.getURL() +"/");
+        assertEquals(driver.getCurrentUrl(), driver.getBaseURL() +"/");
     }
 
     public void createEqual(){
@@ -34,13 +34,13 @@ public class CreateSubjectTest {
         driver.changeInput("subjectName", "SubjectTest1");
         driver.clickButton("createSubjectButton");
         driver.clickButton("confirmButton");
-        assertEquals(driver.getCurrentUrl(), driver.getURL() +"/newSubject");
+        assertEquals(driver.getCurrentUrl(), driver.getBaseURL() +"/newSubject");
     }
 
     public void createSubject(){
         driver.login("admin", "admin");
         driver.clickButton("newSubjectButton");
-        assertEquals(driver.getCurrentUrl(), driver.getURL() +"/newSubject");
+        assertEquals(driver.getCurrentUrl(), driver.getBaseURL() +"/newSubject");
         assertFalse(driver.isEnableButton("createSubjectButton"));
         driver.changeInput("subjectName", "SubjectTest2");
         assertTrue(driver.isEnableButton("createSubjectButton"));
@@ -56,6 +56,6 @@ public class CreateSubjectTest {
         driver.selectElementOfList("studentsList", "mat-list-item", "checkbox", 0);
         driver.clickButton("createSubjectButton");
         driver.clickButton("confirmButton");
-        assertEquals(driver.getCurrentUrl(), driver.getURL() +"/");
+        assertEquals(driver.getCurrentUrl(), driver.getBaseURL() +"/");
     }
 }

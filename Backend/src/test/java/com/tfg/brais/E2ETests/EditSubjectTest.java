@@ -49,6 +49,7 @@ public class EditSubjectTest {
         driver.waitTime();
         driver.changeInput("editSubjectName", "SubjectTest2");
         driver.clickButton("editSubjectButton");
+        driver.waitTime();
         driver.clickButton("confirmButton");
         driver.waitTime();
         driver.clickButton("closeEdit");

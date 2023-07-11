@@ -14,16 +14,16 @@ public class LoginTest {
         driver.navigateTo("/login");
         driver.changeInput("email", "nocorrectemail@gmail.com");
         driver.clickButton("loginButton");
-        assertEquals(driver.getCurrentUrl(), driver.getURL() + "/login");
+        assertEquals(driver.getCurrentUrl(), driver.getBaseURL() + "/login");
         driver.clickButton("okButton");
         driver.changeInput("email", "test@gmail.com");
         driver.changeInput("password", "123456789");
         driver.clickButton("loginButton");
-        assertEquals(driver.getCurrentUrl(), driver.getURL() + "/login");
+        assertEquals(driver.getCurrentUrl(), driver.getBaseURL() + "/login");
         driver.clickButton("okButton");
         driver.changeInput("password", "12345678");
         driver.clickButton("loginButton");
-        assertEquals(driver.getCurrentUrl(), driver.getURL() + "/");
+        assertEquals(driver.getCurrentUrl(), driver.getBaseURL() + "/");
         assertEquals(driver.getTextInfo("headerName"), "NameTest");
     }
 }

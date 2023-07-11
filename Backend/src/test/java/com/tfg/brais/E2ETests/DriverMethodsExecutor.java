@@ -3,6 +3,7 @@ package com.tfg.brais.E2ETests;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -27,7 +28,9 @@ public class DriverMethodsExecutor {
     }
 
     public void clickButton(String buttonId) {
-        driver.findElement(By.id(buttonId)).click();
+        WebElement findElement = driver.findElement(By.id(buttonId));
+        JavascriptExecutor executor = (JavascriptExecutor) driver;
+        executor.executeScript("arguments[0].click();", findElement);
     }
 
     public String getCurrentUrl() {
@@ -100,7 +103,7 @@ public class DriverMethodsExecutor {
     }
 
     public void login(String email, String password) {
-        navigateTo("http://localhost:4200/login");
+        navigateTo("/login");
         changeInput("email", email);
         changeInput("password", password);
         clickButton("loginButton");
@@ -120,7 +123,7 @@ public class DriverMethodsExecutor {
         ;
     }
 
-    public String getURL() {
-        return driver.getCurrentUrl();
+    public String getBaseURL() {
+        return this.baseURL;
     }
 }

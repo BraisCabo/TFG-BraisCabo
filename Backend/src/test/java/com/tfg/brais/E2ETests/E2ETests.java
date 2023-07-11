@@ -11,7 +11,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 public class E2ETests {
 
     private static DriverMethodsExecutor driver;
-    
+
     @AfterAll
     public static void close(){
         driver.close();
