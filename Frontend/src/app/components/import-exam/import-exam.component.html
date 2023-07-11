@@ -1,0 +1,114 @@
+<mat-grid-list cols="1">
+  <div class="container2">
+    <span class="title">Importar Examen</span>
+    <button mat-raised-button color="primary" (click)="goToSubject()" id="cancelButton">Cancelar</button>
+  </div>
+  <mat-form-field>
+    <mat-label>Nombre</mat-label>
+    <input matInput [formControl]="name" id="examName">
+    <mat-error *ngIf="name.invalid">
+      {{getNameError()}}
+    </mat-error>
+  </mat-form-field>
+
+
+  <mat-form-field>
+    <mat-label>Porcentaje de la nota final</mat-label>
+    <input matInput [formControl]="calificationPercentaje" id="examPercentaje">
+    <mat-error *ngIf="calificationPercentaje.invalid">
+      {{getCalificationPercentajeError()}}
+    </mat-error>
+  </mat-form-field>
+
+  <br>
+
+  <mat-form-field>
+    <mat-label>Tiempo máximo (en minutos)</mat-label>
+    <input matInput [formControl]="maxTime" type="number" id="maxTime">
+    <mat-error *ngIf="maxTime.invalid">
+      No válido
+    </mat-error>
+  </mat-form-field>
+  <br>
+
+  <div>
+    <span class="title">Selecciona la visibilidad del examen</span>
+    <br>
+    <mat-radio-group [(ngModel)]="visibleExam" color="primary">
+      <mat-radio-button value="true" id="visibleExam">Visible</mat-radio-button>
+      <mat-radio-button value="false">Oculto</mat-radio-button>
+    </mat-radio-group>
+    <br>
+  </div>
+
+  <div style="margin-top: 3vh;">
+    <span class="title">Selecciona la visibilidad de la nota</span>
+    <br>
+
+
+    <mat-radio-group [(ngModel)]="calificationVisible" color="primary">
+      <mat-radio-button value="true" id="visibleCalification">Visible</mat-radio-button>
+      <mat-radio-button value="false">Oculta</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <div style="margin-top: 3vh;">
+    <span class="title">¿Los alumnos podrán hacer entregas tardías?</span>
+    <br>
+    <mat-radio-group [(ngModel)]="canUploadLate" color="primary">
+      <mat-radio-button value="true" id="lateUploads">Si</mat-radio-button>
+      <mat-radio-button value="false">No</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <div style="margin-top: 3vh;">
+    <span class="title">Selecciona la fecha y la hora de apertura</span>
+    <div class="container">
+      <mat-form-field color="primary">
+        <mat-label>Fecha</mat-label>
+        <input matInput [matDatepicker]="picker" [formControl]="openingDate" id="openingDate">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <ngx-timepicker-field [format]="24" [defaultTime]="'00:00'" (timeChanged)="changedOpeningTime($event)"
+        id="timePickerOpening"></ngx-timepicker-field>
+    </div>
+  </div>
+
+  <div style="margin-top: 3vh;">
+    <span class="title">Selecciona la fecha y la hora de cierre</span>
+    <div class="container">
+      <mat-form-field color="primary">
+        <mat-label>Fecha</mat-label>
+        <input matInput placeholder="DD/MM/AAAA" [matDatepicker]="pickerClosing" [formControl]="closingDate"
+           id="closingDate">
+        <mat-datepicker-toggle matIconSuffix [for]="pickerClosing"></mat-datepicker-toggle>
+        <mat-datepicker #pickerClosing></mat-datepicker>
+        <mat-error *ngIf="closingDate.invalid">
+          {{getOpeningDateError()}}
+        </mat-error>
+      </mat-form-field>
+
+      <ngx-timepicker-field [format]="24" [defaultTime]="'00:00'"
+        (timeChanged)="changedClosingTime($event)"></ngx-timepicker-field>
+    </div>
+  </div>
+
+
+  <input type="file" (change)="onFileSelected($event)" style="display:none" accept=".csv" #fileUpload>
+  <button mat-raised-button color="primary" style="margin-top: 3vh;"
+    (click)="fileUpload.click()"><mat-icon>arrow_upward</mat-icon>Subir fichero para importar</button> <br>
+  <span *ngIf="examFile; else noFileSelected">{{examFile.name}}<button mat-icon-button
+      (click)="deleteFile()"><mat-icon>close</mat-icon></button></span>
+      <ng-template #noFileSelected>
+        <span>Debes seleccionar un fichero del que importar el examen</span>
+      </ng-template>
+  <br>
+
+  <button id="createExamButton" *ngIf="!loading; else isLoading" [disabled]="!isValidExam()" mat-raised-button
+    color="primary" (click)="openCreateExamDialog()" style="margin-top: 3vh;">Crear Examen</button>
+  <ng-template #isLoading>
+    <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+  </ng-template>
+</mat-grid-list>

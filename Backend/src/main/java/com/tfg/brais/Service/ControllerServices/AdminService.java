@@ -44,7 +44,13 @@ public class AdminService {
         Subject subject = subjectDTO.generateSubject();
         subject.setStudents(loadUsers(subjectDTO.getStudents()));
         subject.setTeachers(loadUsers(subjectDTO.getTeachers()));
-        subjectRepository.save(subject);
+        Long subjectId = subjectRepository.save(subject).getId();
+        try {
+            fileService.createDirectory(Long.toString(subjectId));
+        } catch (Exception e) {
+            subjectRepository.deleteById(subjectId);
+            return new ResponseEntity<>(HttpStatusCode.valueOf(500));
+        }
         return ResponseEntity.created(path.buildAndExpand(subject.getId()).toUri()).body(new SubjectDetailedDTO(subject));
     }
 
@@ -58,7 +64,7 @@ public class AdminService {
             try {
                 fileService.deleteDirectory(Long.toString(subjectId));
             } catch (Exception e) {
-                return new ResponseEntity<>(HttpStatusCode.valueOf(500));
+                e.printStackTrace();
             }
             subjectRepository.deleteById(subjectId);
             return ResponseEntity.ok(new SubjectDetailedDTO(response.getBody()));

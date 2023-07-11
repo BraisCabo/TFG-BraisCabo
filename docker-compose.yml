@@ -1,6 +1,13 @@
 version: "3.9"
 
 services:
+  db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=keywhale
+    volumes:
+      - ./Backend/.mysql:/var/lib/mysql
   web:
     image: ${ImageName}:${ImageTag}
     restart: on-failure
@@ -11,10 +18,3 @@ services:
       - SPRING_JPA_HIBERNATE_DDL-AUTO=create-drop
     ports:
       - 8443:8443
-  db:
-    image: mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=keywhale
-    volumes:
-      - ./Backend/.mysql:/var/lib/mysql

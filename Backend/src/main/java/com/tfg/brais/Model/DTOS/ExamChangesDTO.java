@@ -29,6 +29,10 @@ public class ExamChangesDTO extends ExamBasicDTO{
 
     private boolean canUploadLate = true;
 
+    private List<String> questionsCalifications = new ArrayList<>();
+
+    private String maxTime;
+
     public ExamChangesDTO(){}
 
     public ExamChangesDTO(Exam exam){
@@ -40,6 +44,7 @@ public class ExamChangesDTO extends ExamBasicDTO{
         this.questions = exam.getQuestions();
         this.canRepeat = exam.isCanRepeat();
         this.canUploadLate = exam.isCanUploadLate();
+        this.maxTime = Double.toString(exam.getMaxTime());
     }
 
     public Exam createExam(){
@@ -51,6 +56,9 @@ public class ExamChangesDTO extends ExamBasicDTO{
         exam.setQuestions(this.getQuestions());
         exam.setCanRepeat(this.isCanRepeat());
         exam.setCanUploadLate(this.isCanUploadLate());
+        if (this.getMaxTime() != null){
+            exam.setMaxTime(Integer.parseInt(this.getMaxTime()));
+        }
         return exam;
     }
 }

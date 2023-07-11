@@ -4,6 +4,7 @@ import { Injectable } from "@angular/core";
 import { ExamBasic } from "../models/ExamBasic";
 import { ExamTeacher } from "../models/ExamTeacher";
 import { ExamChanges } from "../models/ExamChanges";
+import { ImportedExam } from "../models/ImportedExam";
 
 const BASE_URL = "/api/subjects/"
 
@@ -41,6 +42,8 @@ export class ExamService {
     formData.append("questions", exam.questions.toString());
     formData.append("canRepeat", exam.canRepeat.toString());
     formData.append("canUploadLate", exam.canUploadLate.toString());
+    formData.append("questionsCalifications", exam.questionsCalifications.toString())
+    formData.append("maxTime", exam.maxTime.toString())
 
 
     return this.http.post(BASE_URL + subjectId + "/exams/", formData) as Observable<ExamTeacher>;
@@ -61,6 +64,8 @@ export class ExamService {
     formData.append("deletedFile", exam.deletedFile.toString());
     formData.append("canRepeat", exam.canRepeat.toString());
     formData.append("canUploadLate", exam.canUploadLate.toString());
+    formData.append("questionsCalifications", exam.questionsCalifications.toString())
+    formData.append("maxTime", exam.maxTime.toString())
 
     return this.http.put(BASE_URL + subjectId + "/exams/" + exam.id, formData) as Observable<ExamTeacher>;
   }
@@ -68,6 +73,24 @@ export class ExamService {
   changeVisibility(subjectId: Number, examId: Number, newVisibility : Boolean) : Observable<any> {
 
     return this.http.patch(BASE_URL + subjectId + "/exams/" + examId, newVisibility) as Observable<any>;
+  }
+
+  importExam(subjectId: number, exam: ImportedExam) : Observable<any> {
+    const formData : FormData = new FormData();
+    formData.append("name", exam.name);
+    formData.append("calificationPercentaje", exam.calificationPercentaje.toString());
+    formData.append("visibleExam", exam.visibleExam.toString());
+    formData.append("calificationVisible", exam.calificationVisible.toString());
+    formData.append("openingDate", exam.openingDate.toString());
+    formData.append("closingDate", exam.closingDate.toString());
+    formData.append("file", exam.file);
+    formData.append("canUploadLate", exam.canUploadLate.toString());
+    formData.append("maxTime", exam.maxTime.toString());
+    return this.http.post(BASE_URL + subjectId + "/exams/files", formData) as Observable<any>;
+  }
+
+  exportExam(subjectId: number, examId: number) : Observable<any> {
+    return this.http.get(BASE_URL + subjectId + "/exams/" + examId + "/files/exports", {responseType: 'blob', observe: 'response' }) as Observable<any>;
   }
 
 }

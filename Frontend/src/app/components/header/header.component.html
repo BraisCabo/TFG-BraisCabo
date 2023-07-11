@@ -6,7 +6,7 @@
   <mat-grid-tile style="justify-content: flex-end;">
     <div style="margin-left: auto; margin-right: 2vw;"  *ngIf="isLogged()">
       <button mat-button color="basic" class="hover-effect-red" [matMenuTriggerFor]="beforeMenu" >
-        {{ userName() }}
+        <span id="headerName">{{ userName() }}</span>
         <mat-icon>account_circle</mat-icon>
       </button>
       <mat-menu #beforeMenu="matMenu" xPosition="before">

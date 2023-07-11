@@ -8,7 +8,7 @@ import {
 import { Router } from '@angular/router';
 import { UploadService } from 'src/app/services/UploadService';
 import { ConfirmDialog } from '../../dialogs/ConfirmDialog';
-import { Calification } from 'src/app/models/Calification';
+import { CalificationFile } from 'src/app/models/CalificationFile';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -70,8 +70,8 @@ export class SetCalificationDialogComponent {
 
   setCalification() {
     this.loading = true;
-    let studentCalification: Calification = new Calification();
-    studentCalification.calification = this.calification.value;
+    let studentCalification: CalificationFile = new CalificationFile();
+    studentCalification.calification = this.calification.value == '' ? 0 : this.calification.value;
     studentCalification.comment = this.comment;
 
 

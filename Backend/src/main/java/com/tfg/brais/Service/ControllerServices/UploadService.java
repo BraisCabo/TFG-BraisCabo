@@ -3,7 +3,6 @@ package com.tfg.brais.Service.ControllerServices;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import com.tfg.brais.Model.User;
 import com.tfg.brais.Model.DTOS.AnswersDTO;
 import com.tfg.brais.Repository.ExamRepository;
 import com.tfg.brais.Repository.ExerciseUploadRepository;
+import com.tfg.brais.Service.ComplementaryServices.CSVService;
 import com.tfg.brais.Service.ComplementaryServices.ExerciseUploadCheckService;
 import com.tfg.brais.Service.ComplementaryServices.FileService;
 
@@ -35,6 +35,9 @@ public class UploadService {
 
     @Autowired
     private ExamRepository examRepository;
+
+    @Autowired
+    private CSVService csvService;
 
     public UploadService(ExerciseUploadRepository exerciseUploadRepository2,
             ExerciseUploadCheckService exerciseUploadCheckService2, FileService fileService2,
@@ -81,7 +84,6 @@ public class UploadService {
             fileService.saveFile(file, path);
             upload.setFileName(file.getOriginalFilename());
             upload.setUploaded(true);
-            upload.setUploadDate(new Date());
             exerciseUploadRepository.save(upload);
             return ResponseEntity.ok(upload);
         } catch (Exception e) {
@@ -178,7 +180,7 @@ public class UploadService {
             upload.setFileName(user.getName() + user.getLastName() + ".csv");
             Path path = Paths.get(exam.getSubject().getId().toString(), exam.getId().toString(),
                     user.getName() + user.getLastName());
-            fileService.createTextFile(user.getName() + " " + user.getLastName(), user.getEmail(), path.toString(),
+            csvService.examToCSV(user.getName() + " " + user.getLastName(), user.getEmail(), path.toString(),
                     upload.getFileName(), exam.getQuestions(), upload.getAnswers());
             upload.setUploaded(true);
             exerciseUploadRepository.save(upload);
@@ -200,6 +202,10 @@ public class UploadService {
         AnswersDTO answersDTO = new AnswersDTO();
         answersDTO.setAnswers(upload.getAnswers());
         answersDTO.setQuestions(upload.getExam().getQuestions());
+        answersDTO.setQuestionCalifications(upload.getExam().getQuestionsCalifications());
+        if (exerciseUploadCheckService.checkIfCanSeeCalifications(subjectId, principal, upload)){
+            answersDTO.setCalifications(upload.getQuestionsCalification());
+        }
         return ResponseEntity.ok(answersDTO);
     }
 

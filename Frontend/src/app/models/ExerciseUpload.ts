@@ -9,5 +9,6 @@ export class ExerciseUpload{
   student: UserBasic = new UserBasic()
   uploaded : boolean = false
   exam : ExamTeacher = new ExamTeacher()
+  questionsCalification : string[] = []
 
 }

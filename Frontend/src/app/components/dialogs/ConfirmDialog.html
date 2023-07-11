@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>{{this.message}}</h1>
 <div mat-dialog-actions style="justify-content: center;">
-  <button mat-button (click)="this.closeDialog(true)" color="primary">Confirmar</button>
-  <button mat-button (click)="this.closeDialog(false)" cdkFocusInitial>Cancelar</button>
+  <button mat-button (click)="this.closeDialog(true)" color="primary" id="confirmButton">Confirmar</button>
+  <button mat-button (click)="this.closeDialog(false)" cdkFocusInitial id="cancelButton">Cancelar</button>
 </div>

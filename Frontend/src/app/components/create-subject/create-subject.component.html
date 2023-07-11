@@ -8,7 +8,7 @@
     <mat-card-content>
       <mat-form-field style="width: 100%;">
         <mat-label>Nombre de la asignatura</mat-label>
-        <input matInput [formControl]="name" required>
+        <input matInput [formControl]="name" required id="subjectName">
         <mat-error *ngIf="name.invalid">{{getErrorMessage()}}</mat-error>
       </mat-form-field>
     </mat-card-content>
@@ -22,18 +22,18 @@
     <mat-card-content *ngIf="!loadingTeachers; else isLoadingTeachers">
       <mat-form-field appearance="fill">
         <mat-label>Buscar</mat-label>
-        <input matInput [(ngModel)]="this.teachersName">
-        <button mat-icon-button color="primary" (click)="this.searchTeachers()" matSuffix>
+        <input matInput [(ngModel)]="this.teachersName" id="teachersName">
+        <button mat-icon-button color="primary" (click)="this.searchTeachers()" matSuffix id="searchTeachersButton">
           <mat-icon>search</mat-icon>
         </button>
       </mat-form-field>
       <br>
-      <mat-list *ngIf="this.allUsersT.length > 0; else noTeachers">
+      <mat-list *ngIf="this.allUsersT.length > 0; else noTeachers" id="teachersList">
         <mat-divider></mat-divider>
         <div *ngFor="let teacher of this.allUsersT">
           <mat-list-item [disabled]="this.isStudent(teacher)">
             <mat-checkbox [checked]="this.isTeacher(teacher)" [disabled]="this.isStudent(teacher)"
-              (change)="addTeacher(teacher)"></mat-checkbox>
+              (change)="addTeacher(teacher)" id="checkbox"></mat-checkbox>
             {{teacher.name}} {{teacher.lastName}}
           </mat-list-item>
           <mat-divider></mat-divider>
@@ -62,19 +62,19 @@
     <mat-card-content  *ngIf="!loadingStudents; else isLoadingStudents">
       <mat-form-field appearance="fill">
         <mat-label>Buscar</mat-label>
-        <input matInput [(ngModel)]="this.studentsName">
-        <button mat-icon-button color="primary" (click)="this.searchStudents()" matSuffix>
+        <input matInput [(ngModel)]="this.studentsName" id="studentsName">
+        <button mat-icon-button color="primary" (click)="this.searchStudents()" matSuffix id="searchStudentsButton">
           <mat-icon>search</mat-icon>
         </button>
       </mat-form-field>
       <br>
-      <mat-list *ngIf="this.allUsersS.length > 0; else noStudents">
+      <mat-list *ngIf="this.allUsersS.length > 0; else noStudents" id="studentsList">
 
         <mat-divider></mat-divider>
         <div *ngFor="let student of this.allUsersS">
           <mat-list-item [disabled]="this.isTeacher(student)">
             <mat-checkbox [checked]="this.isStudent(student)" [disabled]="this.isTeacher(student)"
-              (change)="addStudent(student)"></mat-checkbox>
+              (change)="addStudent(student)" id="checkbox"></mat-checkbox>
             {{student.name}} {{student.lastName}}
           </mat-list-item>
           <mat-divider></mat-divider>
@@ -94,6 +94,6 @@
     </ng-template>
   </mat-card>
   <button [disabled]="!canCreateSubject()" mat-raised-button color="primary" (click)="createSubject()"
-    style="margin-right: 2vw;">Crear Asignatura</button>
+    style="margin-right: 2vw;" id="createSubjectButton">Crear Asignatura</button>
   <button mat-raised-button color="primary" [routerLink]="['/']">Cancelar</button>
 </mat-grid-list>

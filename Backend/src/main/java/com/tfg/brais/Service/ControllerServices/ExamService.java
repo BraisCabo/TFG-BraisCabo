@@ -2,7 +2,7 @@ package com.tfg.brais.Service.ControllerServices;
 
 import java.nio.file.Paths;
 import java.security.Principal;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,11 +23,15 @@ import com.tfg.brais.Model.DTOS.ExamBasicDTO;
 import com.tfg.brais.Model.DTOS.ExamChangesDTO;
 import com.tfg.brais.Model.DTOS.ExamStudentDTO;
 import com.tfg.brais.Model.DTOS.ExamTeacherDTO;
+import com.tfg.brais.Model.DTOS.ImportedExamDTO;
+import com.tfg.brais.Model.DTOS.QuestionsDTO;
 import com.tfg.brais.Repository.ExamRepository;
 import com.tfg.brais.Repository.ExerciseUploadRepository;
+import com.tfg.brais.Service.ComplementaryServices.CSVService;
 import com.tfg.brais.Service.ComplementaryServices.ExamCheckService;
 import com.tfg.brais.Service.ComplementaryServices.FileService;
 import com.tfg.brais.Service.ComplementaryServices.SubjectCheckService;
+import com.tfg.brais.Service.ComplementaryServices.TaskDelayerService;
 import com.tfg.brais.Service.ComplementaryServices.UserCheckService;
 
 @Service
@@ -54,15 +58,22 @@ public class ExamService {
     @Autowired
     private FileService fileService;
 
+    @Autowired
+    private TaskDelayerService taskDelayerService;
+
+    @Autowired
+    private CSVService csvService;
+
     public ExamService(ExamRepository examRepository, SubjectService subjectService, ExamCheckService examCheckService,
             SubjectCheckService subjectCheckService, UserCheckService userCheckService,
-            ExerciseUploadRepository exerciseUploadRepository) {
+            ExerciseUploadRepository exerciseUploadRepository, TaskDelayerService taskDelayerService) {
         this.examRepository = examRepository;
         this.subjectService = subjectService;
         this.examCheckService = examCheckService;
         this.subjectCheckService = subjectCheckService;
         this.userCheckService = userCheckService;
         this.exerciseUploadRepository = exerciseUploadRepository;
+        this.taskDelayerService = taskDelayerService;
     }
 
     public ResponseEntity<ExamBasicDTO> findBySubjectIdAndId(long subjectId, long examId, Principal principal) {
@@ -118,12 +129,14 @@ public class ExamService {
         if (checkIfCanCreateOrEdit.getStatusCode().is4xxClientError()) {
             return new ResponseEntity<ExamTeacherDTO>(checkIfCanCreateOrEdit.getStatusCode());
         }
-        if (exam.getType() == "UPLOAD") {
-            exam.setQuestions(new ArrayList<>());
+        ResponseEntity<Exam> questionsCheck = examCheckService.questionsCheck(exam, examChanges);
+        if (questionsCheck.getStatusCode().is4xxClientError()) {
+            return new ResponseEntity<ExamTeacherDTO>(questionsCheck.getStatusCode());
         }
+        exam = questionsCheck.getBody();
         Exam examToUpdate = checkIfCanCreateOrEdit.getBody();
         examToUpdate.update(exam);
-        if (examFile != null){
+        if (examFile != null) {
             try {
                 if (examToUpdate.getExamFile() != null) {
                     fileService.deleteFile(Paths.get(Long.toString(subjectId), examToUpdate.getExamFile()).toString());
@@ -133,7 +146,7 @@ public class ExamService {
             } catch (Exception e) {
                 return new ResponseEntity<>(HttpStatus.valueOf(500));
             }
-        }else if (examChanges.isDeletedFile() && examToUpdate.getExamFile() != null){
+        } else if (examChanges.isDeletedFile() && examToUpdate.getExamFile() != null) {
             try {
                 fileService.deleteFile(Paths.get(Long.toString(subjectId), examToUpdate.getExamFile()).toString());
                 examToUpdate.setExamFile(null);
@@ -153,9 +166,11 @@ public class ExamService {
         if (checkIfCanCreate.getStatusCode().is4xxClientError()) {
             return new ResponseEntity<ExamTeacherDTO>(checkIfCanCreate.getStatusCode());
         }
-        if (exam.getType().equals("UPLOAD")) {
-            exam.setQuestions(new ArrayList<>());
+        ResponseEntity<Exam> questionsCheck = examCheckService.questionsCheck(exam, examChangesDTO);
+        if (questionsCheck.getStatusCode().is4xxClientError()) {
+            return new ResponseEntity<ExamTeacherDTO>(questionsCheck.getStatusCode());
         }
+        exam = questionsCheck.getBody();
         exam.setSubject(subjectService.findSubjectById(subjectId).getBody());
         if (examFile != null) {
             try {
@@ -194,12 +209,24 @@ public class ExamService {
         return ResponseEntity.ok(new ExamTeacherDTO(exam));
     }
 
-    public ResponseEntity<List<String>> getExamQuestions(long subjectId, long examId, Principal userPrincipal) {
+    public ResponseEntity<QuestionsDTO> getExamQuestions(long subjectId, long examId, Principal userPrincipal) {
         ResponseEntity<Exam> checkIfCanSee = examCheckService.checkIfCanSee(examId, subjectId, userPrincipal);
         if (checkIfCanSee.getStatusCode().is4xxClientError()) {
-            return new ResponseEntity<List<String>>(checkIfCanSee.getStatusCode());
+            return new ResponseEntity<>(checkIfCanSee.getStatusCode());
         }
-        return ResponseEntity.ok(checkIfCanSee.getBody().getQuestions());
+        User user = userCheckService.loadUserNoCkeck(userPrincipal).getBody();
+        ExerciseUpload upload = exerciseUploadRepository
+                .findByStudentIdAndExamIdAndExamSubjectId(user.getId(), examId, subjectId).get();
+        if (upload.getStartedDate() == null) {
+            upload.setStartedDate(new Date());
+            exerciseUploadRepository.save(upload);
+        }
+        QuestionsDTO questionsDTO = new QuestionsDTO(checkIfCanSee.getBody());
+        questionsDTO.setStartedDate(upload.getStartedDate());
+
+        taskDelayerService.delayTask(taskDelayerService.createAutoUploadTask(subjectId, examId, userPrincipal,
+                upload.getExam().getQuestions().size()), upload.calculateTimeDifference());
+        return ResponseEntity.ok(questionsDTO);
     }
 
     public ResponseEntity<Resource> getExamFiles(long subjectId, long examId, Principal userPrincipal) {
@@ -209,4 +236,24 @@ public class ExamService {
         }
         return fileService.downloadFile(Paths.get(Long.toString(subjectId), checkIfCanSee.getBody().getExamFile()));
     }
+
+    public ResponseEntity<ExamTeacherDTO> importExamFile(long subjectId, ImportedExamDTO importedExam,
+            Principal userPrincipal, UriComponentsBuilder uBuilder) {
+        ResponseEntity<Exam> csvToExam = csvService.CSVToExam(subjectId, importedExam, userPrincipal);
+        if (csvToExam.getStatusCode().is4xxClientError()) {
+            return new ResponseEntity<ExamTeacherDTO>(csvToExam.getStatusCode());
+        }
+        Exam exam = csvToExam.getBody();
+        return ResponseEntity.created(uBuilder.buildAndExpand(exam.getId()).toUri()).body(new ExamTeacherDTO(exam));
+    }
+
+    public ResponseEntity<Resource> exportExam(long subjectId, long examId, Principal userPrincipal) {
+        ResponseEntity<Exam> checkIfCanSee = examCheckService.checkIfCanSee(examId, subjectId, userPrincipal);
+        if (checkIfCanSee.getStatusCode().is4xxClientError()) {
+            return new ResponseEntity<>(checkIfCanSee.getStatusCode());
+        }
+        Exam exam = checkIfCanSee.getBody();
+        return csvService.exportToCSV(exam);
+    }
+
 }

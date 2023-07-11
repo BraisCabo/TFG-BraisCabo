@@ -24,7 +24,7 @@ public class UserCheckService {
         this.emailValidator = emailValidator;
     }
 
-    private boolean emailUsed(String email) {
+    public boolean emailUsed(String email) {
         return this.userRepository.findByEmail(email).isPresent();
     }
 

@@ -1,6 +1,7 @@
 package com.tfg.brais.Service.ComplementaryServices;
 
 import java.security.Principal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ public class ExerciseUploadCheckService {
     @Autowired
     private UserCheckService userCheckService;
 
-    private ResponseEntity<ExerciseUpload> checkIfCanUploadUser(long id, long examId, long userId) {
+    private ResponseEntity<ExerciseUpload> checkIfCanUploadUser(long id, long examId, long userId, ExerciseUpload upload) {
         Optional<Exam> examOp = examRepository.findByIdAndSubjectId(examId, id);
         if (!examOp.isPresent()) {
             return ResponseEntity.notFound().build();
@@ -39,12 +40,19 @@ public class ExerciseUploadCheckService {
             return ResponseEntity.status(403).build();
         }
         if (exam.getClosingDate().before(new Date()) && !exam.isCanUploadLate()) {
-            return ResponseEntity.status(403).build();
+            if (checkIfLateUpload(upload)){
+                return ResponseEntity.status(403).build();
+            }else if (new Date().before(limitDate(upload))){
+                upload.setUploadDate(new Date());
+            }else{
+                upload.setUploadDate(limitDate(upload));
+            }
+        }else{
+            upload.setUploadDate(new Date());
         }
         if (!subjectCheckService.isStudentOfSubject(userId, id)) {
             return ResponseEntity.status(403).build();
         }
-
         try {
             ExerciseUpload exerciseUpload = exerciseUploadRepository.findByStudentIdAndExamIdAndExamSubjectId(userId, examId, id).get();
             if(exerciseUpload.isUploaded() && exerciseUpload.getExam().getType().equals("QUESTIONS")){
@@ -52,9 +60,32 @@ public class ExerciseUploadCheckService {
             }else if (exerciseUpload.isUploaded() && !exerciseUpload.getExam().isCanRepeat()){
                 return ResponseEntity.status(403).build();
             }
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(upload);
         } catch (Exception e) {
             return ResponseEntity.status(500).build();
+        }
+    }
+    
+    private boolean checkIfLateUpload(ExerciseUpload upload){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.SECOND, -5);
+        Date maxTime = calendar.getTime();
+        if (limitDate(upload).before(maxTime)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private Date limitDate(ExerciseUpload upload){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(upload.getStartedDate());
+        calendar.add(Calendar.MINUTE, upload.getExam().getMaxTime());
+        if (calendar.getTime().before(upload.getExam().getClosingDate())){
+            return calendar.getTime();
+        }else{
+            return upload.getExam().getClosingDate();
         }
     }
 
@@ -127,13 +158,28 @@ public class ExerciseUploadCheckService {
             return ResponseEntity.status(403).build();
         }
         ResponseEntity<ExerciseUpload> checkIfCanUpload = this.checkIfCanUploadUser(id, examId,
-                user.getId());
+                user.getId(), upload);
         if (checkIfCanUpload.getStatusCode().is4xxClientError()) {
             return ResponseEntity.status(checkIfCanUpload.getStatusCode()).build();
         }
+        upload = checkIfCanUpload.getBody();
         Exam exam = examRepository.findById(examId).get();
         upload.setExam(exam);
         upload.setStudent(user);
         return ResponseEntity.ok(upload);
+    }
+
+    public boolean checkIfCanSeeCalifications(long subjectId, Principal principal, ExerciseUpload upload){
+        ResponseEntity<User> responseUser = userCheckService.loadUserNoCkeck(principal);
+        if (responseUser.getStatusCode().is4xxClientError()) {
+            return false;
+        }
+        User user = responseUser.getBody();
+        if (upload.getExam().isCalificationVisible()){
+            return true;
+        }else if (subjectCheckService.isTeacherOfSubject(user.getId(), subjectId)){
+            return true;
+        }
+        return false;
     }
 }

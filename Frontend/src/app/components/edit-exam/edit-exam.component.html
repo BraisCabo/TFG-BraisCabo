@@ -30,6 +30,14 @@
         <mat-option value="QUESTIONS">Preguntas Cortas</mat-option>
       </mat-select>
     </mat-form-field>
+
+    <mat-form-field *ngIf="type.value === 'QUESTIONS'">
+      <mat-label>Tiempo máximo (en minutos)</mat-label>
+      <input matInput [formControl]="maxTime" type="number">
+      <mat-error *ngIf="maxTime.invalid">
+        No válido
+      </mat-error>
+    </mat-form-field>
     <br>
     <div>
       <span class="title">Selecciona la visibilidad del examen</span>
@@ -113,14 +121,26 @@
         Debes introducir por lo menos una pregunta
       </div>
       <ng-template #allQuestions>
-        <div *ngFor="let question of questions; let i = index; trackBy: trackByFn">
-          <mat-form-field style="width: 90%;">
-            <mat-label>Pregunta {{i+1}}</mat-label>
-            <textarea matInput [(ngModel)]="questions[i]"></textarea>
+        <mat-card *ngFor="let question of questions; let i = index; trackBy: trackByFn">
+          <mat-card-header>
+            <mat-card-title>Pregunta {{i+1}}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-form-field style="width: 90%;">
+              <mat-label>Pregunta</mat-label>
+              <textarea matInput [(ngModel)]="questions[i]"></textarea>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Valor de la pregunta</mat-label>
+              <input matInput type="number" [(ngModel)]="questionsCalifications[i]" min="0">
+              <mat-error>No válido</mat-error>
+            </mat-form-field>
+          </mat-card-content>
+          <mat-card-actions>
             <button (click)="deleteQuestion(i)" mat-icon-button color="primary"> <mat-icon>delete</mat-icon></button>
-          </mat-form-field>
+          </mat-card-actions>
 
-        </div>
+        </mat-card>
       </ng-template>
 
       <button (click)="newQuestion()" mat-raised-button color="primary" style="margin-top: 2vh;">
@@ -128,10 +148,11 @@
     </div>
 
     <input type="file" (change)="onFileSelected($event)" style="display:none" #fileUpload>
-  <button mat-raised-button color="primary" style="margin-top: 3vh;"
-    (click)="fileUpload.click()"><mat-icon>arrow_upward</mat-icon>Subir enunciado</button> <br>
-  <span *ngIf="examFileName">{{examFileName}}<button mat-icon-button (click)="deleteFile()"><mat-icon>close</mat-icon></button></span>
-  <br>
+    <button mat-raised-button color="primary" style="margin-top: 3vh;"
+      (click)="fileUpload.click()"><mat-icon>arrow_upward</mat-icon>Subir enunciado</button> <br>
+    <span *ngIf="examFileName">{{examFileName}}<button mat-icon-button
+        (click)="deleteFile()"><mat-icon>close</mat-icon></button></span>
+    <br>
 
     <button *ngIf="!loading; else isLoading" [disabled]="!isValidExam()" mat-raised-button color="primary"
       (click)="openEditExamDialog()" style="margin-top: 3vh;">Editar Examen</button>

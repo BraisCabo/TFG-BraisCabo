@@ -81,4 +81,8 @@ public class UserSubjectService {
     public ResponseEntity<Boolean> isTeacherOfSubject(long subjectId, long userId) {
         return ResponseEntity.ok(subjectCheckService.isTeacherOfSubject(userId, subjectId));
     }
+
+    public ResponseEntity<Boolean> isStudentOfSubject(long subjectId, long userId) {
+        return ResponseEntity.ok(subjectCheckService.isStudentOfSubject(userId, subjectId));
+    }
 }

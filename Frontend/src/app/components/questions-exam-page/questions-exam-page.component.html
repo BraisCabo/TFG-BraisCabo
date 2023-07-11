@@ -1,25 +1,31 @@
 <mat-grid-list cols="1">
+  {{getClosingDate()}}
   <div *ngIf="!loadingQuestions; else isLoading">
-  <div *ngFor="let question of questions; let i = index">
-    <mat-card style="margin-bottom: 2vh;">
-      <mat-card-header>
-      <mat-card-title>
-        <p class="title">{{i + 1}}. {{question}}</p>
-      </mat-card-title>
-    </mat-card-header>
-      <mat-card-content>
-        <mat-form-field style="width: 100%">
-          <textarea [(ngModel)]="answers[i]" matInput></textarea>
-        </mat-form-field>
-      </mat-card-content>
-    </mat-card>
+    <div *ngFor="let question of examData.questions; let i = index">
+      <mat-card style="margin-bottom: 2vh;">
+        <mat-card-header>
+          <mat-card-title>
+            <span class="title">{{i + 1}}. {{examData.questions[i]}}</span>
+          </mat-card-title>
+          <mat-card-subtitle>
+            {{examData.califications[i]}} ptos.
+          </mat-card-subtitle>
+        </mat-card-header>
+        <br>
+        <mat-card-content>
+          <mat-form-field style="width: 100%">
+            <textarea [(ngModel)]="answers[i]" (ngModelChange)="textChanged(i)" matInput></textarea>
+          </mat-form-field>
+        </mat-card-content>
+      </mat-card>
 
+    </div>
+    <button *ngIf="!loadingSend; else isLoadingSend" mat-raised-button color="primary"
+      (click)="openSendDialog()"><mat-icon>send</mat-icon>Enviar respuestas</button>
+    <ng-template #isLoadingSend>
+      <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+    </ng-template>
   </div>
-  <button *ngIf="!loadingSend; else isLoadingSend" mat-raised-button color="primary" (click)="openSendDialog()"><mat-icon>send</mat-icon>Enviar respuestas</button>
-  <ng-template #isLoadingSend>
-    <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
-  </ng-template>
-</div>
   <ng-template #isLoading>
     <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
   </ng-template>

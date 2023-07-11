@@ -16,6 +16,9 @@
     <mat-list-item>
       <span class="text">Fecha de cierre: {{getClosingDate()}}</span> <br>
     </mat-list-item>
+    <mat-list-item *ngIf="exam.type == 'QUESTIONS'">
+      <span class="text">Tiempo máximo para hacer el examen: {{exam.maxTime}} minutos</span> <br>
+    </mat-list-item>
     <mat-list-item>
       <span class="text">{{getRemainingTime()}}</span> <br>
     </mat-list-item>
@@ -47,7 +50,7 @@
       <mat-divider></mat-divider>
       <span *ngFor="let question of exam.questions; let i = index">
         <mat-list-item>
-          {{i + 1}}. {{question}}
+          {{i + 1}}. {{question}} ({{exam.questionsCalifications[i]}} puntos)
         </mat-list-item>
         <mat-divider></mat-divider>
       </span>
@@ -59,6 +62,13 @@
         <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
       </ng-template>
     </mat-list-item>
+    <mat-list-item *ngIf="exam.type === 'QUESTIONS'">
+      <button mat-raised-button color="primary" *ngIf="!loadingExport; else isLoadingExport"
+        (click)="exportExam()"><mat-icon>arrow_downward</mat-icon>Exportar examen</button>
+      <ng-template #isLoadingExport>
+        <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+      </ng-template>
+    </mat-list-item>
     <mat-list-item *ngIf="exam.examFile">
       <button mat-raised-button color="primary" *ngIf="!loadingExamFile; else isLoadingExamFile"
         (click)="downloadExam()"><mat-icon>arrow_downward</mat-icon>Descargar enunciado</button>
@@ -67,8 +77,8 @@
       </ng-template>
     </mat-list-item>
     <mat-list-item>
-      <button mat-raised-button color="primary"
-      (click)="goToCalificate()"><mat-icon>visibility</mat-icon>Ver entregas</button>
+      <button mat-raised-button color="primary" (click)="goToCalificate()"><mat-icon>visibility</mat-icon>Ver
+        entregas</button>
     </mat-list-item>
   </mat-list>
 </div>

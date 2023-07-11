@@ -1,6 +1,6 @@
 <mat-grid-list cols="1">
   <div style="display: flex; justify-content: flex-end; margin-top: 2vh;">
-    <button mat-icon-button color="primary" (click)="cancellEdition()" style="margin-bottom: 2vh;">
+    <button id="closeEdit" mat-icon-button color="primary" (click)="cancellEdition()" style="margin-bottom: 2vh;">
       <mat-icon>close</mat-icon>
     </button>
   </div>
@@ -13,7 +13,7 @@
     <mat-card-content>
       <mat-form-field style="width: 100%;">
         <mat-label>Nombre de la asignatura</mat-label>
-        <input matInput [formControl]="name" required>
+        <input matInput [formControl]="name" required id="editSubjectName">
         <mat-error *ngIf="name.invalid">{{getErrorMessage()}}</mat-error>
       </mat-form-field>
     </mat-card-content>
@@ -33,12 +33,12 @@
         </button>
       </mat-form-field>
       <br>
-      <mat-list *ngIf="this.allUsersT.length > 0; else noTeachers">
+      <mat-list *ngIf="this.allUsersT.length > 0; else noTeachers" id="teachersList">
         <mat-divider></mat-divider>
         <div *ngFor="let teacher of this.allUsersT">
           <mat-list-item [disabled]="this.isStudent(teacher)">
             <mat-checkbox [checked]="this.isTeacher(teacher)" [disabled]="this.isStudent(teacher)"
-              (change)="addTeacher(teacher)"></mat-checkbox>
+              (change)="addTeacher(teacher)" id="checkbox"></mat-checkbox>
             {{teacher.name}} {{teacher.lastName}}
           </mat-list-item>
           <mat-divider></mat-divider>
@@ -73,12 +73,12 @@
         </button>
       </mat-form-field>
       <br>
-      <mat-list *ngIf="this.allUsersS.length > 0; else noStudents">
+      <mat-list *ngIf="this.allUsersS.length > 0; else noStudents" id="studentsList">
         <mat-divider></mat-divider>
         <div *ngFor="let student of this.allUsersS">
           <mat-list-item [disabled]="this.isTeacher(student)">
             <mat-checkbox [checked]="this.isStudent(student)" [disabled]="this.isTeacher(student)"
-              (change)="addStudent(student)"></mat-checkbox>
+              (change)="addStudent(student)" id="checkbox"></mat-checkbox>
             {{student.name}} {{student.lastName}}
           </mat-list-item>
           <mat-divider></mat-divider>
@@ -98,6 +98,6 @@
     </ng-template>
   </mat-card>
   <button [disabled]="!canEditSubject()" mat-raised-button color="primary" (click)="editSubject()"
-    style="margin-right: 2vw;">Editar Asignatura</button>
+    style="margin-right: 2vw;" id="editSubjectButton">Editar Asignatura</button>
   <button mat-raised-button color="primary" (click)="cancellEdition()">Cancelar</button>
 </mat-grid-list>

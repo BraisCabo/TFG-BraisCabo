@@ -6,6 +6,7 @@ import { ExamTeacher } from 'src/app/models/ExamTeacher';
 import { ExamService } from 'src/app/services/ExamService';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ExerciseUpload } from 'src/app/models/ExerciseUpload';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-teacher-exam-page',
@@ -21,6 +22,7 @@ export class TeacherExamPageComponent {
   name = '';
   exerciseUploads: ExerciseUpload[] = [];
   loadingExamFile = false;
+  loadingExport = false;
 
   constructor(
     private examService: ExamService,
@@ -157,19 +159,30 @@ export class TeacherExamPageComponent {
   }
 
   downloadAllUploads() {
-    this.loadingDownload = true;
-    this.uploadService.downloadAll(this.subjectId, this.examId).subscribe(
+    this.download(this.loadingDownload, this.uploadService.downloadAll(this.subjectId, this.examId));
+  }
+
+  private download(
+    loadingVarible: boolean,
+    resource : Observable<any>
+  ) {
+    loadingVarible = true;
+    resource.subscribe(
       (response) => {
         this.uploadService.donwloadFile(response);
-        this.loadingDownload = false;
+        loadingVarible = false;
       },
       (_) => {
         this.openSnackBar(
           'Error al descargar el fichero intentalo de nuevo más tarde.'
         );
-        this.loadingDownload = false;
+        loadingVarible = false;
       }
     );
+  }
+
+  exportExam() {
+    this.download(this.loadingExport, this.examService.exportExam(this.subjectId, this.examId));
   }
 
   goToCalificate() {

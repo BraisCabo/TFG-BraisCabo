@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,11 +23,14 @@ import com.tfg.brais.Model.ExerciseUpload;
 import com.tfg.brais.Model.Subject;
 import com.tfg.brais.Model.User;
 import com.tfg.brais.Model.DTOS.ExamBasicDTO;
+import com.tfg.brais.Model.DTOS.ExamChangesDTO;
 import com.tfg.brais.Model.DTOS.ExamTeacherDTO;
+import com.tfg.brais.Model.DTOS.QuestionsDTO;
 import com.tfg.brais.Repository.ExamRepository;
 import com.tfg.brais.Repository.ExerciseUploadRepository;
 import com.tfg.brais.Service.ComplementaryServices.ExamCheckService;
 import com.tfg.brais.Service.ComplementaryServices.SubjectCheckService;
+import com.tfg.brais.Service.ComplementaryServices.TaskDelayerService;
 import com.tfg.brais.Service.ComplementaryServices.UserCheckService;
 import com.tfg.brais.Service.ControllerServices.ExamService;
 import com.tfg.brais.Service.ControllerServices.SubjectService;
@@ -47,6 +51,8 @@ public class ExamServiceTest {
 
     private ExerciseUploadRepository exerciseUploadRepository;
 
+    private TaskDelayerService taskDelayerService;
+
     @BeforeEach
     public void setUp() {
         examRepository = mock(ExamRepository.class);
@@ -54,9 +60,10 @@ public class ExamServiceTest {
         examCheckService = mock(ExamCheckService.class);
         subjectCheckService = mock(SubjectCheckService.class);
         userCheckService = mock(UserCheckService.class);
+        taskDelayerService = mock(TaskDelayerService.class);
         exerciseUploadRepository = mock(ExerciseUploadRepository.class);
         examService = new ExamService(examRepository, subjectService, examCheckService, subjectCheckService,
-                userCheckService, exerciseUploadRepository);
+                userCheckService, exerciseUploadRepository, taskDelayerService);
     }
 
     @Nested
@@ -184,37 +191,25 @@ public class ExamServiceTest {
         @Test
         public void updateExamTestCantEdit() {
             when(examCheckService.checkIfCanEdit(anyLong(), anyLong(),any(), any())).thenReturn(ResponseEntity.notFound().build());
-            assertTrue(examService.updateExam(1L, 1L, new ExamTeacherDTO(), null).getStatusCode().is4xxClientError());
+            assertTrue(examService.updateExam(1L, 1L, new ExamChangesDTO(), null, null).getStatusCode().is4xxClientError());
         }
 
         @Test
-        public void updateExamTestUpload() {
-            when(examCheckService.checkIfCanEdit(anyLong(), anyLong(),any(), any())).thenReturn(ResponseEntity.ok(new Exam()));
-            ExamTeacherDTO examTeacherDTO = new ExamTeacherDTO();
-            examTeacherDTO.setType("UPLOAD");
-            ArrayList<String> questions = new ArrayList<>();
-            questions.add("test");
-            examTeacherDTO.setQuestions(questions);
-            when(examRepository.save(any())).thenReturn(new Exam());
-            ResponseEntity<ExamTeacherDTO> updateExam = examService.updateExam(1L, 1L, examTeacherDTO, null);
-            assertTrue(updateExam.getStatusCode().is2xxSuccessful());
-            assertEquals("UPLOAD", updateExam.getBody().getType());
-            assertEquals(0, updateExam.getBody().getQuestions().size());
+        public void updateExamTestwrongQuestions(){
+            when(examCheckService.checkIfCanEdit(anyLong(), anyLong(),any(), any())).thenReturn(ResponseEntity.ok().build());
+            when(examCheckService.questionsCheck(any(), any())).thenReturn(ResponseEntity.notFound().build());
+            assertTrue(examService.updateExam(1L, 1L, new ExamChangesDTO(), null, null).getStatusCode().is4xxClientError());
         }
 
         @Test
-        public void updateExamTestQuestions() {
-            when(examCheckService.checkIfCanEdit(anyLong(), anyLong(),any(), any())).thenReturn(ResponseEntity.ok(new Exam()));
-            ExamTeacherDTO examTeacherDTO = new ExamTeacherDTO();
-            examTeacherDTO.setType("QUESTIONS");
-            ArrayList<String> questions = new ArrayList<>();
-            questions.add("test");
-            examTeacherDTO.setQuestions(questions);
-            when(examRepository.save(any())).thenReturn(new Exam());
-            ResponseEntity<ExamTeacherDTO> updateExam = examService.updateExam(1L, 1L, examTeacherDTO, null);
-            assertTrue(updateExam.getStatusCode().is2xxSuccessful());
-            assertEquals("QUESTIONS", updateExam.getBody().getType());
-            assertEquals(1, updateExam.getBody().getQuestions().size());
+        public void updateExamTestCorrect() {
+            ExamChangesDTO examChangesDTO = new ExamChangesDTO();
+            examChangesDTO.setDeletedFile(false);
+            when(examCheckService.checkIfCanEdit(anyLong(), anyLong(), any(), any()))
+                    .thenReturn(ResponseEntity.ok(new Exam()));
+            when(examCheckService.questionsCheck(any(), any())).thenReturn(ResponseEntity.ok(new Exam()));
+            assertTrue(
+                    examService.updateExam(1L, 1L, new ExamChangesDTO(), null, null).getStatusCode().is2xxSuccessful());
         }
     }
 
@@ -222,50 +217,32 @@ public class ExamServiceTest {
     public class CreateExamTest {
 
         @Test
-            public void createExamTestCantCreate() {
-                when(examCheckService.checkIfCanCreate(anyLong(), any(), any())).thenReturn(ResponseEntity.notFound().build());
-                assertTrue(examService.createExam(1L, new ExamTeacherDTO(), null, null).getStatusCode().is4xxClientError());
-            }
-
-        @Test
-        public void createExamTestUpload() {
-            when(examCheckService.checkIfCanCreate(anyLong(), any() , any())).thenReturn(ResponseEntity.ok(new Exam()));
-            ExamTeacherDTO examTeacherDTO = new ExamTeacherDTO();
-            examTeacherDTO.setType("UPLOAD");
-            ArrayList<String> questions = new ArrayList<>();
-            questions.add("test");
-            examTeacherDTO.setQuestions(questions);
-            when(examRepository.save(any())).thenReturn(new Exam());
-            when(subjectService.findSubjectById(anyLong())).thenReturn(ResponseEntity.ok(new Subject()));
-            when(examRepository.save(any())).thenReturn(new Exam());
-            when(exerciseUploadRepository.save(any())).thenReturn(new ExerciseUpload());
-            ResponseEntity<ExamTeacherDTO> updateExam = examService.createExam(1L, examTeacherDTO, null, UriComponentsBuilder.newInstance());
-            assertTrue(updateExam.getStatusCode().is2xxSuccessful());
-            assertEquals("UPLOAD", updateExam.getBody().getType());
-            assertEquals(0, updateExam.getBody().getQuestions().size());
+        public void createExamTestCantCreate() {
+            when(examCheckService.checkIfCanCreate(anyLong(), any(), any())).thenReturn(ResponseEntity.notFound().build());
+            assertTrue(examService.createExam(1L, new ExamChangesDTO(), null, null, null).getStatusCode().is4xxClientError());
         }
 
         @Test
-        public void createExamTestQuestions() {
-            when(examCheckService.checkIfCanCreate(anyLong(), any() , any())).thenReturn(ResponseEntity.ok(new Exam()));
-            ExamTeacherDTO examTeacherDTO = new ExamTeacherDTO();
-            examTeacherDTO.setType("QUESTIONS");
-            ArrayList<String> questions = new ArrayList<>();
-            questions.add("test");
-            examTeacherDTO.setQuestions(questions);
-            when(examRepository.save(any())).thenReturn(new Exam());
+        public void createExamTestWrongQuestions() {
+            when(examCheckService.checkIfCanCreate(anyLong(), any(), any())).thenReturn(ResponseEntity.ok(new Exam()));
+            when(examCheckService.questionsCheck(any(), any())).thenReturn(ResponseEntity.notFound().build());
+            assertTrue(examService.createExam(1L, new ExamChangesDTO(), null, null, null).getStatusCode().is4xxClientError());
+        }
+
+        @Test
+        public void createExamTestUpload() {
+            when(examCheckService.checkIfCanCreate(anyLong(), any(), any())).thenReturn(ResponseEntity.ok(new Exam()));
+            when(examCheckService.questionsCheck(any(), any())).thenReturn(ResponseEntity.ok(new Exam()));
             when(subjectService.findSubjectById(anyLong())).thenReturn(ResponseEntity.ok(new Subject()));
             when(examRepository.save(any())).thenReturn(new Exam());
             when(exerciseUploadRepository.save(any())).thenReturn(new ExerciseUpload());
-            ResponseEntity<ExamTeacherDTO> updateExam = examService.createExam(1L, examTeacherDTO, null, UriComponentsBuilder.newInstance());
+            ResponseEntity<ExamTeacherDTO> updateExam = examService.createExam(1L, new ExamChangesDTO(),null, null, UriComponentsBuilder.newInstance());
             assertTrue(updateExam.getStatusCode().is2xxSuccessful());
-            assertEquals("QUESTIONS", updateExam.getBody().getType());
-            assertEquals(1, updateExam.getBody().getQuestions().size());
         }
     }
 
     @Nested
-    public class getExamQuestionsTest{
+    public class getExamQuestionsTest {
 
         @Test
         public void getExamQuestionsCantSee() {
@@ -275,10 +252,22 @@ public class ExamServiceTest {
 
         @Test
         public void getExamQuestions() {
+            User user = new User();
+            user.setId(1L);
+            ExerciseUpload exerciseUpload = new ExerciseUpload();
+            Exam exam = new Exam();
+            exam.setMaxTime(10);
+            exam.setQuestions(new ArrayList<>());
+            exerciseUpload.setExam(exam);
+            exerciseUpload.setStartedDate(new Date());
             when(examCheckService.checkIfCanSee(anyLong(), anyLong(), any())).thenReturn(ResponseEntity.ok(new Exam()));
-            ResponseEntity<List<String>> examQuestions = examService.getExamQuestions(1L, 1L, null);
+            when(userCheckService.loadUserNoCkeck(any())).thenReturn(ResponseEntity.ok(user));
+            when(exerciseUploadRepository.findByStudentIdAndExamIdAndExamSubjectId(anyLong(), anyLong(), anyLong())).thenReturn(Optional.of(exerciseUpload));
+            when(examRepository.save(any())).thenReturn(new Exam());
+            when(exerciseUploadRepository.save(any())).thenReturn(new ExerciseUpload());
+            ResponseEntity<QuestionsDTO> examQuestions = examService.getExamQuestions(1L, 1L, null);
             assertTrue(examQuestions.getStatusCode().is2xxSuccessful());
-            assertEquals(0, examQuestions.getBody().size());
+            assertEquals(0, examQuestions.getBody().getCalifications().size());
         }
     }
 }

@@ -55,6 +55,9 @@ import { StudentCalificationsComponent } from './components/califications-page/s
 import {MatTableModule} from '@angular/material/table';
 import { CalificationsPageComponent } from './components/califications-page/califications-page.component';
 import { TeacherCalificationsComponent } from './components/califications-page/teacher-califications/teacher-califications.component';
+import { SetCalificationDialogQuestionsComponent } from './components/calificate/set-calification-dialog-questions/set-calification-dialog-questions.component';
+import { EditCalificationDialogQuestionsComponent } from './components/calificate/edit-calification-dialog-questions/edit-calification-dialog-questions.component';
+import { ImportExamComponent } from './components/import-exam/import-exam.component';
 
 @NgModule({
   declarations: [
@@ -84,7 +87,10 @@ import { TeacherCalificationsComponent } from './components/califications-page/t
     EditCalificationDialogComponent,
     StudentCalificationsComponent,
     CalificationsPageComponent,
-    TeacherCalificationsComponent
+    TeacherCalificationsComponent,
+    SetCalificationDialogQuestionsComponent,
+    EditCalificationDialogQuestionsComponent,
+    ImportExamComponent
   ],
   imports: [
     BrowserModule,

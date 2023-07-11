@@ -20,6 +20,8 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 import com.tfg.brais.Model.DTOS.ExamBasicDTO;
 import com.tfg.brais.Model.DTOS.ExamChangesDTO;
 import com.tfg.brais.Model.DTOS.ExamTeacherDTO;
+import com.tfg.brais.Model.DTOS.ImportedExamDTO;
+import com.tfg.brais.Model.DTOS.QuestionsDTO;
 import com.tfg.brais.Service.ControllerServices.ExamService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,7 +49,7 @@ public class ExamController {
     }
 
     @GetMapping("/{examId}/questions")
-    public ResponseEntity<List<String>> getQuestions(@PathVariable long id, @PathVariable long examId, HttpServletRequest request){
+    public ResponseEntity<QuestionsDTO> getQuestions(@PathVariable long id, @PathVariable long examId, HttpServletRequest request){
         return this.examService.getExamQuestions(id, examId, request.getUserPrincipal());
     }
 
@@ -64,5 +66,15 @@ public class ExamController {
     @GetMapping("/{examId}/files")
     public ResponseEntity<Resource> getFiles(@PathVariable long id, @PathVariable long examId, HttpServletRequest request){
         return this.examService.getExamFiles(id, examId, request.getUserPrincipal());
+    }
+
+    @PostMapping("/files")
+    public ResponseEntity<ExamTeacherDTO> importExam(@PathVariable long id, HttpServletRequest request, ImportedExamDTO importedExam){
+        return this.examService.importExamFile(id, importedExam, request.getUserPrincipal(), fromCurrentRequest().path("/{id}"));
+    }
+
+    @GetMapping("/{examId}/files/exports")
+    public ResponseEntity<Resource> getExportedFiles(@PathVariable long id, @PathVariable long examId, HttpServletRequest request){
+        return this.examService.exportExam(id, examId, request.getUserPrincipal());
     }
 }

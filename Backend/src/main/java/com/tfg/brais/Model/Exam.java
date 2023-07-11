@@ -7,6 +7,8 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -44,13 +46,19 @@ public class Exam {
 
     private Date closingDate = new Date();
 
+    @ElementCollection
+    @Column(columnDefinition = "TEXT")
     private List<String> questions = new ArrayList<>();
+
+    private List<Double> questionsCalifications = new ArrayList<>();
 
     private boolean canRepeat = true;
 
     private boolean canUploadLate = true;
 
-    private String examFile; 
+    private String examFile;
+
+    private int maxTime;
 
     public void update(Exam exam) {
         this.name = exam.getName();
@@ -63,6 +71,7 @@ public class Exam {
         this.type = exam.getType();
         this.canRepeat = exam.isCanRepeat();
         this.canUploadLate = exam.isCanUploadLate();
-        
+        this.questionsCalifications = exam.getQuestionsCalifications();
+        this.maxTime = exam.getMaxTime();
     }
 }

@@ -4,8 +4,8 @@
   <div  *ngIf="this.teachedSubjects.length > 0">
   <p class="title">Asignaturas que impartes</p>
   <div>
-    <div  *ngFor="let subject of this.teachedSubjects">
-      <mat-card class="button-like-card"  (click)="goToSubject(subject)">
+    <div  *ngFor="let subject of this.teachedSubjects" id="teachedSubjects">
+      <mat-card class="button-like-card"  (click)="goToSubject(subject)" id="teachedSubejct">
         <mat-card-content>
           <span style="font-size: x-large;">
             {{subject.name}}
@@ -22,8 +22,8 @@
 <div *ngIf="this.studiedSubjects.length > 0">
   <p class="title">Asignaturas en las que estás matriculado</p>
   <div>
-    <div  *ngFor="let subject of this.studiedSubjects">
-    <mat-card class="button-like-card"  (click)="goToSubject(subject)">
+    <div *ngFor="let subject of this.studiedSubjects"  id="studiedSubjects">
+    <mat-card class="button-like-card"  (click)="goToSubject(subject)" id="studiedSubject">
       <mat-card-content>
         <span style="font-size: x-large;">
           {{subject.name}}
