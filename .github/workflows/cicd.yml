@@ -32,7 +32,9 @@ jobs:
             - name: Push the docker image
               run: docker push ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }}
             - name: Setup docker compose
-              run: docker-compose up
+              run: docker-compose up -d
+            - name: Wait for containers to start
+              run: sleep 60
             - name: Run tests
               run: mvn -f Backend/pom.xml test
             - name: Install Okteto CLI
