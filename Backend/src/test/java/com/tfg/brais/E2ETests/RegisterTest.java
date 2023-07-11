@@ -13,7 +13,7 @@ public class RegisterTest {
     }
 
     public void Register() {
-        driver.navigateTo("http://localhost:4200/register");
+        driver.navigateTo("/register");
         assertFalse(driver.isEnableButton("registerButton"));
         driver.changeInput("name", "NameTest");
         assertFalse(driver.isEnableButton("registerButton"));
@@ -32,18 +32,18 @@ public class RegisterTest {
         driver.changeInput("email", "test@gmail.com");
         assertTrue(driver.isEnableButton("registerButton"));
         driver.clickButton("registerButton");
-        assertEquals(driver.getCurrentUrl(), "http://localhost:4200/");
-        driver.navigateTo("http://localhost:4200/register");
+        assertEquals(driver.getCurrentUrl(), driver.getURL() + "/");
+        driver.navigateTo("/register");
         driver.changeInput("name", "NameTest2");
         driver.changeInput("lastName", "LastNameTest2");
         driver.changeInput("email", "test@gmail.com");
         driver.changeInput("password", "12345678");
         driver.changeInput("repeatPassword", "12345678");
         driver.clickButton("registerButton");
-        assertEquals(driver.getCurrentUrl(), "http://localhost:4200/register");
+        assertEquals(driver.getCurrentUrl(), driver.getURL() + "/register");
         driver.changeInput("email", "test2@gmail.com");
         driver.clickButton("registerButton");
-        assertEquals(driver.getCurrentUrl(), "http://localhost:4200/");
+        assertEquals(driver.getCurrentUrl(), driver.getURL() + "/");
     }
 
 }

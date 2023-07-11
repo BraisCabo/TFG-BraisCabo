@@ -62,6 +62,9 @@ public class AdminServiceTest {
         @Test
         public void testCreateSubjectCorrect() {
             when(subjectCheckService.canCreateSubject(any())).thenReturn(true);
+            Subject subject = new Subject();
+            subject.setId(1L);
+            when(subjectRepository.save(any())).thenReturn(subject);
             UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance();
             assertTrue(adminService.createSubject(new SubjectChangesDTO(), uriComponentsBuilder).getStatusCode().is2xxSuccessful());
         }

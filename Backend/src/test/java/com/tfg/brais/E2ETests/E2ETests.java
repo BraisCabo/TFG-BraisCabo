@@ -1,37 +1,43 @@
 package com.tfg.brais.E2ETests;
 
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
-
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class E2ETests {
 
-    DriverMethodsExecutor driver;
+    private static DriverMethodsExecutor driver;
     
-    @AfterSuite
-    public void close(){
+    @AfterAll
+    public static void close(){
         driver.close();
     }
 
-    @BeforeSuite
-    public void setUP(){
+    @BeforeAll
+    public static void setUP(){
         driver = new DriverMethodsExecutor();
     }
 
-    @Test(priority = 1)
+    @Test
+    @Order(1)
     public void RegisterTest(){
         RegisterTest registerTest = new RegisterTest(driver);
         registerTest.Register();
     }
 
-    @Test(priority = 2)
+    @Test
+    @Order(2)
     public void LoginTest(){
         LoginTest loginTest = new LoginTest(driver);
         loginTest.login();
     }
 
-    @Test(priority = 3)
+    @Test
+    @Order(3)
     public void CreateSubjectTest(){
         CreateSubjectTest createSubjectTest = new CreateSubjectTest(driver);
         createSubjectTest.createEmpty();
@@ -39,7 +45,8 @@ public class E2ETests {
         createSubjectTest.createSubject();
     }
 
-    @Test(priority = 4)
+    @Test
+    @Order(4)
     public void EditSubjectTest(){
         EditSubjectTest editSubjectTest = new EditSubjectTest(driver);
         editSubjectTest.editSubject();
@@ -47,13 +54,15 @@ public class E2ETests {
         editSubjectTest.editSubjectIncorrectName();
     }
 
-    @Test(priority = 5)
+    @Test
+    @Order(5)
     public void DeleteSubjectTest(){
         DeleteSubjectTest deleteSubjectTest = new DeleteSubjectTest(driver);
         deleteSubjectTest.deleteSubject();
     }
 
-    @Test(priority = 6)
+    @Test
+    @Order(6)
     public void CreateExamTest(){
         CreateExamTest createExamTest = new CreateExamTest(driver);
         createExamTest.createExamFile();

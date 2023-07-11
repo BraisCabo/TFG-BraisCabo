@@ -64,7 +64,7 @@ public class AdminService {
             try {
                 fileService.deleteDirectory(Long.toString(subjectId));
             } catch (Exception e) {
-                e.printStackTrace();
+                return new ResponseEntity<>(HttpStatusCode.valueOf(500));
             }
             subjectRepository.deleteById(subjectId);
             return ResponseEntity.ok(new SubjectDetailedDTO(response.getBody()));

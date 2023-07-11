@@ -13,6 +13,8 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 public class DriverMethodsExecutor {
     private WebDriver driver;
 
+    private String baseURL = "http://localhost:8443";
+
     public DriverMethodsExecutor() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
@@ -21,7 +23,7 @@ public class DriverMethodsExecutor {
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--headless");
         driver = new ChromeDriver(options);
-        driver.get("http://localhost:4200");
+        driver.get(baseURL);
     }
 
     public void clickButton(String buttonId) {
@@ -47,7 +49,7 @@ public class DriverMethodsExecutor {
     }
 
     public void navigateTo(String url) {
-        driver.get(url);
+        driver.get(baseURL + url);
     }
 
     public String getTextInfo(String infoId) {
@@ -116,5 +118,9 @@ public class DriverMethodsExecutor {
         elements.get(index).findElement(By.id(textId)).clear();
         elements.get(index).findElement(By.id(textId)).sendKeys(text);
         ;
+    }
+
+    public String getURL() {
+        return driver.getCurrentUrl();
     }
 }
