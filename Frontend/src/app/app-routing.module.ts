@@ -15,10 +15,12 @@ import { QuestionsExamPageComponent } from './components/questions-exam-page/que
 import { CalificateComponent } from './components/calificate/calificate.component';
 import { CalificationsPageComponent } from './components/califications-page/califications-page.component';
 import { ImportExamComponent } from './components/import-exam/import-exam.component';
+import { LtiComponent } from './components/lti/lti.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [loggedGuard]},
   { path: 'login', component : LoginComponent },
+  { path: 'ltiAuth', component : LtiComponent },
   { path: 'newSubject', component: CreateSubjectComponent, canActivate: [adminGuard]},
   { path: 'register', component: RegisterComponent},
   { path: 'error', component: ErrorComponentComponent},

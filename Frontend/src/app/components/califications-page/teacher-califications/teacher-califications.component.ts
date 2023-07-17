@@ -36,7 +36,7 @@ export class TeacherCalificationsComponent {
         for(let i = 0; i < this.califications[index].studentCalifications.califications.length; i++) {
           this.source.push({examen: this.califications[index].studentCalifications.examNames[i], porcentaje: this.califications[index].studentCalifications.percentajes[i] + "%", calificacion: this.califications[index].studentCalifications.califications[i], comentario: this.califications[index].studentCalifications.comments[i]});
         }
-        this.source.push({examen: "Calificación Final", porcentaje: "100%", calificacion: this.califications[index].studentCalifications.finalCalification, comentario: Number(this.califications[index].studentCalifications.finalCalification) > 5 ? "Aprobado" : "Suspenso"})
+        this.source.push({examen: "Calificación Final", porcentaje: "100%", calificacion: this.califications[index].studentCalifications.finalCalification, comentario: Number(this.califications[index].studentCalifications.finalCalification) >= 5 ? "Aprobado" : "Suspenso"})
         this.realSource.push(this.source);
         this.source = [];
       }
