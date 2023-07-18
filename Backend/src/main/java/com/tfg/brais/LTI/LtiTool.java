@@ -1,10 +1,7 @@
 package com.tfg.brais.LTI;
 
-import java.net.http.HttpRequest;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.plaf.nimbus.State;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +16,6 @@ import edu.uoc.elc.lti.tool.Deployment.DeploymentBuilder;
 import edu.uoc.elc.lti.tool.Key.KeyBuilder;
 import edu.uoc.elc.lti.tool.KeySet.KeySetBuilder;
 import edu.uoc.elc.lti.tool.Registration.RegistrationBuilder;
-import edu.uoc.elc.spring.lti.security.openid.HttpSessionOIDCLaunchSession;
 import edu.uoc.lti.accesstoken.AccessTokenRequestBuilder;
 import edu.uoc.lti.accesstoken.JSONAccessTokenRequestBuilderImpl;
 import edu.uoc.lti.claims.ClaimAccessor;
@@ -28,7 +24,6 @@ import edu.uoc.lti.deeplink.DeepLinkingTokenBuilder;
 import edu.uoc.lti.jwt.claims.JWSClaimAccessor;
 import edu.uoc.lti.jwt.client.JWSClientCredentialsTokenBuilder;
 import edu.uoc.lti.jwt.deeplink.JWSTokenBuilder;
-import edu.uoc.lti.oidc.OIDCLaunchSession;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 

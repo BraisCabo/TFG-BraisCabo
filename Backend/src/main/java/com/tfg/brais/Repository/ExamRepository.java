@@ -13,6 +13,7 @@ public interface ExamRepository extends JpaRepository<Exam, Long> {
     
     Optional<Exam> findByIdAndSubjectId(long id, long subjectId);
 
+    @Query("SELECT e FROM Exam e WHERE LOWER(e.name) = ?1 AND e.subject.id = ?2")
     Optional<Exam> findByNameAndSubjectId(String name, long subjectId);
 
     List<Exam> findAllBySubjectId(long subjectId);

@@ -133,4 +133,13 @@ public class SubjectCheckService {
         }
         return ResponseEntity.ok(subject);
     }
+
+    public ResponseEntity<Subject> findByName(String name){
+        try {
+            Subject subject = this.subjectRepository.findByName(name).get();
+            return ResponseEntity.ok(subject);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
