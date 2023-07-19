@@ -4,7 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+
+import com.tfg.brais.LTI.Tool.JwtAccessTokenCreator;
+import com.tfg.brais.LTI.Tool.Score;
 
 import edu.uoc.elc.lti.tool.Deployment;
 import edu.uoc.elc.lti.tool.Key;
@@ -32,6 +44,9 @@ public class LtiTool {
 
     @Autowired
     private LtiInfo ltiInfo;
+
+    @Autowired
+    private JwtAccessTokenCreator jwtAccessTokenCreator;
 
     private MyOidcLaunchSession oidcLaunchSession;
     private Registration registration;
@@ -123,10 +138,60 @@ public class LtiTool {
         return session;
     }
 
+    
+    public ResponseEntity<String> score(Score score, String lineItem, String accessToken) {
+        String url = lineItem + "/scores";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/vnd.ims.lis.v1.score+json"));
+        headers.setBearerAuth(accessToken);
+        HttpEntity<Score> request = new HttpEntity<>(score, headers);
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
+            return response;
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+
+
     public Tool getTool(HttpServletRequest request) {
         this.oidcLaunchSession = generateLaunchSession(request);
         this.tool = new Tool(registration, claimAccessor, oidcLaunchSession, toolBuilders, kid);
         return this.tool;
+    }
+
+    public ResponseEntity<String> getAccessToken() {
+        String url = ltiInfo.getAccessTokenURL();
+
+        String accessToken = jwtAccessTokenCreator.generateJWT(this.ltiInfo.getPrivateKey(), this.ltiInfo.getClientId(), ltiInfo.getAccessTokenURL());
+
+        // Crea los parámetros que se enviarán en la solicitud
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "client_credentials");
+        params.add("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer");
+
+        params.add("client_assertion",
+                accessToken);
+        params.add("scope",
+                "https://purl.imsglobal.org/spec/lti-ags/scope/lineitem https://purl.imsglobal.org/spec/lti-ags/scope/lineitem.readonly https://purl.imsglobal.org/spec/lti-ags/scope/result.readonly https://purl.imsglobal.org/spec/lti-ags/scope/score");
+
+        // Configura el encabezado de la solicitud
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+
+        // Crea una instancia de RestTemplate
+        RestTemplate restTemplate = new RestTemplate();
+
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
+            JSONObject jsonObject = new JSONObject(response.getBody());
+            return ResponseEntity.ok(jsonObject.getString("access_token"));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
 }

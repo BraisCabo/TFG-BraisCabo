@@ -3,18 +3,25 @@ package com.tfg.brais.LTI;
 import java.math.BigInteger;
 import java.net.URI;
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 
+import org.asynchttpclient.uri.Uri;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.tfg.brais.LTI.Tool.Score;
 import com.tfg.brais.Model.Exam;
 import com.tfg.brais.Model.ExerciseUpload;
 import com.tfg.brais.Model.Subject;
 import com.tfg.brais.Model.User;
 import com.tfg.brais.Model.DTOS.UserRegisterDTO;
+import com.tfg.brais.Repository.ExamRepository;
 import com.tfg.brais.Repository.ExerciseUploadRepository;
+import com.tfg.brais.Repository.UserRepository;
 import com.tfg.brais.Service.ComplementaryServices.CSVService;
 import com.tfg.brais.Service.ComplementaryServices.ExamCheckService;
 import com.tfg.brais.Service.ComplementaryServices.ExerciseUploadCheckService;
@@ -22,6 +29,7 @@ import com.tfg.brais.Service.ComplementaryServices.SubjectCheckService;
 import com.tfg.brais.Service.ComplementaryServices.UserCheckService;
 import com.tfg.brais.Service.ControllerServices.SubjectService;
 
+import edu.uoc.elc.lti.tool.AssignmentGradeService;
 import edu.uoc.elc.lti.tool.Tool;
 import edu.uoc.elc.lti.tool.oidc.AuthRequestUrlBuilder;
 import edu.uoc.elc.lti.tool.oidc.LoginRequest;
@@ -59,6 +67,12 @@ public class LtiService {
     @Autowired
     private ExerciseUploadCheckService exerciseUploadCheckService;
 
+    @Autowired
+    private ExamRepository examRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
     public ResponseEntity<String> loginOnLti(HttpServletRequest request, HttpServletResponse response) {
         LoginRequest loginRequest = getLoginRequest(request);
         try {
@@ -82,6 +96,7 @@ public class LtiService {
         userRegisterDTO.setName(tool.getUser().getGivenName());
         userRegisterDTO.setLastName(tool.getUser().getFamilyName());
         userRegisterDTO.setPassword(tool.getUser().getGivenName() + tool.getUser().getFamilyName());
+        userRegisterDTO.setLtiId(tool.getUser().getId());
         csvService.registerUser(userRegisterDTO);
         ResponseEntity<User> response = userCheckService.findByMail(userRegisterDTO.getEmail());
         if (response.getStatusCode().is4xxClientError()) {
@@ -97,7 +112,18 @@ public class LtiService {
         UserExamModel userExamModel = new UserExamModel();
         userExamModel.setEmail(user.getEmail());
         userExamModel.setExam(examResponse.getBody());
+        setLtiInfo(user, examResponse.getBody(), tool);
         return ResponseEntity.ok(userExamModel);
+    }
+
+    public ResponseEntity<String> scoreTask(ExerciseUpload exerciseUpload) {
+        ResponseEntity<String> accessTokenResponse = ltiTool.getAccessToken();
+        if (accessTokenResponse.getStatusCode().isError()) {
+            return new ResponseEntity<>(accessTokenResponse.getStatusCode());
+        }
+        String accessToken = accessTokenResponse.getBody();
+        Score score = buildScore(exerciseUpload);
+        return ltiTool.score(score, exerciseUpload.getExam().getLtiURI(), accessToken);
     }
 
     private LoginRequest getLoginRequest(HttpServletRequest request) {
@@ -153,6 +179,44 @@ public class LtiService {
             exerciseUploadRepository.save(exerciseUpload);
         }
         return examResponse;
+    }
+
+    public void setLtiInfo(User user, Exam exam, Tool tool) {
+        if (user.getLtiId() == null || !user.getLtiId().equals(tool.getUser().getId())) {
+            user.setLtiId(tool.getUser().getId());
+            try {
+                userRepository.save(user);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        AssignmentGradeService agsServiceProvider = tool.getAssignmentGradeService();
+        Uri uri = Uri.create(agsServiceProvider.getLineitem());
+        String lineItemUri = uri.getBaseUrl() + uri.getPath();
+        if (exam.getLtiURI() == null || !lineItemUri.equals(exam.getLtiURI())) {
+            exam.setLtiURI(lineItemUri);
+            examRepository.save(exam);
+        }
+    }
+
+    private Score buildScore(ExerciseUpload upload) {
+        Score score = new Score();
+        score.setComment(upload.getComment());
+        score.setTimestamp(getFormatedDate());
+        score.setUserId(upload.getStudent().getLtiId());
+        score.setScoreMaximum(10);
+        if (!upload.getCalification().equals("")) {
+            score.setScoreGiven(Double.parseDouble(upload.getCalification()));
+        }
+        score.setGradingProgress(upload.getCalification().equals("") ? "Pending" : "FullyGraded");
+        score.setActivityProgress(upload.getCalification().equals("") ? "Initialized " : "Completed");
+        return score;
+    }
+
+    private String getFormatedDate(){
+        LocalDateTime fechaHora = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        return fechaHora.atZone(ZoneOffset.UTC).format(formatter);
     }
 
 }

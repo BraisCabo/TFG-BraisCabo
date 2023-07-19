@@ -15,27 +15,28 @@ import com.tfg.brais.Model.Exam;
 import com.tfg.brais.security.jwt.UserLoginService;
 
 @Controller
-public class LtiLoginController{
+public class LtiLoginController {
 
-   @Autowired
-   private LtiService ltiService;
+    @Autowired
+    private LtiService ltiService;
 
-   @Autowired
-   private UserLoginService userLoginService;
+    @Autowired
+    private UserLoginService userLoginService;
 
-   @PostMapping("/lti/login")
-   public String loginOnLti(HttpServletRequest request, HttpServletResponse response){
-      ResponseEntity<String> loginResponse = ltiService.loginOnLti(request, response);
-      if (loginResponse.getStatusCode().is2xxSuccessful()){
-         return null;
-      }
-      return "redirect:/error";
-   }
+    @PostMapping("/lti/login")
+    public String loginOnLti(HttpServletRequest request, HttpServletResponse response) {
+        ResponseEntity<String> loginResponse = ltiService.loginOnLti(request, response);
+        if (loginResponse.getStatusCode().is2xxSuccessful()) {
+            return null;
+        }
+        return "redirect:/error";
+    }
 
-   @PostMapping("/lti/")
+    @PostMapping("/lti/")
     public ResponseEntity<Void> getExam(String id_token, String state, HttpServletRequest request) {
         HttpHeaders headers;
         ResponseEntity<UserExamModel> resourceResponse = ltiService.getResource(id_token, state, request);
+        
         if (resourceResponse.getStatusCode().is2xxSuccessful()) {
             Exam exam = resourceResponse.getBody().getExam();
             String route = "/subject/" + exam.getSubject().getId() + "/exam/" + exam.getId();
