@@ -14,10 +14,8 @@ jobs:
              ubuntu-latest
         steps:
             - uses: actions/checkout@v3
-            - name : Hola
-              run: |
-                ls > directory_contents.txt
-                cat directory_contents.txt
+            - name: Dar permisos de ejecución al script
+              run: chmod +x h.sh
             - name: Create settings file
               run : ./h.sh
             - name: Mostrar contenido de settings.xml
