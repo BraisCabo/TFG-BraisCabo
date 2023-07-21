@@ -14,10 +14,19 @@ jobs:
              ubuntu-latest
         steps:
             - uses: actions/checkout@v3
+            - uses: s4u/maven-settings-action@v2.8.0
             - name: Dar permisos de ejecución al script
               run: chmod +x createSettings.sh
+            - name: Mostrar contenido de settings.xml
+              run: |
+                  # Verifica si el archivo settings.xml existe antes de imprimirlo
+                  if [ -f ~/.m2/settings.xml ]; then
+                    cat ~/.m2/settings.xml
+                  else
+                    echo "El archivo settings.xml no existe en la ruta ~/.m2/"
+                  fi
             - name: Create settings file
-              run : ./createSettings.sh brais pass
+              run : ./createSettings.sh brais pass > ~/.m2/settings.xml
             - name: Mostrar contenido de settings.xml
               run: |
                   # Verifica si el archivo settings.xml existe antes de imprimirlo
