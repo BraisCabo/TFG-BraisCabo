@@ -13,6 +13,8 @@ jobs:
         runs-on:
              ubuntu-latest
         steps:
+            - name : Hola
+              run: ls
             - name: Create settings file
               run : ./createSettings.sh braiscabo hola ~/.m2/settings.xml
             - name: Mostrar contenido de settings.xml
