@@ -18,7 +18,7 @@ jobs:
             - name: Dar permisos de ejecución al script
               run: chmod +x createSettings.sh
             - name: Create settings file
-              run : ./createSettings.sh brais pass ~/.m2/settings.xml
+              run : ./createSettings.sh ${{secrets.GH_USERNAME}} ${{secrets.GH_TOKEN}} ~/.m2/settings.xml
             - name : Copy maven settings to docker
               run : cp ~/.m2/settings.xml Docker/settings.xml
             - name: Mostrar contenido de settings.xml
