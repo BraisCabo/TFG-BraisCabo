@@ -12,6 +12,12 @@ RUN npm run build -- --configuration=production
 # Stage 2 - Build Spring Boot app
 FROM jelastic/maven:3.8.6-openjdk-20.ea-b24 as backend
 
+# Create a new directory in the Docker image to hold the Maven settings.xml file
+RUN mkdir /root/.m2
+
+# Copy your local settings.xml to the Docker image
+COPY Docker/settings.xml /root/.m2/
+
 WORKDIR /project
 
 COPY Backend/pom.xml /project/

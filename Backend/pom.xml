@@ -60,10 +60,6 @@
 			<version>0.11.5</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-mustache</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
@@ -79,14 +75,9 @@
 			<version>5.5</version>
 		</dependency>
 		<dependency>
-			<groupId>edu.uoc.elc.lti</groupId>
-			<artifactId>spring-boot-lti-advantage</artifactId>
-			<version>1.0.6</version>
-		</dependency>
-		<dependency>
-			<groupId>edu.uoc.elc.lti</groupId>
-			<artifactId>lti-13-jwt</artifactId>
-			<version>1.0.0</version>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20230227</version>
 		</dependency>
 		<dependency>
 			<groupId>org.testng</groupId>
@@ -109,6 +100,22 @@
 			<artifactId>zt-zip</artifactId>
 			<version>1.15</version>
 			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>edu.uoc.elc.lti</groupId>
+			<artifactId>spring-boot-lti-advantage</artifactId>
+			<version>1.0.6</version>
+		</dependency>
+		<dependency>
+			<groupId>edu.uoc.elc.lti</groupId>
+			<artifactId>lti-13-jwt</artifactId>
+			<version>1.0.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.google.guava</groupId>
+					<artifactId>guava</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

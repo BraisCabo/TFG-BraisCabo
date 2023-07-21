@@ -35,6 +35,8 @@ public class ExamTeacherDTO extends ExamBasicDTO{
 
     private String maxTime;
 
+    private String ltiURI;
+
     public ExamTeacherDTO(){}
 
     public ExamTeacherDTO(Exam exam){
@@ -50,6 +52,7 @@ public class ExamTeacherDTO extends ExamBasicDTO{
         this.canUploadLate = exam.isCanUploadLate();
         this.questionsCalifications = exam.getQuestionsCalifications();
         this.maxTime = Integer.toString(exam.getMaxTime());
+        this.ltiURI = exam.getLtiURI();
     }
 
     public Exam createExam(){

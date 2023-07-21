@@ -8,24 +8,24 @@ import lombok.Data;
 @Data
 @Component
 public class LtiInfo {
-    @Value("${lti.clientId}")
+    @Value("${lti.clientId:#{null}}")
     private String clientId;
-    @Value("${lti.name}")
+    @Value("${lti.name:#{null}}")
     private String name;
-    @Value("${lti.externalPlatform}")
+    @Value("${lti.externalPlatform:#{null}}")
     private String externalPlatform;
-    @Value("${lti.keySetUrl}")
+    @Value("${lti.keySetUrl:#{null}}")
     private String keySetURL;
-    @Value("${lti.accessTokenUrl}")
+    @Value("${lti.accessTokenUrl:#{null}}")
     private String accessTokenURL;
-    @Value("${lti.oidcAuthUrl}")
+    @Value("${lti.oidcAuthUrl:#{null}}")
     private String oidcAuthUrl;
-    @Value("${lti.algorithm}")
+    @Value("${lti.algorithm:#{null}}")
     private String algorithm;
-    @Value("${lti.privateKey}")
+    @Value("${lti.privateKey:#{null}}")
     private String privateKey;
-    @Value("${lti.publicKey}")
+    @Value("${lti.publicKey:#{null}}")
     private String publicKey;
-    @Value("${lti.deploymentId}")
+    @Value("${lti.deploymentId:#{null}}")
     private String deploymentId;
 }

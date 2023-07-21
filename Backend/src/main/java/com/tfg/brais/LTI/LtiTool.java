@@ -3,8 +3,8 @@ package com.tfg.brais.LTI;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -59,11 +59,14 @@ public class LtiTool {
 
     @PostConstruct
     public void init() {
-        this.registration = generateRegistration();
-        this.toolBuilders = getBuilders();
-        this.claimAccessor = generateClaimAccessor();
-        this.oidcLaunchSession = new MyOidcLaunchSession();
-        this.kid = "id";
+        if (!(ltiInfo.getPrivateKey() == null)) {
+            this.registration = generateRegistration();
+            this.toolBuilders = getBuilders();
+            this.claimAccessor = generateClaimAccessor();
+            this.oidcLaunchSession = new MyOidcLaunchSession();
+            this.kid = "id";
+        }
+
     }
 
     private ToolBuilders getBuilders() {
@@ -138,7 +141,6 @@ public class LtiTool {
         return session;
     }
 
-    
     public ResponseEntity<String> score(Score score, String lineItem, String accessToken) {
         String url = lineItem + "/scores";
         HttpHeaders headers = new HttpHeaders();
@@ -154,8 +156,6 @@ public class LtiTool {
         }
     }
 
-
-
     public Tool getTool(HttpServletRequest request) {
         this.oidcLaunchSession = generateLaunchSession(request);
         this.tool = new Tool(registration, claimAccessor, oidcLaunchSession, toolBuilders, kid);
@@ -165,7 +165,8 @@ public class LtiTool {
     public ResponseEntity<String> getAccessToken() {
         String url = ltiInfo.getAccessTokenURL();
 
-        String accessToken = jwtAccessTokenCreator.generateJWT(this.ltiInfo.getPrivateKey(), this.ltiInfo.getClientId(), ltiInfo.getAccessTokenURL());
+        String accessToken = jwtAccessTokenCreator.generateJWT(this.ltiInfo.getPrivateKey(), this.ltiInfo.getClientId(),
+                ltiInfo.getAccessTokenURL());
 
         // Crea los parámetros que se enviarán en la solicitud
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();

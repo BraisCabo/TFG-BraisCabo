@@ -272,7 +272,7 @@ public class ExamService {
                 return new ResponseEntity<>(scoreTask.getStatusCode());
             }
         }
-        return ResponseEntity.ok("Califications sent");
+        return ResponseEntity.ok().build();
     }
 
 }

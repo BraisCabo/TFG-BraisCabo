@@ -17,6 +17,11 @@ public class DriverMethodsExecutor {
     private String baseURL = "http://localhost:8443";
 
     public DriverMethodsExecutor() {
+        startActions();
+        driver.get(baseURL);
+    }
+
+    private void startActions() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-allow-origins=*");
@@ -24,7 +29,12 @@ public class DriverMethodsExecutor {
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--headless");
         driver = new ChromeDriver(options);
-        driver.get(baseURL);
+    }
+
+    public void startLocal() {
+        System.setProperty("webdriver.chrome.driver",
+                "C:\\Users\\brais\\Downloads\\chromedriver_win32\\chromedriver.exe");
+        driver = new ChromeDriver();
     }
 
     public void clickButton(String buttonId) {
@@ -61,7 +71,7 @@ public class DriverMethodsExecutor {
 
     public void waitTime() {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
