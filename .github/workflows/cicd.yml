@@ -24,8 +24,8 @@ jobs:
             - name: Mostrar contenido de settings.xml
               run: |
                   # Verifica si el archivo settings.xml existe antes de imprimirlo
-                  if [ -f ~/.m2/settings.xml ]; then
-                    cat ~/.m2/settings.xml
+                  if [ -f Docker/settings.xml ]; then
+                    cat Docker/settings.xml
                   else
                     echo "El archivo settings.xml no existe en la ruta ~/.m2/"
                   fi
