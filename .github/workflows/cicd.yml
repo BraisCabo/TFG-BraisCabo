@@ -13,16 +13,8 @@ jobs:
         runs-on:
              ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-            - name: Set up JDK 20
-              uses: actions/setup-java@v3
-              with:
-                distribution: 'temurin'
-                java-version: '20'
-            - uses: browser-actions/setup-chrome@latest
-            - run: chrome --version
             - name: Create settings file
-              run : ./create-settings.sh braiscabo hola ~/.m2/settings.xml
+              run : ./createSettings.sh braiscabo hola ~/.m2/settings.xml
             - name: Mostrar contenido de settings.xml
               run: |
                   # Verifica si el archivo settings.xml existe antes de imprimirlo
