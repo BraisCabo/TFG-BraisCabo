@@ -14,8 +14,6 @@ public class UserRegisterDTO {
 
     private String lastName;
 
-    private String ltiId;
-
     public UserRegisterDTO() {
     }
 
@@ -25,7 +23,6 @@ public class UserRegisterDTO {
         user.setPassword(this.password);
         user.setName(this.name);
         user.setLastName(this.lastName);
-        user.setLtiId(this.ltiId);
         return user;
     }
 }

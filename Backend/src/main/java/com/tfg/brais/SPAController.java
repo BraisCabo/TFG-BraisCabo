@@ -1,14 +1,18 @@
 package com.tfg.brais;
 
-import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.servlet.view.RedirectView;
 @Controller
-public class SPAController implements ErrorController{
+public class SPAController {
 
-    @RequestMapping("/error")
-    public String handleError() {
+    @GetMapping("/")
+    public RedirectView redirectToAngularApp() {
+        return new RedirectView("/index.html");
+    }
+
+    @GetMapping("/**/{path:[^\\.]*}")
+    public String forward() {
         return "forward:/index.html";
     }
-    
 }

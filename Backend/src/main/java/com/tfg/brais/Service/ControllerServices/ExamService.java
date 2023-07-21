@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.tfg.brais.LTI.LtiService;
 import com.tfg.brais.Model.Exam;
 import com.tfg.brais.Model.ExerciseUpload;
 import com.tfg.brais.Model.User;
@@ -64,9 +63,6 @@ public class ExamService {
 
     @Autowired
     private CSVService csvService;
-
-    @Autowired
-    private LtiService ltiService;
 
     public ExamService(ExamRepository examRepository, SubjectService subjectService, ExamCheckService examCheckService,
             SubjectCheckService subjectCheckService, UserCheckService userCheckService,
@@ -258,21 +254,6 @@ public class ExamService {
         }
         Exam exam = checkIfCanSee.getBody();
         return csvService.exportToCSV(exam);
-    }
-
-    public ResponseEntity<String> sendCalificationsToLti(long id, long examId, Principal userPrincipal) {
-        ResponseEntity<Exam> checkIfCanSee = examCheckService.checkIfCanSee(examId, id, userPrincipal);
-        if (checkIfCanSee.getStatusCode().is4xxClientError()) {
-            return new ResponseEntity<>(checkIfCanSee.getStatusCode());
-        }
-        Exam exam = checkIfCanSee.getBody();
-        for (ExerciseUpload upload : exam.getExerciseUploads()) {
-            ResponseEntity<String> scoreTask = ltiService.scoreTask(upload);
-            if (scoreTask.getStatusCode().isError()) {
-                return new ResponseEntity<>(scoreTask.getStatusCode());
-            }
-        }
-        return ResponseEntity.ok().build();
     }
 
 }

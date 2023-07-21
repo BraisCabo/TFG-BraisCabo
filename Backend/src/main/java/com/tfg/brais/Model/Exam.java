@@ -60,8 +60,6 @@ public class Exam {
 
     private int maxTime;
 
-    private String ltiURI;
-
     public void update(Exam exam) {
         this.name = exam.getName();
         this.calificationPercentaje = exam.getCalificationPercentaje();

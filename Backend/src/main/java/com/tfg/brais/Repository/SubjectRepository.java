@@ -14,8 +14,6 @@ import com.tfg.brais.Model.User;
 import com.tfg.brais.Model.DTOS.SubjectDetailedDTO;
 
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
-
-    @Query("SELECT s FROM Subject s WHERE LOWER(s.name) = ?1")
     Optional<Subject> findByName(String name);
 
     @Query(value = "SELECT COUNT(*) FROM subject_students WHERE subject_id = ?1 AND students_id = ?2", nativeQuery = true)

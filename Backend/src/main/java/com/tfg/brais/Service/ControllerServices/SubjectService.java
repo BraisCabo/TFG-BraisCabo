@@ -52,14 +52,4 @@ public class SubjectService {
         subject.getStudents().add(user);
         return ResponseEntity.ok(subjectRepository.save(subject));
     }
-
-        public ResponseEntity<Subject> addTeacher(User user, long subjectId) {
-        ResponseEntity<Subject> subjectCheckResponse = subjectCheckService.findById(subjectId);
-        if (subjectCheckResponse.getStatusCode().is4xxClientError()) {
-            return new ResponseEntity<Subject>(subjectCheckResponse.getStatusCode());
-        }
-        Subject subject = subjectCheckResponse.getBody();
-        subject.getTeachers().add(user);
-        return ResponseEntity.ok(subjectRepository.save(subject));
-    }
 }

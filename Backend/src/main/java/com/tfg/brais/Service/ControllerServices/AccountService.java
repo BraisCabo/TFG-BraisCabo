@@ -48,7 +48,7 @@ public class AccountService {
         }
         user.setEncodedPassword(passwordEncoder.encode(user.getEncodedPassword()));
         user.setRoles("USER");
-        user = userRepository.save(user);
+        userRepository.save(user);
 
         return ResponseEntity.created(path.buildAndExpand(user.getId()).toUri())
                 .headers(userLoginService.generateFreshToken(user.getEmail())).body(new UserDetailedDTO(user));

@@ -17,30 +17,14 @@ public class DriverMethodsExecutor {
     private String baseURL = "http://localhost:8443";
 
     public DriverMethodsExecutor() {
-        startActions();
-        driver.get(baseURL);
-    }
-
-    private void startActions() {
-        String desiredChromeVersion = "114.0.5735.198";
-
+        WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-allow-origins=*");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--headless");
-
-        // Configura WebDriverManager para descargar el ChromeDriver de la versión específica
-        WebDriverManager.chromedriver().browserVersion(desiredChromeVersion).setup();
-
-        // Crea el driver con las opciones configuradas
-        WebDriver driver = new ChromeDriver(options);
-    }
-
-    public void startLocal() {
-        System.setProperty("webdriver.chrome.driver",
-                "C:\\Users\\brais\\Downloads\\chromedriver_win32\\chromedriver.exe");
-        driver = new ChromeDriver();
+        driver = new ChromeDriver(options);
+        driver.get(baseURL);
     }
 
     public void clickButton(String buttonId) {
@@ -77,7 +61,7 @@ public class DriverMethodsExecutor {
 
     public void waitTime() {
         try {
-            Thread.sleep(3000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

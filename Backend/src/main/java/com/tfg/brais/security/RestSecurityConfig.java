@@ -38,7 +38,6 @@ public class RestSecurityConfig {
 				.csrf((csrf) -> csrf.disable())
 				.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-						.requestMatchers(HttpMethod.POST, "/lti/").permitAll()
 						.requestMatchers(HttpMethod.POST, "/api/users/").permitAll()
 						.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
 						.requestMatchers(HttpMethod.POST, "/api/auth/logout").permitAll()
