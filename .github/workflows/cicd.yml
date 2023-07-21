@@ -17,7 +17,7 @@ jobs:
             - name: Dar permisos de ejecución al script
               run: chmod +x createSettings.sh
             - name: Create settings file
-              run : ./createSettings.sh brais pass > ~/.m2/settings.xml
+              run : ./createSettings.sh brais pass
             - name: Mostrar contenido de settings.xml
               run: |
                   # Verifica si el archivo settings.xml existe antes de imprimirlo
