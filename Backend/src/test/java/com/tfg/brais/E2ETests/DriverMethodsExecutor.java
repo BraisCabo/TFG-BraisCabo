@@ -17,12 +17,13 @@ public class DriverMethodsExecutor {
     private String baseURL = "http://localhost:8443";
 
     public DriverMethodsExecutor() {
-        WebDriverManager.chromedriver().setup();
-
+        
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless"); // Enable headless mode
-        driver = new ChromeDriver(options);
-        driver.get(baseURL);
+        options.addArguments("--remote-allow-origins=*");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--headless");
+        driver = WebDriverManager.chromedriver().capabilities(options).create();
         driver.get(baseURL);
     }
 
