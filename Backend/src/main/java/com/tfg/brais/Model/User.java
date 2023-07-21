@@ -31,6 +31,8 @@ public class User{
 
     private String lastName;
 
+    private String ltiId;
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
