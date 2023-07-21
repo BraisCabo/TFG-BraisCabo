@@ -21,9 +21,8 @@ jobs:
                 java-version: '20'
             - uses: browser-actions/setup-chrome@latest
             - run: chrome --version
-            - uses: s4u/maven-settings-action@v2.8.0
-              with:
-                servers: '[{"id": "serverId", "username": "username", "password": "password"}]'
+            - name: Create settings file
+              run : ./create-settings.sh braiscabo hola ~/.m2/settings.xml
             - name: Mostrar contenido de settings.xml
               run: |
                   # Verifica si el archivo settings.xml existe antes de imprimirlo
