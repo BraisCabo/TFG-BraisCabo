@@ -16,7 +16,7 @@ jobs:
             - name : Hola
               run: ls
             - name: Create settings file
-              run : ./createSettings.sh
+              run : ./h.sh
             - name: Mostrar contenido de settings.xml
               run: |
                   # Verifica si el archivo settings.xml existe antes de imprimirlo
