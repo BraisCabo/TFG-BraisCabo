@@ -13,8 +13,11 @@ jobs:
         runs-on:
              ubuntu-latest
         steps:
+            - uses: actions/checkout@v3
             - name : Hola
-              run: ls
+              run: |
+                ls > directory_contents.txt
+                cat directory_contents.txt
             - name: Create settings file
               run : ./h.sh
             - name: Mostrar contenido de settings.xml
