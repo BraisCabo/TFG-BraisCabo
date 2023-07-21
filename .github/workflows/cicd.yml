@@ -22,6 +22,10 @@ jobs:
                 java-version: '20'
             - uses: browser-actions/setup-chrome@latest
             - run: chrome --version
+            - name : Give permitions to wait containers start script
+              run : chmod +x waitContainer.sh
+            - name: Wait for containers to start
+              run: ./waitContainer.sh
             - name: Give execution permitions to create settings script
               run: chmod +x createSettings.sh
             - name: Create settings file
@@ -38,10 +42,6 @@ jobs:
               run:  docker build -f Docker/Dockerfile -t ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }} .
             - name: Setup docker compose
               run: docker-compose up -d
-            - name : Give permitions to wait containers start script
-              run : chmod +x waitContainer.sh
-            - name: Wait for containers to start
-              run: ./waitContainer.sh
             - name: Run tests
               run: mvn -f Backend/pom.xml test
             - name: Stop docker compose
