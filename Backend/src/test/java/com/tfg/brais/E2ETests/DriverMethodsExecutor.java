@@ -8,6 +8,7 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class DriverMethodsExecutor {
@@ -21,7 +22,19 @@ public class DriverMethodsExecutor {
     }
 
     private void startActions() {
-        driver = WebDriverManager.chromedriver().create();
+        String desiredChromeVersion = "114.0.5735.198";
+
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--remote-allow-origins=*");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--headless");
+
+        // Configura WebDriverManager para descargar el ChromeDriver de la versión específica
+        WebDriverManager.chromedriver().browserVersion(desiredChromeVersion).setup();
+
+        // Crea el driver con las opciones configuradas
+        WebDriver driver = new ChromeDriver(options);
     }
 
     public void startLocal() {
