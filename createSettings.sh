@@ -1,18 +1,17 @@
 #!/bin/bash
 
 # Verifica si se proporcionaron los dos argumentos (username y password)
-if [ $# -ne 3 ]; then
-  echo "Use: $0 <username> <password> <fileAddress>"
+if [ $# -ne 2 ]; then
+  echo "Use: $0 <username> <password>"
   exit 1
 fi
 
 # Guarda el username y la contraseña en variables
 username="$1"
 password="$2"
-address="$3"
 
 # Imprime el contenido del archivo settings.xml con el username y contraseña reemplazados
-cat <<EOF > "$address"
+cat <<EOF
 <settings>
     <activeProfiles>
         <activeProfile>github</activeProfile>
