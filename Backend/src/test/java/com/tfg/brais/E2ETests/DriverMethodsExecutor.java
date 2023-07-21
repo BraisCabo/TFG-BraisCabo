@@ -17,7 +17,12 @@ public class DriverMethodsExecutor {
     private String baseURL = "http://localhost:8443";
 
     public DriverMethodsExecutor() {
-        driver = WebDriverManager.chromedriver().create();
+        WebDriverManager.chromedriver().setup();
+
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless"); // Enable headless mode
+        driver = new ChromeDriver(options);
+        driver.get(baseURL);
         driver.get(baseURL);
     }
 
