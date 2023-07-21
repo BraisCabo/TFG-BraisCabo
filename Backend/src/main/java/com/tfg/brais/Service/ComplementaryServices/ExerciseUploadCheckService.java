@@ -182,4 +182,8 @@ public class ExerciseUploadCheckService {
         }
         return false;
     }
+
+    public boolean existUploadByStudentIdAndExamIdAndExamSubjectId(long studentId, long examId, long subjectId){
+        return exerciseUploadRepository.findByStudentIdAndExamIdAndExamSubjectId(studentId, examId, subjectId).isPresent();
+    }
 }

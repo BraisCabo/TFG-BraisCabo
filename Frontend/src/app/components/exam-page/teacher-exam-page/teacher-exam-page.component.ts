@@ -159,13 +159,13 @@ export class TeacherExamPageComponent {
   }
 
   downloadAllUploads() {
-    this.download(this.loadingDownload, this.uploadService.downloadAll(this.subjectId, this.examId));
+    this.download(
+      this.loadingDownload,
+      this.uploadService.downloadAll(this.subjectId, this.examId)
+    );
   }
 
-  private download(
-    loadingVarible: boolean,
-    resource : Observable<any>
-  ) {
+  private download(loadingVarible: boolean, resource: Observable<any>) {
     loadingVarible = true;
     resource.subscribe(
       (response) => {
@@ -182,7 +182,10 @@ export class TeacherExamPageComponent {
   }
 
   exportExam() {
-    this.download(this.loadingExport, this.examService.exportExam(this.subjectId, this.examId));
+    this.download(
+      this.loadingExport,
+      this.examService.exportExam(this.subjectId, this.examId)
+    );
   }
 
   goToCalificate() {
@@ -221,5 +224,14 @@ export class TeacherExamPageComponent {
     } else {
       return 'Los alumnos no pueden entregar el examen fuera de plazo.';
     }
+  }
+
+  sendCalificationsToLti() {
+    this.examService
+      .sendCalificationsToLti(this.subjectId, this.examId).subscribe(
+        _ => {
+          this.openSnackBar('Calificaciones enviadas correctamente.');
+        }
+      )
   }
 }

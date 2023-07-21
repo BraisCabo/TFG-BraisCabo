@@ -90,7 +90,7 @@ import { ImportExamComponent } from './components/import-exam/import-exam.compon
     TeacherCalificationsComponent,
     SetCalificationDialogQuestionsComponent,
     EditCalificationDialogQuestionsComponent,
-    ImportExamComponent
+    ImportExamComponent,
   ],
   imports: [
     BrowserModule,

@@ -80,6 +80,10 @@
       <button mat-raised-button color="primary" (click)="goToCalificate()"><mat-icon>visibility</mat-icon>Ver
         entregas</button>
     </mat-list-item>
+    <mat-list-item *ngIf="exam.ltiURI">
+      <button mat-raised-button color="primary"
+        (click)="sendCalificationsToLti()"><mat-icon>arrow_upward</mat-icon>Subir calificaciones al LMS</button>
+    </mat-list-item>
   </mat-list>
 </div>
 <ng-template #isLoading>

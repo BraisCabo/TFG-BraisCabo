@@ -21,27 +21,14 @@ jobs:
                 java-version: '20'
             - uses: browser-actions/setup-chrome@latest
             - run: chrome --version
-            - name: 'Create env file'
+            - uses: s4u/maven-settings-action@v2.8.0
+              with:
+                servers: '[{"id": "serverId", "username": "username", "password": "password"}]'
+            - name: Mostrar contenido de settings.xml
               run: |
-                echo "ImageName=${{ secrets.DOCKERHUB_IMAGE }}" > .env
-                echo "ImageTag=${{ github.sha }}" >> .env
-            - name: Login to docker
-              run: docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_TOKEN }}"
-            - name: Build the docker image
-              run:  docker build -f Docker/Dockerfile -t ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }} .
-            - name: Push the docker image
-              run: docker push ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }}
-            - name: Setup docker compose
-              run: docker-compose up -d
-            - name: Wait for containers to start
-              run: sleep 60
-            - name: Run tests
-              run: mvn -f Backend/pom.xml test
-            - name: Stop docker compose
-              run: docker-compose down
-            - name: Install Okteto CLI
-              run: curl https://get.okteto.com -sSfL | sh
-            - name: Login into Okteto
-              run: okteto context use https://cloud.okteto.com --token ${{ secrets.OKTETO_TOKEN }}
-            - name: Deploy to Okteto
-              run: okteto deploy --var ImageName=${{ secrets.DOCKERHUB_IMAGE }} --var ImageTag=${{ github.sha }}
+                  # Verifica si el archivo settings.xml existe antes de imprimirlo
+                  if [ -f ~/.m2/settings.xml ]; then
+                    cat ~/.m2/settings.xml
+                  else
+                    echo "El archivo settings.xml no existe en la ruta ~/.m2/"
+                  fi

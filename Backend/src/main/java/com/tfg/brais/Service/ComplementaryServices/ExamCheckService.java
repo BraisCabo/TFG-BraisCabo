@@ -165,4 +165,13 @@ public class ExamCheckService {
         }
         return ResponseEntity.ok(exam);
     }
+
+    public ResponseEntity<Exam> findExamByNameAndSubjectId(String name, Long id){
+        try {
+            Exam exam = this.examRepository.findByNameAndSubjectId(name, id).get();
+            return ResponseEntity.ok(exam);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

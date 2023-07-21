@@ -93,4 +93,8 @@ export class ExamService {
     return this.http.get(BASE_URL + subjectId + "/exams/" + examId + "/files/exports", {responseType: 'blob', observe: 'response' }) as Observable<any>;
   }
 
+  sendCalificationsToLti(subjectId: number, examId: number) : Observable<any> {
+    return this.http.post(BASE_URL + subjectId + "/exams/" + examId, null) as Observable<any>;
+  }
+
 }

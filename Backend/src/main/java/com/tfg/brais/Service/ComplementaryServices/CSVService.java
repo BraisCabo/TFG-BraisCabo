@@ -107,7 +107,7 @@ public class CSVService {
                 userRegisterDTO.setLastName(line[0]);
                 userRegisterDTO.setEmail(line[2]);
                 userRegisterDTO.setPassword(userRegisterDTO.getName() + userRegisterDTO.getLastName());
-                checkIfUserOnSubject(userRegisterDTO);
+                registerUser(userRegisterDTO);
                 ResponseEntity<User> response = userCheckService.findByMail(userRegisterDTO.getEmail());
                 if (response.getStatusCode().is4xxClientError()) {
                     csvReader.close();
@@ -135,7 +135,7 @@ public class CSVService {
         }
     }
 
-    private void checkIfUserOnSubject(UserRegisterDTO userRegisterDTO) {
+    public void registerUser(UserRegisterDTO userRegisterDTO) {
         if (!userCheckService.emailUsed(userRegisterDTO.getEmail())) {
             accountService.register(userRegisterDTO, UriComponentsBuilder.newInstance());
         }

@@ -77,4 +77,9 @@ public class ExamController {
     public ResponseEntity<Resource> getExportedFiles(@PathVariable long id, @PathVariable long examId, HttpServletRequest request){
         return this.examService.exportExam(id, examId, request.getUserPrincipal());
     }
+
+    @PostMapping("/{examId}")
+    public ResponseEntity<String> sendCalificationsToLti(@PathVariable long id, @PathVariable long examId, HttpServletRequest request){
+        return this.examService.sendCalificationsToLti(id, examId, request.getUserPrincipal());
+    }
 }

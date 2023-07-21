@@ -25,4 +25,6 @@ export class ExamTeacher{
 
   maxTime : string = ""
 
+  ltiURI : string = ""
+
 }
