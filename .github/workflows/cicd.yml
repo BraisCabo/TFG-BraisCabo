@@ -15,9 +15,9 @@ jobs:
         steps:
             - uses: actions/checkout@v3
             - name: Dar permisos de ejecución al script
-              run: chmod +x h.sh
+              run: chmod +x createSettings.sh
             - name: Create settings file
-              run : ./h.sh
+              run : ./createSettings.sh brais pass ~/.m2/settings.xml
             - name: Mostrar contenido de settings.xml
               run: |
                   # Verifica si el archivo settings.xml existe antes de imprimirlo
