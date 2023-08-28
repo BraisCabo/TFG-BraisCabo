@@ -109,4 +109,15 @@ public class UserCheckService {
         }
         return true;
     }
+
+    public boolean validateEditPassword(User newUser, User oldUser) {
+         if (newUser == null || oldUser == null) {
+            return false;
+        }
+
+        if (checkPassword(newUser.getEncodedPassword())) {
+            return false;
+        }
+        return true;
+    }
 }

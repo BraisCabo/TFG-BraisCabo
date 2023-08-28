@@ -76,19 +76,15 @@ public class AccountService {
         }
         User oldUser = userCheckResponse.getBody();
 
-        if (userCheckService.validateEditUser(user, oldUser)){
+        if (!userCheckService.validateEditPassword(user, oldUser)){
             return new ResponseEntity<>(HttpStatusCode.valueOf(403));
         }
 
         if (user.getEncodedPassword() != null && !user.getEncodedPassword().isEmpty()) {
             oldUser.setEncodedPassword(passwordEncoder.encode(user.getEncodedPassword()));
-        } else {
-            user.setEncodedPassword(oldUser.getEncodedPassword());
         }
-
-        oldUser.updateUser(user);
         userRepository.save(oldUser);
 
-        return ResponseEntity.ok().headers(userLoginService.generateFreshToken(user.getEmail())).body(new UserDetailedDTO(oldUser));
+        return ResponseEntity.ok().headers(userLoginService.generateFreshToken(oldUser.getEmail())).body(new UserDetailedDTO(oldUser));
     }
 }

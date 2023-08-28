@@ -13,7 +13,6 @@ interface UserCredentials {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-
   private currentUser!: UserDetailed;
   private logged: boolean = false;
 
@@ -57,7 +56,7 @@ export class AuthService {
   }
 
   isAdmin(): boolean {
-    return this.currentUser.roles.includes("ADMIN");
+    return this.currentUser.roles.includes('ADMIN');
   }
 
   logout() {
@@ -66,14 +65,22 @@ export class AuthService {
     this.http.post(BASE_URL + 'logout', {}).subscribe();
   }
 
-  register(name: string, lastname: string, email: string, password: string) : Observable<UserDetailed> {
-    const userRegister : UserRegister = {
+  register(
+    name: string,
+    lastname: string,
+    email: string,
+    password: string
+  ): Observable<UserDetailed> {
+    const userRegister: UserRegister = {
       name: name,
       lastName: lastname,
       email: email,
-      password: password
-    }
-    return this.http.post("/api/users/", userRegister) as Observable<UserDetailed>;
+      password: password,
+    };
+    return this.http.post(
+      '/api/users/',
+      userRegister
+    ) as Observable<UserDetailed>;
   }
 
   currentUserObserver(): Observable<UserDetailed> {
@@ -98,5 +105,16 @@ export class AuthService {
     });
   }
 
-
+  editUser(password: string, userId: Number): Observable<UserDetailed> {
+    let userRegister: UserRegister = {
+      name: '',
+      lastName: '',
+      email: '',
+      password: password,
+    };
+    return this.http.put(
+      '/api/users/' + userId,
+      userRegister
+    ) as Observable<UserDetailed>;
+  }
 }

@@ -1,0 +1,27 @@
+<mat-grid-list cols="1">
+  <p style="font-size: x-large;">Cambiar Contraseña</p>
+  <mat-form-field>
+    <mat-label>Nueva Contraseña</mat-label>
+    <input matInput [formControl]="password" [type]="hidePassword ? 'password' : 'text'" required id="password">
+    <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'"
+      [attr.aria-pressed]="hidePassword">
+      <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+    <mat-error *ngIf="password.invalid">{{getErrorMessagePassword()}}</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Confirmar contraseña</mat-label>
+    <input matInput [formControl]="repeatPassword" [type]="hideRepeatPassword ? 'password' : 'text'" required id="repeatPassword">
+    <button mat-icon-button matSuffix (click)="hideRepeatPassword = !hideRepeatPassword"
+      [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideRepeatPassword">
+      <mat-icon>{{hideRepeatPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+  </mat-form-field>
+  <br>
+  <div *ngIf="!loading; else isLoading">
+    <button [disabled]="!correctData()" (click)="editPassword()" mat-raised-button color="primary" id="registerButton">Cambiar Contraseña</button>
+  </div>
+  <ng-template #isLoading>
+    <mat-spinner color="primary" style="height: 50px; width: 50px;"></mat-spinner>
+  </ng-template>
+</mat-grid-list>

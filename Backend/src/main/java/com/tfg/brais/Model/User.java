@@ -48,10 +48,4 @@ public class User{
         this.roles = roles2;
     }
 
-    public void updateUser(User newUser){
-        this.email = newUser.email;
-        this.lastName = newUser.lastName;
-        this.name = newUser.name;
-    }
-
 }

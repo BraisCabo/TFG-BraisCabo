@@ -15,6 +15,7 @@ import { QuestionsExamPageComponent } from './components/questions-exam-page/que
 import { CalificateComponent } from './components/calificate/calificate.component';
 import { CalificationsPageComponent } from './components/califications-page/califications-page.component';
 import { ImportExamComponent } from './components/import-exam/import-exam.component';
+import { EditUserComponent } from './components/edit-user/edit-user.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [loggedGuard]},
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'newSubject', component: CreateSubjectComponent, canActivate: [adminGuard]},
   { path: 'register', component: RegisterComponent},
   { path: 'error', component: ErrorComponentComponent},
+  { path: 'changePassword', component: EditUserComponent, canActivate: [loggedGuard]},
   { path: 'subject/:id', component: SubjectPageComponent, canActivate: [loggedGuard]},
   { path: 'subject/:id/newExam', component: CreateExamComponent, canActivate: [loggedGuard]},
   { path: 'subject/:id/importExam', component: ImportExamComponent, canActivate: [loggedGuard]},
