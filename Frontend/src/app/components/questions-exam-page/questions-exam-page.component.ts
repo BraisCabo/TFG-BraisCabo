@@ -82,6 +82,9 @@ export class QuestionsExamPageComponent {
     this.loadingSend = true;
     this.uploadService.uploadExamQuestions(this.subjectId, this.examId, this.answers).subscribe(
       () => {
+        for (let i = 0; i < this.examData.questions.length; i++) {
+          this.localStorageService.setItem(this.examKey + i, "");
+        }
         this.loadingSend = false;
         this.router.navigate(['/subject/'+this.subjectId+'/exam/'+ this.examId]);
       },
