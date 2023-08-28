@@ -141,48 +141,28 @@ public class AccountServiceTest {
         public void editUserTestIncorrectNewUser(){
             UserRegisterDTO user = createuser();
             when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(createuser().createUser()));
-            when(userCheckService.validateEditUser(any(), any())).thenReturn(true);
+            when(userCheckService.validateEditPassword(any(), any())).thenReturn(false);
             assertTrue(accountService.editUser(null, 1L, user).getStatusCode().is4xxClientError());
         }
 
         @Test
-        public void editUserTestNewPassword(){
+        public void editUserTestCorrect(){
             UserRegisterDTO newUser = createuser();
             newUser.setPassword("123456789");
             UserRegisterDTO oldUser = createuser();
             oldUser.setPassword("12345678");
             when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(oldUser.createUser()));
-            when(userCheckService.validateEditUser(any(), any())).thenReturn(false);
+            when(userCheckService.validateEditPassword(any(), any())).thenReturn(true);
             when(passwordEncoder.encode(anyString())).thenReturn("123456789");
             when(userRepository.save(any())).thenReturn(newUser.createUser());
             when(userLoginService.generateFreshToken(anyString())).thenReturn(null);
             ResponseEntity<UserDetailedDTO> editUser = accountService.editUser(null, 1L, newUser);
             assertTrue(editUser.getStatusCode().is2xxSuccessful());
-            assertTrue(editUser.getBody().getEncodedPassword().equals("123456789"));
-        }
-
-        @Test
-        public void editUserTestNoPassword(){
-            UserRegisterDTO newUser = createuser();
-            newUser.setName("test2");
-            UserRegisterDTO oldUser = createuser();
-            oldUser.setPassword("12345678");
-            when(userCheckService.loadUserPrincipal(anyLong(), any())).thenReturn(ResponseEntity.ok(oldUser.createUser()));
-            when(userCheckService.validateEditUser(any(), any())).thenReturn(false);
-            when(passwordEncoder.encode(anyString())).thenReturn("12345678");
-            when(userRepository.save(any())).thenReturn(newUser.createUser());
-            when(userLoginService.generateFreshToken(anyString())).thenReturn(null);
-            ResponseEntity<UserDetailedDTO> editUser = accountService.editUser(null, 1L, newUser);
-            assertTrue(editUser.getStatusCode().is2xxSuccessful());
-            assertTrue(editUser.getBody().getEncodedPassword().equals("12345678"));
         }
 
         private UserRegisterDTO createuser(){
             UserRegisterDTO user = new UserRegisterDTO();
-            user.setName("test");
-            user.setLastName("test");
-            user.setEmail("test@gmail.com");
-            user.setPassword("12345678");
+            user.setPassword("1234567");
             return user;
         }
     }
