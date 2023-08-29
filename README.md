@@ -22,6 +22,8 @@
     - [Realizar exámenes](#realizar-examenes)
     - [Ver calificaciones](#ver-calificaciones)
 - [Guía de despliegue](#guia-de-despliegue)
+    - [Crear una imagen de docker](#crear-una-imagen-de-docker)
+    - [Desplegar la imagen de docker](#desplegar-la-imagen-de-docker)
 
 ## Introducción
 
@@ -151,6 +153,7 @@ Calificar o editar la calificación: si no se ha calificado la entrega se podrá
 
 ![Calificar_Examen_Fichero](./images/Calificar_Examen_Fichero.png)
 ![Calificar_Examen_Preguntas](./images/Calificar_Examen_Preguntas.png)
+
 #### Ver Calificaciones
 
 Los profesores pueden ver todas las calificaciones que han obtenidos todos los alumnos de las asignaturas. A esta pantalla se puede acceder pulsando el botón "Calificaciones" de la pantalla principal de la asignatura.
@@ -178,3 +181,21 @@ Los alumnos pueden ver las calificaciones que han obtenido en la asignatura. Par
 ![Calificaciones_Alumno](./images/Calificaciones_Alumno.png)
 
 ## Guia de despliegue
+
+### Crear una imagen de docker
+
+Para crear la imagen de docker hay que ejecutar el script "createImage.sh" de la carpeta Docker. Para ejecutar el script hay que pasarle obligatoriamente un parámetro con el username de docker y otro con el nombre de la imagen. Opcionalmente se le puede pasar un parámetro con la etiqueta de la imagen.
+
+```shell
+cd Docker
+./createImage.sh braiscabo tfg latest
+```
+
+### Desplegar la imagen de docker
+
+Para desplegar la imagen que hemos creado hay que ejecutar el script "deployImage.sh" de la carpeta Docker. Para ejecutar el script hay que pasarle 2 parámetros, el nombre de la imagen (el nombre se refiere a nombre de ususario y nombre de la imagen ej: nombreUsuario/nombreImagen) y otro con la etiqueta de la imagen.
+
+```shell
+cd Docker
+./deployImage.sh braiscabo/tfg latest
+```
