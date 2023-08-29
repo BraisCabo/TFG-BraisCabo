@@ -37,7 +37,7 @@ public class ExamStudentDTO extends ExamBasicDTO{
         this.calificationVisible = exam.isCalificationVisible();
         this.openingDate = exam.getOpeningDate();
         this.closingDate = exam.getClosingDate();
-        if (exam.getClosingDate().before(new Date())){
+        if (exam.getOpeningDate().before(new Date())){
             this.examFile = exam.getExamFile();
         }
         this.canRepeat = exam.isCanRepeat();
