@@ -57,19 +57,26 @@ Se deben elegir a los profesores y los alumnos. Las asignaturas pueden crearse s
 
 Para ver la información de la asignatura hay que pulsar el icono del ojo respectivo a la asignatura en la página principal. Se puede ver el nombre de la asignatura y los profesores y estudantes asignados.
 
+![Ver_Asignatura_1](./images/Ver_Asignatura.png)
+
 #### Editar asignatura[![](./docs/img/pin.svg)](#editar_asignatura)
 
 Para editar la asignatura hay que pulsar el icono del lápiz respectivo a la asignatura en la página principal. Se puede editar el nombre de la asignatura y los profesores y alumnos asignados con las mismas restricciones que para la creación de las asignaturas.
+
+![Editar_Asignatura_1](./images/Editar_Asignatura_1.png)
+![Editar_Asignatura_2](./images/Editar_Asignatura_2.png)
 
 #### Borrar asignatura[![](./docs/img/pin.svg)](#borrar_asignatura)
 
 Para borrar una asignatura hay que pulsar el icono de la papelera respectivo a la asignatura en la página principal.
 
-### Funciones del Profesor[![](./docs/img/pin.svg)](#funciones_profesor)
+![Borrar_Asignatura_1](./images/Borrar_Asignatura.png)
+
+### Funciones del Profesor
 
 El profesor puede hacer lo que pueden hacer los usuarios comunes. El profesor puede realizar actividades relacionadas con la creación y edición de exámenes, calificación de exámenes e importación de exámenes.
 
-#### Creación y edición de exámenes[![](./docs/img/pin.svg)](#creacion_examen)
+#### Creación y edición de exámenes
 
 La creación y edición de exámenes son básicamente iguales. Para crear un examen hay que pulsar el botón "Nuevo Examen" y para editar un examen hay que ir a la pantalla correspondiente al examen y pulsar el botón de "Editar".
 
@@ -99,7 +106,13 @@ La opción para subir enunciado se usa para que el profesor pueda subir un fiche
 
 Si se ha seleccionado la opción de un examen de preguntas cortas se abrirá una opción para establecer las preguntas. El número de preguntas debe ser superior a cero. Cada pregunta debe tener un enunciado y una puntuación.
 
-#### Importación de exámenes[![](./docs/img/pin.svg)](#importacion_examen)
+![Crear_Examen_1](./images/Crear_Examen_1.png)
+![Crear_Examen_2](./images/Crear_Examen_2.png)
+![Crear_Examen_Pregunta_1](./images/Crear_Examen_Preguntas_1.png)
+![Crear_Examen_Pregunta_2](./images/Crear_Examen_Preguntas_2.png)
+![Crear_Examen_Pregunta_3](./images/Crear_Examen_Preguntas_3.png)
+
+#### Importación de exámenes
 
 Se pueden importar exámenes de otras plataformas para que sean corregidos por la plataforma. Solamente se pueden importar exámenes de preguntas cortas de otras plataformas.
 
@@ -107,15 +120,21 @@ Para importar exámenes hay que seleccionar el botón de "Importar Examen" en la
 
 En la pantalla de importación de exámenes hay que seleccionar los mismos campos que para la creación de un examen de preguntas cortas, salvando el apartado de preguntas cortas que son importadas directamente. Hay un nuevo apartado para subir el fichero del que se va a importar. Cuando se importa un examen, se registra al alumno en caso de que no esté registrado (la contraseña establecida es el nombre del alumno seguido del apellido del alumno, ej: Alumno1 Apellido1 Apellido2 su contraseña sería Alumno1Apellido1 Apellido2).
 
-#### Exportación de exámenes[![](./docs/img/pin.svg)](#exportacion_examen)
+![Importar_Examen_1](./images/Importar_Examen_1.png)
+![Importar_Examen_2](./images/Importar_Examen_2.png)
+
+#### Exportación de exámenes
 
 Los exámenes de preguntas cortas se pueden exportar para ser importados en otras plataformas. Para exportarlos hay que pulsar el botón "Exportar Examen" en la página principal del examen correspondiente.
 
-#### Ver entregas[![](./docs/img/pin.svg)](#ver_entregas)
+#### Ver entregas
 
 Los profesores pueden ver las entregas que han hecho los alumnos. Para esto tienen que pulsar el botón "Ver Entregas" en la página principal del examen.
 
 En las entregas se puede ver el nombre del alumno, la fecha de entrega si se ha entregado y la calificación si ha sido calificado.
+
+![Ver_Entregas_No_Calificado](./images/Entrega_No_Calificada.png)
+![Ver_Entregas_Calificado](./images/Enterga_Calificado.png)
 
 El profesor puede realizar distintas acciones:
 
@@ -123,26 +142,39 @@ Descargar la entrega: se debe pulsar el icono de la flecha para abajo correspond
 
 Ver la entrega: esta opción solo está disponible si el examen es de preguntas cortas. En ella se pueden ver las respuestas y la calificación de cada pregunta en caso de haberla.
 
+![Ver_Respuestas_No_Corregido](./images/Ver_Respuestas_No_Corregido.png)
+![Ver_Respuestas_Corregido](./images/Ver_Respuestas_Corregido.png)
+
 Borrar la entrega: esta opción sirve para borrar la entrega del alumno.
 
 Calificar o editar la calificación: si no se ha calificado la entrega se podrá pulsar el botón para calificar, en caso de que haya sido calificada el botón servirá para editar la calificación. Si el examen es de preguntas cortas hay que calificar cada pregunta, si es de subida de fichero hay que calificar la entrega. En ambos casos se puede establecer un comentario sobre la tarea.
 
-#### Ver Calificaciones[![](./docs/img/pin.svg)](#ver_calificaciones)
+![Calificar_Examen_Fichero](./images/Calificar_Examen_Fichero.png)
+![Calificar_Examen_Preguntas](./images/Calificar_Examen_Preguntas.png)
+#### Ver Calificaciones
 
 Los profesores pueden ver todas las calificaciones que han obtenidos todos los alumnos de las asignaturas. A esta pantalla se puede acceder pulsando el botón "Calificaciones" de la pantalla principal de la asignatura.
 
-### Funciones del alumno[![](./docs/img/pin.svg)](#funciones_alumno)
+![Calificaciones_Profesor](./images/Calificaciones_Profesor.png)
+
+### Funciones del alumno
 
 Los alumnos pueden hacer lo que pueden hacer los usuarios comunes. Los alumnos pueden realizar exámenes y ver sus calificaciones.
 
-#### Realizar exámenes[![](./docs/img/pin.svg)](#realizar_examenes)
+#### Realizar exámenes
 
 Los alumnos pueden realizar los exámenes de preguntas cortas, para ello tienen que pulsar el botón realizar entrega en la página principal del examen. Se le redirigirá a la pantalla para realizar el examen, en ella se le mostrarán las preguntas, su valor y el tiempo necesario. Una vez realizado si el profesor lo ha elegido así podrá ver las respuestas y si ha sido calificado ver la calificación de cada pregunta.
 
+![Realizar_Examen_Preguntas](./images/Hacer_Examen_Preguntas.png)
+
 Para realizar la entrega de un examen de subida de fichero es similar solo que hay que en ese caso se pide que se suba un fichero. En este caso podrá descargar su entrega.
 
-#### Ver calificaciones[![](./docs/img/pin.svg)](#ver_calificaciones)
+![Realizar_Examen_Subida](./images/Hacer_Examen_Subida.png)
+
+#### Ver calificaciones
 
 Los alumnos pueden ver las calificaciones que han obtenido en la asignatura. Para ello debe pulsar en el botón "Mis Calificaciones" de la página principal de la asignatura.
+
+![Calificaciones_Alumno](./images/Calificaciones_Alumno.png)
 
 ## Guia de despliegue
