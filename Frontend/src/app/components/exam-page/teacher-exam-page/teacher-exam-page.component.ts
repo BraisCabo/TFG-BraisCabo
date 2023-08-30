@@ -231,6 +231,9 @@ export class TeacherExamPageComponent {
       .sendCalificationsToLti(this.subjectId, this.examId).subscribe(
         _ => {
           this.openSnackBar('Calificaciones enviadas correctamente.');
+        },
+        _ => {
+          this.openSnackBar('Error al enviar las calificaciones.');
         }
       )
   }

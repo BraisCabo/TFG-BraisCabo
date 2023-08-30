@@ -21,6 +21,7 @@
   - [Funciones del alumno](#funciones-del-alumno)
     - [Realizar exámenes](#realizar-examenes)
     - [Ver calificaciones](#ver-calificaciones)
+  - [Conexión con Moodle](#conexion-con-moodle)
 - [Guía de despliegue](#guia-de-despliegue)
     - [Crear una imagen de docker](#crear-una-imagen-de-docker)
     - [Desplegar la imagen de docker](#desplegar-la-imagen-de-docker)
@@ -61,14 +62,14 @@ Para ver la información de la asignatura hay que pulsar el icono del ojo respec
 
 ![Ver_Asignatura_1](./images/Ver_Asignatura.png)
 
-#### Editar asignatura[![](./docs/img/pin.svg)](#editar_asignatura)
+#### Editar asignatura
 
 Para editar la asignatura hay que pulsar el icono del lápiz respectivo a la asignatura en la página principal. Se puede editar el nombre de la asignatura y los profesores y alumnos asignados con las mismas restricciones que para la creación de las asignaturas.
 
 ![Editar_Asignatura_1](./images/Editar_Asignatura_1.png)
 ![Editar_Asignatura_2](./images/Editar_Asignatura_2.png)
 
-#### Borrar asignatura[![](./docs/img/pin.svg)](#borrar_asignatura)
+#### Borrar asignatura
 
 Para borrar una asignatura hay que pulsar el icono de la papelera respectivo a la asignatura en la página principal.
 
@@ -179,6 +180,65 @@ Para realizar la entrega de un examen de subida de fichero es similar solo que h
 Los alumnos pueden ver las calificaciones que han obtenido en la asignatura. Para ello debe pulsar en el botón "Mis Calificaciones" de la página principal de la asignatura.
 
 ![Calificaciones_Alumno](./images/Calificaciones_Alumno.png)
+
+### Conexión con Moodle
+
+Para conectar la aplicación con Moodle lo primero que hay que hacer es tener un par de claves pública y privada RSA de 2048 bits. En la siguiente página se puede hacer: https://www.devglan.com/online-tools/rsa-encryption-decryption.
+
+En Moodle tenemos que configurar una nueva herramienta. Para esto tenemos que ir a la administración de plugins y añadir una nueva herramienta externa. Tenemos que seleccionar la opción para configurar una herramienta manualmente.
+
+![Moodle_1](./images/Moodle_1.png)
+
+Una vez hemos entrado en la pantala de configuración, tenemos que establecer el nombre que le vamos a dar la herramienta, así como su URL de lti (url_plataforma/lti/). En la versión de LTI tenemos que seleccionar la 1.3 y en el tipo de clave pública RSA. En el apartado de clave pública tenemos que escribir la clave pública que hemos generado, en formato PEM, esto es, la clave debe empezar con -----BEGIN PUBLIC KEY-----
+y terminar con
+-----END PUBLIC KEY-----.
+Un ejemplo de clave sería:
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhH42c/dsiVm+/ppuHVf6SpOVqIyeUs9LYVa33cyoeT9UfXyQIDXgjkAFbx19bsiilPMRFWmEfBcvjROTX3hJGFxgLEWVNJR9Ij/UO+bb5eyI49dGK9Lyl7fmkphdtjmew+K0yfe32t6/dz8snRz5+lo9OOeGNEMEG2noMSWF3O6kpdTNo589nHvf3DB1UWSXwphsQgdWN8+JVDe1Ty4udD4xhypZRMB5lDAo8XyVUkpg5OslvoZweRgjxHyE5y5b9aalziax1nqULTRqn+l8DAhFJIQx7SxNpaq9evJ9kmAyI2wkW0D5zHcx/PGhBvkeE8chU2NGYY7YmyQRKyO9rwIDAQAB
+-----END PUBLIC KEY-----
+
+En el apartado de initiate login url tenemos que poner la URL de la plataforma + /lti/login (url_plataforma/lti/login) y en la de Redirection Url la misma que arriba de todo. En el Default Launch Container debemos seleccionar en una nueva ventana. Y en el apartado de privacidad tenemos que establecer las opciones de intercambio de datos y de aceptación de notas a siempre. En servicios debe quedar como en la foto, permitiendo usar todos los servicios.
+
+![Moodle_2](./images/Moodle_2.png)
+![Moodle_3](./images/Moodle_3.png)
+![Moodle_4](./images/Moodle_4.png)
+
+Una vez hemos configurado la plataforma en Moodle tenemos que modificar el archivo Backend\src\main\resources\application.properties para cambiar los siguientes campos teniendo en cuenta la información que nos aporta Moodle. Tenemos que cambiar los siguientes apartados del archivo:
+lti.clientId: lo cambiamos por el Deployment ID que nos aporta Moodle.
+lti.externalPlatform: lo cambiamos por el Platform ID que nos aporta Moodle.
+lti.keySetUrl: lo cambiamos or el Public Keyset URL que nos aporta Moodle.
+lti.accessTokenUrl: lo cambiamos por el Access Token URL que nos aporta moodle.
+lti.oidcAuthUrl: lo cambiamos por Authentication request URL.
+lti.privateKey: lo cambiamos por la clave privada generada anteriormente.
+lti.publicKey: lo cambiamos por la clave pública generada anteriormente.
+lti.deploymentId: lo cambiamos por el Deployment ID que nos aporta Moodle.
+
+Debemos tener algo similar a lo siguiente:
+
+```Java
+lti.basic.registration.id=1
+lti.clientId=gLdbMIPatorTZvl
+lti.name=Aula Virtual
+lti.externalPlatform=http://localhost
+lti.keySetUrl=http://localhost/mod/lti/certs.php
+lti.accessTokenUrl=http://localhost/mod/lti/token.php
+lti.oidcAuthUrl=http://localhost/mod/lti/auth.php
+lti.algorithm=RSA
+lti.privateKey=MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCXie8Sm3TWI2Q1RjI7KboATZxPNGkg667UZnE48Iv3w8vQ5DMqYvPnoDuArakugYw6iMhnlmk1lkrS6L5JqbmEGVNVPSp2JZyxxM35UQxn0Y1wlNbZYMOzQP8CPxtdoB12+8zqA0DU8g+/8Bswz93gLimfJuhpWzCT0065XbLWmMduMT1r2N08oEvDKjFNv6pM7V+89dmc2nnCaNi0OillKtSNyr0OxzjKi7BHVRmXCNbMGTsZEU9Tre4AC53KQYAIa4ANRjCOBzHU4LP6JXNQDF4GcXK/g55t83phHgxP7kbxvcKstOeJqau4ds6hqQt7wvl0FrNVtUa/AgFwMy/bAgMBAAECggEAT50Q9EamAGbBm9eQRlLqvIQJzfbsEHah+EcFzvNZpcbBCrMJSoiIObWN7VHPY3Z+NLZuCzYTeirGjr3mUw8PPx6LEGo9J6slAqQxzn1NNjH6zB32LmhPCJrqHsUG3I5lTICHrJ4e7oFp0t4TevaKS+AUz9+CFO/quo82ed6HOYRgx+3cWzQI5O9NN083OaK9T5qIM+BK8cyjucFKBxy4M45Ye9Vrzfn3HeYbEMKGR4pkeRQPhD6rz1YcWvzIOc6QgvZ0kAXH1cqN14Wk0V0VOIepHgD5HaISmRIfQZD/9Vy/RqAyFl5YKW559ionOYcteGmBMk9zBN1V33cvliGm+QKBgQD04VPuOyl82IRMG75jV2UynzA+OXOPx1S6ba7cNdlcm7HZOwxAJI/0kPbyK7ubKwFXjMRKljthubSYNDlfj8CB8rbPVPDMnLqPoaPJZtT29W5T/Rz42enfpea8pI921LZ0kp9vBriY4GnXsMIIcFA5qkGIilFThJwuz8qshWzpbQKBgQCea4kLZ0GYfVP2RCp7kSVwuWfdrgEvhTYAWx7iDwYLRwiToZKGyxRC1edTQC0akTrWNJ0ff7+oz7GO8xPwRiBoTLBnXHg3vmU1o4j16fyeyBnYPP0iau8TrM82eJNNJFckL27rKGrZavIEMLe3Mss3jJ56cGE4YNyUpz5MTgg5ZwKBgCiv26skh1MoAmtG3M5SsgzEKFbeYtYLz4cePER4agIaGGW4iuOJb6W6BF3eaFByx8lNKTwfVAR7v4befn3jO6AbvMYcHdpRXCoLOFR5Un8p7kfkMVEjm9k+DmVfjjq3Qw2BYx4mZrt35f4hb0vJpXq/UB4opTSUPwMEIW+ix6LNAoGAPDWKpHbeC2K2ooZNzyDfJfSRcUNM2A68822uUyR6m5anv9RMqEZOsQgzHwTpH4vK3NaqUOpwoWwug7IHBe7hKkLbWK1gU29dcAFzcGM5y+8pQ3IKkyYpL0UijAVPlqYVKH+OnHmEApYO3WDWsh3v9nDPWqGTkaXer/DQUJfnsEkCgYBI1wIANAL3FJqcidUMV4lCmWsDi4wHbVeWkU2SA2O7/1imxmT5t86ZKm31YfSv1exLCk1sts3rrNhCdhOPspqZaW8EpNEhV9POtaP5OFKO3HexZQxh29cGp8gT2jj3R2+BIH76q5dwrEoUFK/cXNF04BZ3o0IJpIy9QYXpBuuCWg==
+lti.publicKey=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl4nvEpt01iNkNUYyOym6AE2cTzRpIOuu1GZxOPCL98PL0OQzKmLz56A7gK2pLoGMOojIZ5ZpNZZK0ui+Sam5hBlTVT0qdiWcscTN+VEMZ9GNcJTW2WDDs0D/Aj8bXaAddvvM6gNA1PIPv/AbMM/d4C4pnyboaVswk9NOuV2y1pjHbjE9a9jdPKBLwyoxTb+qTO1fvPXZnNp5wmjYtDopZSrUjcq9Dsc4youwR1UZlwjWzBk7GRFPU63uAAudykGACGuADUYwjgcx1OCz+iVzUAxeBnFyv4OebfN6YR4MT+5G8b3CrLTniamruHbOoakLe8L5dBazVbVGvwIBcDMv2wIDAQAB
+lti.deploymentId=18
+```
+
+![Moodle_5](./images/Moodle_5.png)
+
+Una vez hecho esto ya podemos levantar la aplicación. En Moodle, en la asignatura en cuestión el profesor tendrá que crearuna nueva actividad del tipo Herramienta Externa. En ella hay establecer un nombre para la actividad. Hay que ir al apartado de más configuración y en custom parameters tenemos que poner 2 parámetros, el primero exam_name con el nombre del examen de la aplicación y el segundo subject_name con el nombre de la asignatura en la aplicación. Una vez hecho esto vamos al apartado de herramientas preconfiguradas y seleccionamos nuestra herramienta, cuando esté listo, le damos a crear y se nos creará la actividad.
+
+![Moodle_6](./images/Moodle_6.png)
+![Moodle_7](./images/Moodle_7.png)
+
+Si nuestro correo estaba asociado a una cuenta en la aplicación se iniciará sesión, en caso contrario se creará una cuenta y se iniciará sesión. Si el examen no estaba todavía creado o la asignatura no existe se registrará igualmente pero saldrá un error. En caso de que el examen no esté creado solo necesitamos logearnos, con nuestro correo y la contraseña (en caso que no estuvieramos registrados será nuestro Nombre y Apellidos sin espacios entre Nombre y Apellidos, ej: Nombre1 Apellido1 Apellido2 la contraseña sería Nombre1Apellido1 Apellido2) tenemos que ir a la asignatura y crear el examen. El examen se crea con normalidad y con el nombre que le hemos puesto de parámetro a Moodle. Los alumnos cuando accedan através de la URL de Moodle se registrarán de igual manera que hace el profesor.
+
+Una vez ya se haya realizado el examen el profesor puede darle al botón de "Subir Calificaciones al LMS" para subir las calificaciones a Moodle.
 
 ## Guia de despliegue
 
