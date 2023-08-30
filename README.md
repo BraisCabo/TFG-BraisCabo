@@ -2,9 +2,9 @@
 
 ## Índice
 
-- [Introducción](#introduccion)
-- [Guía de uso](#guia-de-uso)
-  - [Común a todos los usuarios](#comun-a-todos-los-usuarios)
+- [Introducción](#introducción)
+- [Guía de uso](#guía-de-uso)
+  - [Común a todos los usuarios](#común-a-todos-los-usuarios)
     - [Cambio de contraseña](#cambio-de-contraseña)
     - [Cerrar sesión](#cerrar-sesion)
   - [Funciones del Administrador](#funciones-del-administrador)
@@ -32,7 +32,7 @@ Esta aplicación es un aula virtual pensada para realizar exámenes y que sean c
 
 ## Guía de uso
 
-### Comun a todos los usuarios
+### Común a todos los usuarios
 
 #### Cambio de contraseña
 
