@@ -26,6 +26,9 @@
     - [Crear una imagen de docker](#crear-una-imagen-de-docker)
     - [Desplegar la imagen de docker](#desplegar-la-imagen-de-docker)
 - [Documentación de desarrollo](#documentación-de-desarrollo)
+  - [Diagrama de las entidades de la base de datos](#diagrama-de-las-entidades-de-la-base-de-datos)
+  - [Diagrama de clases del backend](#diagrama-de-clases-del-backend)
+  - [Documentación de la api rest](#documentación-de-la-api-rest)
 
 ## Introducción
 
