@@ -13,6 +13,9 @@ import com.tfg.brais.security.jwt.LoginRequest;
 import com.tfg.brais.security.jwt.UserLoginService;
 import com.tfg.brais.security.jwt.AuthResponse.Status;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -24,6 +27,9 @@ public class LoginRestController {
 	private UserLoginService userService;
 
 	@PostMapping("/login")
+	@Operation(summary = "Login")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "User logged in"),
+			@ApiResponse(responseCode = "403", description = "User credentials incorrect") })
 	public ResponseEntity<AuthResponse> login(
 			@CookieValue(name = "accessToken", required = false) String accessToken,
 			@CookieValue(name = "refreshToken", required = false) String refreshToken,
@@ -32,6 +38,8 @@ public class LoginRestController {
 	}
 
 	@PostMapping("/logout")
+	@Operation(summary = "Logout")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "User logged out") })
 	public ResponseEntity<AuthResponse> logOut(HttpServletRequest request, HttpServletResponse response) {
 		return ResponseEntity.ok(new AuthResponse(Status.SUCCESS, userService.logout(request, response)));
 	}

@@ -25,6 +25,7 @@
 - [Guía de despliegue](#guía-de-despliegue)
     - [Crear una imagen de docker](#crear-una-imagen-de-docker)
     - [Desplegar la imagen de docker](#desplegar-la-imagen-de-docker)
+- [Documentación de desarrollo](#documentación-de-desarrollo)
 
 ## Introducción
 
@@ -259,3 +260,21 @@ Para desplegar la imagen que hemos creado hay que ejecutar el script "deployImag
 cd Docker
 ./deployImage.sh braiscabo/tfg latest
 ```
+
+## Documentación de Desarrollo
+
+### Tecnologías usadas
+
+Para este proyecto se ha utilizado Spring Boot 3.1 para crear el backend. Para el frontend se ha usado Angular 16.0.4. Para empaquetar la aplicación se ha utilizado docker.
+
+### Diagrama de las entidades de la base de datos
+
+![DataBase_Diagram](./images/Database_Diagram.png)
+
+### Diagrama de clases del backend
+
+![Backend_Diagram_Class](./images/Spring_Boot_Class_Diagram.png)
+
+### Documentación de la api rest
+
+Las documentación de la Api Rest se encuentra en el archivo: Backend\api-documentation.pdf
