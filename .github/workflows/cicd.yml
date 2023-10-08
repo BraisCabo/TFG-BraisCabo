@@ -13,6 +13,7 @@ jobs:
         runs-on:
              ubuntu-latest
         steps:
+            ## Step 1: Configuration
             - uses: actions/checkout@v3
             - uses: s4u/maven-settings-action@v2.8.0
             - name: Set up JDK 20
@@ -32,22 +33,32 @@ jobs:
               run: |
                 echo "ImageName=${{ secrets.DOCKERHUB_IMAGE }}" > .env
                 echo "ImageTag=${{ github.sha }}" >> .env
+                
+            ## Step 2: Docker Login and Image Build
             - name: Login to docker
               run: docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_TOKEN }}"
             - name: Build the docker image
               run:  docker build -f Docker/Dockerfile -t ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }} .
+
+            ## Step 3: Image Execution and Wait to Image Start
             - name: Setup docker compose
               run: docker-compose up -d
             - name : Give permitions to wait containers start script
               run : chmod +x waitContainer.sh
             - name: Wait for containers to start
               run: ./waitContainer.sh
+
+              ## Step 4: Test execution
             - name: Run tests
               run: mvn -f Backend/pom.xml test
+
+              ## Step 5: End Image Execution and Push image to Docker Hub
             - name: Stop docker compose
               run: docker-compose down
             - name: Push the docker image
               run: docker push ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }}
+
+              ## Step 6: Configure Okteto and deploy application
             - name: Install Okteto CLI
               run: curl https://get.okteto.com -sSfL | sh
             - name: Login into Okteto
