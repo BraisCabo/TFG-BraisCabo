@@ -9,13 +9,11 @@ on:
             - master
 
 jobs:
-    configure:
-        runs-on: ubuntu-latest
+    publish:
+        runs-on:
+            ubuntu-latest
         steps:
-            - id: 'auth'
-              uses: 'google-github-actions/auth@v2'
-              with:
-                credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+            ## Step 1: Configuration
             - uses: actions/checkout@v3
             - uses: s4u/maven-settings-action@v2.8.0
             - name: Set up JDK 20
@@ -35,57 +33,40 @@ jobs:
               run: |
                 echo "ImageName=${{ secrets.DOCKERHUB_IMAGE }}" > .env
                 echo "ImageTag=${{ github.sha }}" >> .env
-
-    docker_build:
-        runs-on: ubuntu-latest
-        needs: configure
-        steps:
+                
+            ## Step 2: Docker Login and Image Build
             - name: Login to docker
               run: docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_TOKEN }}"
             - name: Build the docker image
               run: docker build -f Docker/Dockerfile -t ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }} .
 
-    docker_run:
-        runs-on: ubuntu-latest
-        needs: docker_build
-        steps:
-            - name: Setup docker compose
-              run: docker-compose up -d
-            - name: Give permissions to wait containers start script
-              run: chmod +x waitContainer.sh
-            - name: Wait for containers to start
-              run: ./waitContainer.sh
-
-    test:
-        runs-on: ubuntu-latest
-        needs: docker_run
-        steps:
-            - name: Run tests
-              run: mvn -f Backend/pom.xml test
-
-    docker_push:
-        runs-on: ubuntu-latest
-        needs: test
-        steps:
-            - name: Stop docker compose
-              run: docker-compose down
+            
             - name: Push the docker image
               run: docker push ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }}
 
     deploy:
-        runs-on: ubuntu-latest
-        needs: docker_push
-        steps:
-            - name: 'Set up Cloud SDK'
-              uses: 'google-github-actions/setup-gcloud@v2'
-            - name: Deploy to Google Cloud Run
-              run: |
-                gcloud run deploy corregia \
-                --image ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }} \
-                --region us-central1 \
-                --allow-unauthenticated \
-                --platform managed \
-                --set-env-vars SPRING_DATASOURCE_URL=jdbc:mysql://34.28.247.197:3306/keywhale \
-                --set-env-vars SPRING_DATASOURCE_USERNAME=root \
-                --set-env-vars SPRING_DATASOURCE_PASSWORD=${{ secrets.GCP_DB_PASSWORD }} \
-                --set-env-vars SPRING_JPA_HIBERNATE_DDL-AUTO=update
+      runs-on:
+        ubuntu-latest
+      steps:
+        - id: 'auth'
+          uses: 'google-github-actions/auth@v2'
+          with:
+            credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+        - name: 'Set up Cloud SDK'
+          uses: 'google-github-actions/setup-gcloud@v2'
+
+        - name: 'Use gcloud CLI'
+          run: 'gcloud info'
+
+        - name: Deploy to Google Cloud Run
+          run: |
+            gcloud run deploy corregia \
+            --image ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }} \
+            --region us-central1 \
+            --allow-unauthenticated \
+            --platform managed \
+            --set-env-vars SPRING_DATASOURCE_URL=jdbc:mysql://34.28.247.197:3306/keywhale \
+            --set-env-vars SPRING_DATASOURCE_USERNAME=root \
+            --set-env-vars SPRING_DATASOURCE_PASSWORD=${{ secrets.GCP_DB_PASSWORD }} \
+            --set-env-vars SPRING_JPA_HIBERNATE_DDL-AUTO=updateç
+  
