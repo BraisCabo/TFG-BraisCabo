@@ -1,0 +1,24 @@
+@startuml
+class Usuario {
+   nombre: String
+   contraseña: String
+   email: String
+}
+
+class Asignatura {
+   listaDeProfesores: List<Profesor>
+   listaDeAlumnos: List<Alumno>
+}
+
+class UsuarioDTO {
+   nombre: String
+   email: String
+   listaAsignaturasImpartidas: List<Asignatura>
+   listaAsignaturasMatriculado: List<Asignatura>
+   UsuarioDTO(Usuario usuario, Asignatura asignatura)
+}
+
+Usuario -.-> UsuarioDTO
+Asignatura -.-> UsuarioDTO
+
+@enduml

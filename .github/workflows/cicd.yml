@@ -36,21 +36,17 @@ jobs:
               run: docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_TOKEN }}"
             - name: Build the docker image
               run:  docker build -f Docker/Dockerfile -t ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }} .
-            - name: Setup docker compose
-              run: docker-compose up -d
-            - name : Give permitions to wait containers start script
-              run : chmod +x waitContainer.sh
-            - name: Wait for containers to start
-              run: ./waitContainer.sh
-            - name: Run tests
-              run: mvn -f Backend/pom.xml test
             - name: Stop docker compose
               run: docker-compose down
             - name: Push the docker image
               run: docker push ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }}
-            - name: Install Okteto CLI
-              run: curl https://get.okteto.com -sSfL | sh
-            - name: Login into Okteto
-              run: okteto context use https://cloud.okteto.com --token ${{ secrets.OKTETO_TOKEN }}
-            - name: Deploy to Okteto
-              run: okteto deploy --var ImageName=${{ secrets.DOCKERHUB_IMAGE }} --var ImageTag=${{ github.sha }}
+            - name: Install Gitpod CLI
+              run: curl -L https://github.com/gitpod-io/gitpod/releases/download/v0.10.0/gitpod-cli-linux > /usr/local/bin/gitpod && chmod +x /usr/local/bin/gitpod
+            - name: Login to Gitpod
+              run: gitpod login --auth-token ${{ secrets.GITPOD_TOKEN }}
+            - name: Deploy to Gitpod
+              run: |
+                gitpod start workspace \
+                --repo https://github.com/${{ github.repository }} \
+                --branch ${{ github.ref }} \
+                --command "docker-compose up -d"

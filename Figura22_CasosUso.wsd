@@ -1,0 +1,61 @@
+@startuml
+scale 2
+left to right direction
+skinparam packageStyle rect
+
+actor "Administrador" as admin
+actor "Usuario General" as user
+
+rectangle "Tareas Administrador" {
+    admin -- (Crear Asignatura)
+    admin -- (Borrar Asignatura)
+    admin -- (Editar Asignatura)
+    admin -- (Ver información de Asignatura)
+    (Login) as login1
+    (Crear Asignatura) -.> (login1) : include
+    (Borrar Asignatura) -.> (login1) : include
+    (Editar Asignatura) -.> (login1) : include
+    (Ver información de Asignatura) -.> (login1) : include
+}
+
+rectangle "Tareas Profesor Asignatura" {
+    user -- (Crear Actividad)
+    user -- (Modificar Actividad)
+    user -- (Ver información de Actividad)
+    user -- (Ver entregas de Actividad)
+    user -- (Calificar entregas de Actividad)
+    user -- (Ver calificaciones de todos los alumnos de Asignatura)
+    (Login) as login2
+    (Ser profesor de Asignatura) as profesor
+    (Crear Actividad) -.> (login2) : include
+    (Modificar Actividad) -.> (login2) : include
+    (Ver información de Actividad) -.> (login2) : include
+    (Ver entregas de Actividad) -.> (login2) : include
+    (Calificar entregas de Actividad) -.> (login2) : include
+    (Ver calificaciones de todos los alumnos de Asignatura) -.> (login2) : include
+    (Crear Actividad) -.> (profesor) : include
+    (Modificar Actividad) -.> (profesor) : include
+    (Ver información de Actividad) -.> (profesor) : include
+    (Ver entregas de Actividad) -.> (profesor) : include
+    (Calificar entregas de Actividad) -.> (profesor) : include
+    (Ver calificaciones de todos los alumnos de Asignatura) -.> (profesor) : include
+}
+
+rectangle "Tareas Alumno Asignatura"{
+    (Ver información de Actividad) as ver1
+    user -- (ver1)
+    user -- (Ver entrega del usuario en la actividad)
+    user -- (Ver calificación del usuario en la actividad)
+    user -- (Realizar entrega en la actividad)
+    (Login) as login3
+    (Ser alumno de Asignatura) as alumno
+    (ver1) -.> (login3) : include
+    (Ver entrega del usuario en la actividad) -.> (login3) : include
+    (Ver calificación del usuario en la actividad) -.> (login3) : include
+    (Realizar entrega en la actividad) -.> (login3) : include
+    (ver1) -.> (alumno) : include
+    (Ver entrega del usuario en la actividad) -.> (alumno) : include
+    (Ver calificación del usuario en la actividad) -.> (alumno) : include
+    (Realizar entrega en la actividad) -.> (alumno) : include
+}
+@enduml

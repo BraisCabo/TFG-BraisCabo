@@ -1,0 +1,42 @@
+@startuml
+title Login Protocolo LTI
+
+actor PlataformaDocente as "Plataforma Docente (Aula Virtual)"
+actor HerramientaExterna as "Herramienta Externa (CorregIA)"
+database BaseDeDatos as "Base de Datos"
+
+PlataformaDocente -> HerramientaExterna: Solicitud de login
+PlataformaDocente --> HerramientaExterna: Parámetro request
+PlataformaDocente --> HerramientaExterna: Parámetro response
+HerramientaExterna -> HerramientaExterna: Obtener datos de la solicitud
+HerramientaExterna -> PlataformaDocente: Rellenar response con datos confidenciales
+HerramientaExterna -> PlataformaDocente: Enviar response al endpoint proporcionado en la request
+PlataformaDocente -> PlataformaDocente: Validar validez de la petición
+
+PlataformaDocente -> HerramientaExterna: Peticion enviando datos del usaurio
+HerramientaExterna -> HerramientaExterna: Validar veracidad de la petición
+HerramientaExterna -> HerramientaExterna: Obtener datos de la solicitud
+
+alt Usuario no registrado
+    HerramientaExterna -> BaseDeDatos: Registrar usuario
+end
+HerramientaExterna -> HerramientaExterna: Iniciar sesión del usuario
+HerramientaExterna -> BaseDeDatos: Guardar id de usuario en Plataforma docente
+
+alt Usuario es profesor
+HerramientaExterna -> BaseDeDatos: Guardar usuario como profesor de asignatura
+else usuario es alumno
+HerramientaExterna -> BaseDeDatos: Guardar usuario como alumno de asignatura
+end
+HerramientaExterna -> BaseDeDatos: Guardar endpoint para enviar calificaciones
+
+HerramientaExterna -> HerramientaExterna: Generar token JWT con datos confidenciales
+
+HerramientaExterna -> HerramientaExterna: Crear respuesta con estado HTTP 302 \ny ruta de la actividad
+
+HerramientaExterna -> PlataformaDocente: Enviar respuesta firmada con token JWT
+
+PlataformaDocente -> PlataformaDocente: Validar la validez de la respuesta recibida
+
+PlataformaDocente -> HerramientaExterna: Redirigir al usuario a la ruta de la actividad
+@enduml

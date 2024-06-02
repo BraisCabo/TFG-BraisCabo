@@ -1,0 +1,15 @@
+image:
+  file: .gitpod.Dockerfile
+
+tasks:
+  - init: ./scripts/docker-up.sh
+  - name: Docker Compose Up
+    command: docker-compose up -d
+
+ports:
+  - port: 8000
+    onOpen: open-preview
+
+vscode:
+  extensions:
+    - ms-azuretools.vscode-docker
