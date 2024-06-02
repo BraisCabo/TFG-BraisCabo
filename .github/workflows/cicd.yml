@@ -45,6 +45,7 @@ jobs:
               run: docker push ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }}
 
     deploy:
+      needs: publish
       runs-on:
         ubuntu-latest
       steps:
@@ -68,5 +69,4 @@ jobs:
             --set-env-vars SPRING_DATASOURCE_URL=jdbc:mysql://34.28.247.197:3306/keywhale \
             --set-env-vars SPRING_DATASOURCE_USERNAME=root \
             --set-env-vars SPRING_DATASOURCE_PASSWORD=${{ secrets.GCP_DB_PASSWORD }} \
-            --set-env-vars SPRING_JPA_HIBERNATE_DDL-AUTO=updateç
-  
+            --set-env-vars SPRING_JPA_HIBERNATE_DDL-AUTO=update
