@@ -11,9 +11,13 @@ on:
 jobs:
     publish:
         runs-on:
-             ubuntu-latest
+            ubuntu-latest
         steps:
             ## Step 1: Configuration
+            - id: 'auth'
+              uses: 'google-github-actions/auth@v2'
+              with:
+                credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
             - uses: actions/checkout@v3
             - uses: s4u/maven-settings-action@v2.8.0
             - name: Set up JDK 20
@@ -23,12 +27,12 @@ jobs:
                 java-version: '20'
             - uses: browser-actions/setup-chrome@latest
             - run: chrome --version
-            - name: Give execution permitions to create settings script
+            - name: Give execution permissions to create settings script
               run: chmod +x createSettings.sh
             - name: Create settings file
-              run : ./createSettings.sh ${{secrets.GH_USERNAME}} ${{secrets.GH_TOKEN}} ~/.m2/settings.xml
-            - name : Copy maven settings to docker
-              run : cp ~/.m2/settings.xml Docker/settings.xml
+              run: ./createSettings.sh ${{secrets.GH_USERNAME}} ${{secrets.GH_TOKEN}} ~/.m2/settings.xml
+            - name: Copy maven settings to docker
+              run: cp ~/.m2/settings.xml Docker/settings.xml
             - name: 'Create env file'
               run: |
                 echo "ImageName=${{ secrets.DOCKERHUB_IMAGE }}" > .env
@@ -38,32 +42,20 @@ jobs:
             - name: Login to docker
               run: docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_TOKEN }}"
             - name: Build the docker image
-              run:  docker build -f Docker/Dockerfile -t ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }} .
+              run: docker build -f Docker/Dockerfile -t ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }} .
 
-            ## Step 3: Image Execution and Wait to Image Start
-            - name: Setup docker compose
-              run: docker-compose up -d
-            - name : Give permitions to wait containers start script
-              run : chmod +x waitContainer.sh
-            - name: Wait for containers to start
-              run: ./waitContainer.sh
+            ## Step 6: Configure Google Cloud CLI and deploy application
+            - name: 'Set up Cloud SDK'
+              uses: 'google-github-actions/setup-gcloud@v2'
 
-              ## Step 4: Test execution
-            - name: Run tests
-              run: mvn -f Backend/pom.xml test
-
-              ## Step 5: End Image Execution and Push image to Docker Hub
-            - name: Stop docker compose
-              run: docker-compose down
-            - name: Push the docker image
-              run: docker push ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }}
-            - name: Install Gitpod CLI
-              run: curl -L https://github.com/gitpod-io/gitpod/releases/download/v0.10.0/gitpod-cli-linux > /usr/local/bin/gitpod && chmod +x /usr/local/bin/gitpod
-            - name: Login to Gitpod
-              run: gitpod login --auth-token ${{ secrets.GITPOD_TOKEN }}
-            - name: Deploy to Gitpod
+            - name: Deploy to Google Cloud Run
               run: |
-                gitpod start workspace \
-                --repo https://github.com/${{ github.repository }} \
-                --branch ${{ github.ref }} \
-                --command "docker-compose up -d"
+                gcloud run deploy corregia \
+                --image ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }} \
+                --region us-central1 \
+                --allow-unauthenticated \
+                --platform managed \
+                --set-env-vars SPRING_DATASOURCE_URL=jdbc:mysql://34.28.247.197:3306/keywhale \
+                --set-env-vars SPRING_DATASOURCE_USERNAME=root \
+                --set-env-vars SPRING_DATASOURCE_PASSWORD=${{ secrets.GCP_DB_PASSWORD }} \
+                --set-env-vars SPRING_JPA_HIBERNATE_DDL-AUTO=update
