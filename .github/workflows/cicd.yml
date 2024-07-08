@@ -40,7 +40,23 @@ jobs:
             - name: Build the docker image
               run: docker build -f Docker/Dockerfile -t ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }} .
 
-            
+            ## Step 3: Image Execution and Wait to Image Start
+            - name: Setup docker compose
+              run: docker-compose up -d
+            - name: Give permissions to wait containers start script
+              run: chmod +x waitContainer.sh
+            - name: Wait for containers to start
+              run: ./waitContainer.sh
+
+            ## Step 4: Test execution
+            - name: Run tests
+              run: mvn -f Backend/pom.xml test
+
+            ## Step 5: End Image Execution and Push image to Docker Hub
+            - name: Stop docker compose
+              run: docker-compose down
+            - name: Push the docker image
+              run: docker push ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }}
             - name: Push the docker image
               run: docker push ${{ secrets.DOCKERHUB_IMAGE }}:${{ github.sha }}
 
